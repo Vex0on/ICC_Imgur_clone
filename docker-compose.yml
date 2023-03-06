@@ -2,21 +2,21 @@ version: "3.9"
 
 services:
   db:
-    container_name: postgres_db
+    container_name: imgur_db
     image: postgres
     env_file:
       - .env
     environment:
-      - POSTGRES_DB: ${DB_NAME}
-      - POSTGRES_USER: ${DB_USER}
-      - POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
   
   backend:
-    container_name: backend
+    container_name: imgur_backend
     build:
       dockerfile: Dockerfile
       context: ./backend
@@ -28,20 +28,20 @@ services:
       - db
     command: python manage.py runserver 0.0.0.0:8000
 
-    frontend:
-      container_name: frontend
-      build:
-        dockerfile: Dockerfile
-        context: ./frontend
-      volumes:
-        - ./frontend:/frontend-dir
-        - /frontend-dir/node_modules
-      environment:
-        - WATCHPACK_POLLING=true
-      ports:
-        - "3000:3000"
-      depends_on:
-        - backend
-      command: npm start 0.0.0.0:3000
+  frontend:
+    container_name: imgur_frontend
+    build:
+      dockerfile: Dockerfile
+      context: ./frontend
+    volumes:
+      - ./frontend:/frontend-dir
+      - /frontend-dir/node_modules
+    environment:
+      - WATCHPACK_POLLING=true
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    command: npm start 0.0.0.0:3000
 
 
