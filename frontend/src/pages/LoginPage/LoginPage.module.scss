@@ -1,0 +1,57 @@
+.main {
+    position: relative;
+
+    display: flex;
+
+    width: 70rem;
+    height: 45rem;
+
+    background-color: #fff;
+}
+
+.logo {
+    font-size: 1.25rem;
+    font-weight: 600;
+
+    position: absolute;
+    top: 1.25rem;
+    left: 2rem;
+
+    color: #000;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    width: 50%;
+    margin: 0.75rem;
+
+    border-radius: 1rem;
+    background-color: #44008B;
+
+    .img {
+        width: 27rem;
+        margin-top: 3.5rem;
+    }
+
+    .header {
+        font-size: 2.2rem;
+        font-weight: 600;
+
+        width: 75%;
+        margin-top: 2.5rem;
+    }
+
+    .sub_header {
+        width: 75%;
+    }
+}
+
+.logo,
+.img,
+.header,
+.sub_header {
+    caret-color: transparent;
+}
