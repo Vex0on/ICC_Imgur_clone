@@ -1,8 +1,12 @@
 import React from 'react'
-import { Login } from '../../components/Login/Login'
-import styles from './LoginPage.module.scss'
-import LoginImg from '../../assets/img/test.png'
 import { Link } from 'react-router-dom'
+
+import { Login } from '../../components/Login/Login'
+
+import styles from './LoginPage.module.scss'
+
+import LoginImg from '../../assets/img/login-01.png'
+
 
 export const LoginPage = () => {
     return(

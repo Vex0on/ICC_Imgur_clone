@@ -11,6 +11,8 @@
 
     background-color: $background-secondary-color;
 
+    border-radius: 0.2rem;
+
     @include mixin.desktop-larger {
         width: 35rem;
     }

@@ -1,6 +1,8 @@
 import React from 'react'
-import styles from './Login.module.scss'
 import { Link } from 'react-router-dom'
+
+import styles from './Login.module.scss'
+
 import { BsEnvelope } from 'react-icons/bs';
 import { AiOutlineLock } from 'react-icons/ai';
 
@@ -16,7 +18,7 @@ export const Login = () => {
                 <p className={styles.headers__paragraph}>
                     Możesz
                     <Link className={styles.headers__link} to='register'>Zarejestrować się tutaj!</Link>
-                    </p>
+                </p>
             </div>
 
             <form className={styles.form} action=''>
