@@ -7,7 +7,7 @@ import { AiOutlineLock } from 'react-icons/ai';
 export const Login = () => {
     return(
         <section className={styles.container} >
-            <div className={styles.headers_container}>
+            <div className={styles.container__headers}>
                 <h1 className={styles.headers__header}>Zaloguj się!</h1>
 
                 <p className={styles.headers__paragraph} >
@@ -25,7 +25,7 @@ export const Login = () => {
                     htmlFor='email'>
                     Email
                 </label>
-                <div className={styles.icon_input_container}>
+                <div className={styles.container__icon__input}>
                     <BsEnvelope className={styles.form__icon}/>   
                     <input
                         className={styles.form__input} 
@@ -39,7 +39,7 @@ export const Login = () => {
                     htmlFor='password'>
                     Hasło
                 </label>
-                <div className={styles.icon_input_container}>
+                <div className={styles.container__icon__input}>
                     <AiOutlineLock className={styles.form__icon}/>
                     <input 
                         className={styles.form__input} 
@@ -48,7 +48,7 @@ export const Login = () => {
                         placeholder='Wpisz swoje hasło'/>
                 </div>
 
-                <div className={styles.check_forgot_container}>
+                <div className={styles.container__check__forgot}>
                     <label className={styles.form__label__check}>
                         <input 
                             className={styles.form__checkbox}
