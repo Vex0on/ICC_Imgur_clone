@@ -1,0 +1,76 @@
+@use '../../styles/mixin.scss' as mixin;
+@import '../../styles/variables.scss';
+
+.main {
+    position: relative;
+
+    display: flex;
+
+    width: 70rem;
+    height: 45rem;
+
+    background-color: $background-secondary-color;
+
+    border-radius: 0.2rem;
+
+    @include mixin.desktop-larger {
+        width: 35rem;
+    }
+
+    @include mixin.small {
+        width: 100vw;
+        height: 100vh;
+    }
+
+}
+
+.logo {
+    font-size: 1.25rem;
+    font-weight: 600;
+
+    position: absolute;
+    top: 1.25rem;
+    right: 2rem;
+
+    color: $font-secondary-color;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    width: 50%;
+    margin: 0.75rem;
+
+    border-radius: 1rem;
+    background-color: $background-primary-color;
+
+    @include mixin.desktop-larger {
+        display: none;
+    }
+
+    .container__img {
+        width: 27rem;
+        margin-top: 3.5rem;
+    }
+
+    .container__header {
+        font-size: 2rem;
+        font-weight: 600;
+
+        width: 80%;
+        margin-top: 3rem;
+    }
+
+    .container__text {
+        width: 80%;
+    }
+}
+
+.logo,
+.container__img,
+.container__header,
+.container__sub_header {
+    caret-color: transparent;
+}

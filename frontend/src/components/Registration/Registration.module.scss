@@ -1,0 +1,179 @@
+@use '../../styles/mixin.scss' as mixin;
+@import '../../styles/variables.scss';
+
+.container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    width: 50%;
+
+    @include mixin.desktop-larger {
+        width: 35rem;
+    }
+    
+}
+
+.container__headers {
+    width: 21rem;
+
+    color: $font-secondary-color;
+
+    @include mixin.small {
+        width: 19rem;
+    }
+
+    .headers__header {
+        font-size: 1.75rem;
+        font-weight: 500;
+
+        margin-bottom: 1rem;
+
+        color: inherit;
+    }
+
+    .headers__paragraph {
+        font-size: 0.95rem;
+
+        color: inherit;
+    }
+
+    .headers__link {
+        font-weight: 600;
+
+        margin-left: 0.3rem;
+
+        text-decoration: none;
+
+        color: #0400DA;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    .form__label {
+        font-size: 0.75rem;
+
+        margin-top: 1.5rem;
+        margin-bottom: 0.4rem;
+        margin-left: -0.3rem;
+
+        color: #999;
+    }
+
+    .container__icon__input {
+        position: relative;
+
+        .form__icon {
+            font-size: 1.5rem;
+
+            position: absolute;
+            top: 0.5rem;
+
+            color: #000842;
+        }
+
+        .form__input {
+            font-size: 0.95rem;
+
+            width: 20rem;
+            padding: 0.5rem;
+            padding-left: 1.9rem;
+
+            border-bottom: 0.1rem solid $font-secondary-color;
+            outline: none;
+
+            @include mixin.small {
+                width: 17rem;
+            }
+
+            &::placeholder {
+                color: #000842;
+            }
+
+            &:focus::placeholder {
+                color: transparent;
+            }
+        }
+    }
+
+    .container__check__forgot {
+        font-size: 0.86rem;
+
+        display: flex;
+
+        margin-top: 1rem;
+
+        color: $font-secondary-color;
+
+        gap: 2.7rem;
+
+        @include mixin.small {
+            gap: 1.5rem;
+        }
+
+        .form__label__check {
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .form__checkbox {
+            margin-right: 0.3rem;
+
+            cursor: pointer;
+        }
+
+        .form__forgot {
+            text-decoration: none;
+
+            color: $font-secondary-color;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .form__button {
+        font-weight: 500;
+
+        height: 2.9rem;
+        margin-top: 5rem;
+
+        cursor: pointer;
+        letter-spacing: 0.063rem;
+
+        color: #fff;
+        border-radius: 2rem;
+        background-color: $background-primary-color;
+
+        @include mixin.small {
+            width: 90%;
+        }
+
+        &:hover {
+            background-color: #4f03a0;
+        }
+    }
+}
+
+.headers__header,
+.headers__paragraph,
+.headers__link,
+.form__label,
+.form__icon,
+.form__checkbox,
+.form__label__check,
+.form__forgot {
+    caret-color: transparent;
+}
