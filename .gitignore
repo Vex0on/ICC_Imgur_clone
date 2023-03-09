@@ -127,6 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+postgres-data/
 postgres-data/pg_wal/000000010000000000000001
 postgres-data/postmaster.opts
 postgres-data/pg_stat/pgstat.stat
