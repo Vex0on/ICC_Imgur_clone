@@ -128,10 +128,3 @@ dmypy.json
 # Pyre type checker
 .pyre/
 postgres-data/
-postgres-data/pg_wal/000000010000000000000001
-postgres-data/postmaster.opts
-postgres-data/pg_stat/pgstat.stat
-postgres-data/global/pg_internal.init
-postgres-data/global/pg_control
-postgres-data/base/5/pg_internal.init
-postgres-data/base/1/pg_internal.init
