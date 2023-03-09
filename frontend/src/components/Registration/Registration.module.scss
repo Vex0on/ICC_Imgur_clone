@@ -31,12 +31,20 @@
         margin-bottom: 1rem;
 
         color: inherit;
+
+        @include mixin.desktop-larger-min {
+            font-size: 2.2rem;
+        }
     }
 
     .headers__paragraph {
         font-size: 0.95rem;
 
         color: inherit;
+
+        @include mixin.desktop-larger-min {
+            font-size: 1.2rem;
+        }
     }
 
     .headers__link {
@@ -69,6 +77,10 @@
         margin-left: -0.3rem;
 
         color: #999;
+
+        @include mixin.desktop-larger-min {
+            font-size: 0.95rem;
+        }
     }
 
     .container__icon__input {
@@ -97,6 +109,10 @@
                 width: 17rem;
             }
 
+            @include mixin.desktop-larger-min {
+                font-size: 1.1rem;
+            }
+
             &::placeholder {
                 color: #000842;
             }
@@ -122,9 +138,12 @@
             gap: 1.5rem;
         }
 
+        @include mixin.desktop-larger-min {
+            font-size: 0.9rem;
+        }
+
         .form__label__check {
             cursor: pointer;
-            text-decoration: none;
         }
 
         .form__checkbox {
@@ -159,6 +178,11 @@
 
         @include mixin.small {
             width: 90%;
+        }
+
+        @include mixin.desktop-larger-min {
+            font-size: 1.1rem;
+            height: 3.3rem;
         }
 
         &:hover {
