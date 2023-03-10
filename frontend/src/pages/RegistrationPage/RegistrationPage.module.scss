@@ -6,8 +6,8 @@
 
     display: flex;
 
-    width: 70rem;
-    height: 45rem;
+    width: 70vw;
+    height: 90vh;
 
     background-color: $background-secondary-color;
 
@@ -25,7 +25,7 @@
 }
 
 .logo {
-    font-size: 1.25rem;
+    font-size: 1.75rem;
     font-weight: 600;
 
     position: absolute;
@@ -33,11 +33,17 @@
     right: 2rem;
 
     color: $font-secondary-color;
+
+    
+    @include mixin.desktop-larger-min {
+        font-size: 2.1rem;
+    }
 }
 
 .container {
     display: flex;
     align-items: center;
+    justify-content: center;
     flex-direction: column;
 
     width: 50%;
@@ -56,15 +62,16 @@
     }
 
     .container__header {
-        font-size: 2rem;
+        font-size: 1.75rem;
         font-weight: 600;
 
-        width: 80%;
+        width: 85%;
         margin-top: 3rem;
     }
 
     .container__text {
-        width: 80%;
+        width: 85%;
+        margin-bottom: 1rem;
     }
 }
 
