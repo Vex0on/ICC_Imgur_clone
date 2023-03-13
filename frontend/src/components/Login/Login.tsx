@@ -74,7 +74,7 @@ export const Login = () => {
                         Zapamiętaj mnie
                     </label>
 
-                    <Link className={styles.form__forgot} to='forgot'>Zapomniałeś hasła?</Link>
+                    <Link className={styles.form__forgot} to='/reset'>Zapomniałeś hasła?</Link>
                 </div>
 
                 <button 

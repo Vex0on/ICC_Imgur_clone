@@ -67,11 +67,18 @@
 
         width: 85%;
         margin-top: 3rem;
+
+        @include mixin.desktop-larger-min {
+            font-size: 2.3rem;
+        }
     }
 
     .container__text {
         width: 85%;
-        margin-bottom: 1rem;
+        margin-bottom: 3rem;
+        @include mixin.desktop-larger-min {
+            font-size: 1.3rem;
+        }
     }
 }
 
