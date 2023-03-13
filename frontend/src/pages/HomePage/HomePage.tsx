@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom'
 export const HomePage = () => {
     return(
         <>
-        <Link to='registration'>Rejestracja</Link>
-        <Link to='login'>Logowanie</Link>
+        <Link to='/registration'>Rejestracja</Link>
+        <Link to='/login'>Logowanie</Link>
+        <Link to='/reset'>Reset Hasła</Link>
         </>
     )
 }

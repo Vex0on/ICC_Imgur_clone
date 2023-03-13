@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 
 import styles from './Registration.module.scss'
 
-import { BsEnvelope } from 'react-icons/bs';
-import { AiOutlineLock } from 'react-icons/ai';
+import { BsEnvelope } from 'react-icons/bs'
+import { AiOutlineLock } from 'react-icons/ai'
 
 export const Registration = () => {
     return(
