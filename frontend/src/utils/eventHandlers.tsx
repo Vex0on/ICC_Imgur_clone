@@ -13,3 +13,11 @@ export const handlePasswordChange = (
 ) => {
     setPassword(e.target.value)
 }
+
+export const handleRepeatPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setRepeatPassword: React.Dispatch<React.SetStateAction<string>>
+) => {
+    setRepeatPassword(e.target.value)
+}
+

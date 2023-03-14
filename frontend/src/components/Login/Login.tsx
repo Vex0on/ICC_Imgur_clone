@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 import styles from './Login.module.scss'
 
@@ -11,11 +12,32 @@ import { handleEmailChange, handlePasswordChange } from '../../utils/eventHandle
 export const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [currentUser, setCurrentUser] = useState(true)
+    const [informationLogin, setInformationLogin] = useState('')
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        alert('Email: ' + email + ' Hasło: ' + password)
-    }
+    const navigate = useNavigate()
+
+      const submitLogin = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if(email != "" || password != ""){
+            axios.post('/api/login/', { email, password })
+                .then(response => {
+                    setCurrentUser(true)
+                    navigate('/profile', {
+                        state: {
+                            currentUser: currentUser
+                        }
+                    })
+                })
+                .catch(err => {
+                    setCurrentUser(false)
+                    console.log(err.response.data.error)
+                })
+        }
+        else {
+            setInformationLogin('Pola muszą być wypełnione')
+        }
+      }
 
     return(
         <section className={styles.container} >
@@ -30,9 +52,11 @@ export const Login = () => {
                     Możesz
                     <Link className={styles.headers__link} to='/registration'>Zarejestrować się tutaj!</Link>
                 </p>
+
+                {informationLogin && <p>{informationLogin}</p>}
             </div>
 
-            <form className={styles.form} onSubmit={event => handleSubmit(event)}>
+            <form className={styles.form} onSubmit={e => submitLogin(e)}>
                 <label 
                     className={styles.form__label}
                     htmlFor='email'>
@@ -42,6 +66,7 @@ export const Login = () => {
                     <BsEnvelope className={styles.form__icon}/>   
                     <input
                         className={styles.form__input} 
+                        name='email'
                         type='email' 
                         id='email'
                         placeholder='Wpisz swój email'
@@ -57,7 +82,8 @@ export const Login = () => {
                 <div className={styles.container__icon__input}>
                     <AiOutlineLock className={styles.form__icon}/>
                     <input 
-                        className={styles.form__input} 
+                        className={styles.form__input}
+                        name='password' 
                         type='password' 
                         id='password'
                         placeholder='Wpisz swoje hasło'
@@ -77,11 +103,10 @@ export const Login = () => {
                     <Link className={styles.form__forgot} to='/reset'>Zapomniałeś hasła?</Link>
                 </div>
 
-                <button 
+                <input 
                     className={styles.form__button} 
-                    type='submit'>
-                    Zaloguj się
-                </button>
+                    type='submit'
+                    value='Zaloguj się'/>
             </form>
         </section>
     )

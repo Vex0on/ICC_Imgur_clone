@@ -7,8 +7,9 @@ import {
 
 import { HomePage } from './pages/HomePage/HomePage'
 import { LoginPage } from './pages/LoginPage/LoginPage'
-import { RegistrationPage } from './pages/RegistrationPage/RegistrationPage';
-import { ResetPasswordPage } from './pages/ResetPassword/ResetPasswordPage';
+import { RegistrationPage } from './pages/RegistrationPage/RegistrationPage'
+import { ResetPasswordPage } from './pages/ResetPassword/ResetPasswordPage'
+import { ProfilePage } from './pages/ProfilePage/ProfilePage'
 
 import './styles/globals.scss'
 
@@ -20,7 +21,9 @@ function App() {
             <Route path='/' element={<HomePage />}/>
             <Route path='/login' element={<LoginPage />}/>
             <Route path='/registration' element={<RegistrationPage />}/>
+            <Route path='/profile' element={<ProfilePage />} />
             <Route path='/reset' element={<ResetPasswordPage />}/>
+            <Route path='*' element={<HomePage />}/>
         </Routes> 
       </Router>
     </div>

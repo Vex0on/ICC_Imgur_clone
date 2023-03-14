@@ -1,12 +1,49 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import axios from "axios";
 
 import styles from './Registration.module.scss'
 
 import { BsEnvelope } from 'react-icons/bs'
 import { AiOutlineLock } from 'react-icons/ai'
 
+import { handleEmailChange, handlePasswordChange, handleRepeatPasswordChange } from '../../utils/eventHandlers'
+
 export const Registration = () => {
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [repeatPassword, setRepeatPassword] = useState("")
+    const [error, setError] = useState("")
+    const [success, setSuccess] = useState(false)
+    const [informationRegister, setInformationRegister] = useState('')
+
+    const submitRegister = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setInformationRegister('')
+        console.log("elo")
+
+        if(repeatPassword == password && password != "" && email != ""){
+            axios.post('/api/register/', { email, password })
+                .then(response => {
+                    setSuccess(true)
+                })
+                .catch(err => {
+                    setError(err.response.data.error)
+                    console.log(error)
+                })
+        }
+        else if(password == "") {
+            setInformationRegister('Hasło nie może być puste')
+        }
+        else if(email == "") {
+            setInformationRegister('Email nie może być puste')
+        }
+        else {
+            setInformationRegister('Hasła muszą być identyczne')
+        }
+        
+    }
+
     return(
         <section className={styles.container} >
             <div className={styles.container__headers}>
@@ -19,9 +56,12 @@ export const Registration = () => {
                     Możesz
                     <Link className={styles.headers__link} to='/login'>Zalogować się tutaj!</Link>
                 </p>
+
+                {success && <p>Rejestracja pomyślna</p>}
+                {informationRegister && <p>{informationRegister}</p>}
             </div>
 
-            <form className={styles.form} action=''>
+            <form className={styles.form} onSubmit={e => submitRegister(e)}>
                 <label 
                     className={styles.form__label}
                     htmlFor='email'>
@@ -33,7 +73,9 @@ export const Registration = () => {
                         className={styles.form__input} 
                         type='email' 
                         id='email'
-                        placeholder='Wpisz swój email'/>
+                        placeholder='Wpisz swój email'
+                        maxLength={45}
+                        onChange={event => handleEmailChange(event, setEmail)}/>
                 </div>
 
                 <label 
@@ -47,7 +89,9 @@ export const Registration = () => {
                         className={styles.form__input} 
                         type='password' 
                         id='password'
-                        placeholder='Wpisz swoje hasło'/>
+                        placeholder='Hasło'
+                        minLength={8}
+                        onChange={event => handlePasswordChange(event, setPassword)}/>
                 </div>
 
                 <label 
@@ -61,7 +105,9 @@ export const Registration = () => {
                         className={styles.form__input} 
                         type='password' 
                         id='repeat-password'
-                        placeholder='Powtórz swoje hasło'/>
+                        placeholder='Powtórz swoje hasło'
+                        minLength={8}
+                        onChange={event => handleRepeatPasswordChange(event, setRepeatPassword)}/>
                 </div>
 
                 <div className={styles.container__check__forgot}>
