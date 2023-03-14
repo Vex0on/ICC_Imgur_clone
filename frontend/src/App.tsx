@@ -10,7 +10,6 @@ import { LoginPage } from './pages/LoginPage/LoginPage'
 import { RegistrationPage } from './pages/RegistrationPage/RegistrationPage'
 import { ResetPasswordPage } from './pages/ResetPassword/ResetPasswordPage'
 import { ProfilePage } from './pages/ProfilePage/ProfilePage'
-import { AdminPage } from './pages/AdminPage/AdminPage';
 
 import './styles/globals.scss'
 
@@ -24,7 +23,6 @@ function App() {
             <Route path='/registration' element={<RegistrationPage />}/>
             <Route path='/profile' element={<ProfilePage />} />
             <Route path='/reset' element={<ResetPasswordPage />}/>
-            <Route path='/admin' element={<AdminPage />}/>
             <Route path='*' element={<HomePage />}/>
         </Routes> 
       </Router>
