@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view
 from .serializers import *
 from rest_framework.response import Response
+from rest_framework import status
 
 
 @api_view(['GET'])
@@ -10,7 +11,32 @@ def getImgurUsers(request):
     return Response(serializer.data)
 
 
-@api_view(['GET', 'POST', 'DELETE'])
+@api_view(['POST'])
+def register_user(request):
+    serializer = ImgurUserSerializer(data=request.data)
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
+        username = email
+        user = User.objects.create_user(
+            username = username,
+            email = email,
+            password = password,
+        )
+        ImgurUser.objects.create(
+            user = user,
+            username = username,
+            email = email,
+            password = password
+        )
+        return Response(
+            {'message': 'User created successfully'}, 
+            status=status.HTTP_201_CREATED
+        )
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
 def getImgurUser(request, pk):
     user = ImgurUser.objects.get(id=pk)
     serializer = ImgurUserSerializer(user, many=False)

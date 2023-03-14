@@ -11,10 +11,10 @@ class Record(models.Model):
 
 class ImgurUser(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
-    username = models.CharField(max_length=30)
+    username = models.CharField(max_length=30, null=True, unique=True)
     email = models.EmailField(max_length=45, unique=True)
     password = models.CharField(max_length=45)
-    phone_number = models.CharField(max_length=9, unique=True)
+    phone_number = models.CharField(max_length=9, unique=True, null=True)
 
     def __str__(self):
         return f'{self.username} {self.email}'
