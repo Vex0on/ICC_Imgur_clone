@@ -19,18 +19,18 @@ def register_user(request):
         password = serializer.validated_data['password']
         username = email
         user = User.objects.create_user(
-            username = username,
-            email = email,
-            password = password,
+            username=username,
+            email=email,
+            password=password,
         )
         ImgurUser.objects.create(
-            user = user,
-            username = username,
-            email = email,
-            password = password
+            user=user,
+            username=username,
+            email=email,
+            password=password
         )
         return Response(
-            {'message': 'User created successfully'}, 
+            {'message': 'User created successfully'},
             status=status.HTTP_201_CREATED
         )
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
