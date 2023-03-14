@@ -3,6 +3,8 @@ from . import views
 
 urlpatterns = [
     path('register', views.register_user, name='register_user'),
+    path('login', views.login, name='login_user'),
+    
     path('users', views.getImgurUsers, name='imgurUsers'),
     path('users/<int:pk>', views.getImgurUser, name='imgurUser'),
     path('posts', views.getPosts, name='posts'),
