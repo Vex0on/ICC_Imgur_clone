@@ -3,9 +3,17 @@ from .models import *
 
 
 class ImgurUserSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        del validated_data['confirmPassword']
+        return super().create(validated_data)
+
     class Meta:
         model = ImgurUser
         fields = ('id', 'username', 'email', 'password', 'phone_number')
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
 
 
 class PostSerializer(serializers.ModelSerializer):
