@@ -12,32 +12,32 @@ import { handleEmailChange, handlePasswordChange } from '../../utils/eventHandle
 export const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [currentUser, setCurrentUser] = useState(true)
+    const [currentUser, setCurrentUser] = useState(false)
     const [informationLogin, setInformationLogin] = useState('')
 
     const navigate = useNavigate()
 
-      const submitLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    const submitLogin = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if(email != "" || password != ""){
-            axios.post('/api/login/', { email, password })
+        if(email !== "" || password !== ""){
+            axios.post('http://127.0.0.1:8000/api/login', { email, password })
                 .then(response => {
-                    setCurrentUser(true)
+                    setCurrentUser(true);
                     navigate('/profile', {
                         state: {
-                            currentUser: currentUser
+                            currentUser: true
                         }
                     })
                 })
                 .catch(err => {
                     setCurrentUser(false)
-                    console.log(err.response.data.error)
+                    setInformationLogin('Nieprawidłowe dane logowania')
                 })
         }
         else {
             setInformationLogin('Pola muszą być wypełnione')
         }
-      }
+    }
 
     return(
         <section className={styles.container} >

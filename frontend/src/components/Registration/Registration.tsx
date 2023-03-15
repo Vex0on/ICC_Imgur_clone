@@ -20,22 +20,24 @@ export const Registration = () => {
     const submitRegister = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setInformationRegister('')
-        console.log("elo")
 
-        if(repeatPassword == password && password != "" && email != ""){
+        if(repeatPassword === password && password !== "" && email !== ""){
             axios.post('http://127.0.0.1:8000/api/register', { email, password })
                 .then(response => {
+                    setEmail('')
+                    setPassword('')
+                    setRepeatPassword('')
                     setSuccess(true)
                     console.log(response.data)
                 })
                 .catch(err => {
-                    setError(err.response.data.error)
+                    setInformationRegister('Podany email jest zajęty')
                 })
         }
-        else if(password == "") {
+        else if(password === "") {
             setInformationRegister('Hasło nie może być puste')
         }
-        else if(email == "") {
+        else if(email === "") {
             setInformationRegister('Email nie może być puste')
         }
         else {
@@ -75,6 +77,7 @@ export const Registration = () => {
                         id='email'
                         placeholder='Wpisz swój email'
                         maxLength={45}
+                        value={email}
                         onChange={event => handleEmailChange(event, setEmail)}/>
                 </div>
 
@@ -91,6 +94,7 @@ export const Registration = () => {
                         id='password'
                         placeholder='Hasło'
                         minLength={8}
+                        value={password}
                         onChange={event => handlePasswordChange(event, setPassword)}/>
                 </div>
 
@@ -107,6 +111,7 @@ export const Registration = () => {
                         id='repeat-password'
                         placeholder='Powtórz swoje hasło'
                         minLength={8}
+                        value={repeatPassword}
                         onChange={event => handleRepeatPasswordChange(event, setRepeatPassword)}/>
                 </div>
 
@@ -115,7 +120,8 @@ export const Registration = () => {
                         <input 
                             className={styles.form__checkbox}
                             type='checkbox'
-                            name='remember-me' />
+                            name='remember-me'
+                            required />
 
                       Akceptuje <Link to='/regulations'>regulamin</Link>  
                     </label>
