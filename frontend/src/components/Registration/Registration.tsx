@@ -23,13 +23,13 @@ export const Registration = () => {
         console.log("elo")
 
         if(repeatPassword == password && password != "" && email != ""){
-            axios.post('/api/register/', { email, password })
+            axios.post('http://127.0.0.1:8000/api/register', { email, password })
                 .then(response => {
                     setSuccess(true)
+                    console.log(response.data)
                 })
                 .catch(err => {
                     setError(err.response.data.error)
-                    console.log(error)
                 })
         }
         else if(password == "") {
