@@ -3,50 +3,47 @@ from .models import *
 
 
 class ImgurUserSerializer(serializers.ModelSerializer):
-
-    def create(self, validated_data):
-        del validated_data['confirmPassword']
-        return super().create(validated_data)
-
     class Meta:
         model = ImgurUser
-        fields = ('id', 'username', 'email', 'password', 'phone_number')
+        fields = '__all__'
         extra_kwargs = {
             'password': {'write_only': True},
         }
+
+    def create(self, validated_data):
+        email = validated_data.get('email')
+        if ImgurUser.objects.filter(email=email).exists():
+            raise serializers.ValidationError("A user with that email address already exists.")
+        imgur_user = ImgurUser.objects.create(**validated_data)
+        imgur_user.save()
+        return imgur_user
 
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ('id', 'title', 'description', 'tag', 'expirationDate')
+        fields = '__all__'
 
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ('id', 'name', 'size', 'mimeType', 'path')
-
-
-class LikeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Like
-        fields = ('id', 'like_count', 'dislike_count')
+        fields = '__all__'
 
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ('id', 'text')
+        fields = '__all__'
 
 
 class SubcommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subcomment
-        fields = ('id', 'text')
+        fields = '__all__'
 
 
 class ReactionSerializers(serializers.ModelSerializer):
     class Meta:
         model = Reaction
-        fields = ('id', 'reaction', 'record_id')
+        fields = '__all__'
