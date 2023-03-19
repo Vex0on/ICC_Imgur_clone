@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view
-from .custom_views.ImgurUser import register_user, login, get_imgur_users, get_imgur_user
+from .custom_views.ImgurUser import register_user, login, get_imgur_users, get_imgur_user, delete_imgur_user, update_imgur_user
 from .custom_views.Post import get_post, get_posts
 from .custom_views.Image import get_image, get_images
 from .custom_views.Comment import get_comment, get_comments
@@ -29,7 +29,17 @@ def get_user_view(request):
     return get_imgur_user(request)
 
 
+@api_view(['DELETE'])
+def delete_user_view(request):
+    return delete_imgur_user(request)
+
+
+@api_view(['PUT'])
+def update_user_view(request):
+    return update_imgur_user(request)
+
 # POST
+
 
 @api_view(['GET'])
 def get_post_view(request):
