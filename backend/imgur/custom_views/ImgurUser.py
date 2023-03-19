@@ -50,8 +50,7 @@ def get_imgur_user(request, pk):
         user = ImgurUser.objects.get(id=pk)
         serializer = ImgurUserSerializer(user, many=False)
         return Response(serializer.data)
-    except:
-        ImgurUser.DoesNotExist
-    return Response({
-        'message': 'HTTP_404_NOT_FOUND'
-    }, status=status.HTTP_404_NOT_FOUND)
+    except ImgurUser.DoesNotExist:
+        return Response({
+            'message': 'HTTP_404_NOT_FOUND'
+        }, status=status.HTTP_404_NOT_FOUND)
