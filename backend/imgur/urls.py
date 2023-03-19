@@ -4,7 +4,8 @@ from . import views
 urlpatterns = [
     path('register', views.register_user, name='register_user'),
     path('login', views.login, name='login_user'),
-    
+    path('delete/<int:pk>', views.delete_imgur_user, name='delete-user'),
+    path('update/<int:pk>', views.update_imgur_user, name='update-user'),
     path('users', views.get_imgur_users, name='imgurUsers'),
     path('users/<int:pk>', views.get_imgur_user, name='imgurUser'),
     path('posts', views.get_posts, name='posts'),
