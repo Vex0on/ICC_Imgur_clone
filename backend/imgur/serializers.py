@@ -11,10 +11,13 @@ class ImgurUserSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        email = validated_data.get('email')
-        if ImgurUser.objects.filter(email=email).exists():
-            raise serializers.ValidationError("A user with that email address already exists.")
-        imgur_user = ImgurUser.objects.create(**validated_data)
+        imgur_user = ImgurUser.objects.create(
+            email=validated_data.get('username'),
+            username=validated_data.get('username'),
+            is_active=True  # True - dostep do logowania, False - brak dostepu
+        )
+        # set_password haszuje haslo
+        imgur_user.set_password(validated_data.get('password'))
         imgur_user.save()
         return imgur_user
 
