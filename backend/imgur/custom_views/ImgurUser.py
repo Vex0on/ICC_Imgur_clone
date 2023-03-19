@@ -54,3 +54,35 @@ def get_imgur_user(request, pk):
         return Response({
             'message': 'HTTP_404_NOT_FOUND'
         }, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['DELETE'])
+def delete_imgur_user(request, pk):
+    try:
+        user = ImgurUser.objects.get(id=pk)
+        user.delete()
+        return Response({
+            'message': 'HTTP_204_NO_CONTENT'
+        }, status=status.HTTP_204_NO_CONTENT)
+    except ImgurUser.DoesNotExist:
+        return Response({
+            'message': 'HTTP_404_NOT_FOUND'
+        }, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['PUT'])
+def update_imgur_user(request, pk):
+    try:
+        user = ImgurUser.objects.get(id=pk)
+        serializer = ImgurUserSerializer(instance=user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response({
+                'message': 'HTTP_400_BAD_REQUEST'
+            }, status=status.HTTP_400_BAD_REQUEST)
+    except ImgurUser.DoesNotExist:
+        return Response({
+            'message': 'HTTP_404_NOT_FOUND'
+        }, status=status.HTTP_404_NOT_FOUND)
