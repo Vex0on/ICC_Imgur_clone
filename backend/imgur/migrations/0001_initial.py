@@ -7,103 +7,193 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('auth', '0012_alter_user_first_name_max_length'),
+        ("auth", "0012_alter_user_first_name_max_length"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Comment',
+            name="Comment",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('record_id', models.PositiveIntegerField()),
-                ('text', models.CharField(max_length=140)),
-                ('like_count', models.IntegerField(default=0)),
-                ('dislike_count', models.IntegerField(default=0)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("record_id", models.PositiveIntegerField()),
+                ("text", models.CharField(max_length=140)),
+                ("like_count", models.IntegerField(default=0)),
+                ("dislike_count", models.IntegerField(default=0)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='ImgurUser',
+            name="ImgurUser",
             fields=[
-                ('user_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
-                ('phone_number', models.CharField(max_length=9, null=True, unique=True)),
+                (
+                    "user_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "phone_number",
+                    models.CharField(max_length=9, null=True, unique=True),
+                ),
             ],
             options={
-                'verbose_name': 'user',
-                'verbose_name_plural': 'users',
-                'abstract': False,
+                "verbose_name": "user",
+                "verbose_name_plural": "users",
+                "abstract": False,
             },
-            bases=('auth.user',),
+            bases=("auth.user",),
             managers=[
-                ('objects', django.contrib.auth.models.UserManager()),
+                ("objects", django.contrib.auth.models.UserManager()),
             ],
         ),
         migrations.CreateModel(
-            name='Subcomment',
+            name="Subcomment",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('record_id', models.PositiveIntegerField()),
-                ('text', models.CharField(max_length=140)),
-                ('like_count', models.IntegerField(default=0)),
-                ('dislike_count', models.IntegerField(default=0)),
-                ('comment', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='imgur.comment')),
-                ('user', models.ForeignKey(default=None, on_delete=django.db.models.deletion.SET_DEFAULT, to='imgur.imguruser')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("record_id", models.PositiveIntegerField()),
+                ("text", models.CharField(max_length=140)),
+                ("like_count", models.IntegerField(default=0)),
+                ("dislike_count", models.IntegerField(default=0)),
+                (
+                    "comment",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="imgur.comment"
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        default=None,
+                        on_delete=django.db.models.deletion.SET_DEFAULT,
+                        to="imgur.imguruser",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Reaction',
+            name="Reaction",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('reaction', models.BooleanField(null=True)),
-                ('record_id', models.PositiveIntegerField()),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='imgur.imguruser')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("reaction", models.BooleanField(null=True)),
+                ("record_id", models.PositiveIntegerField()),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="imgur.imguruser",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Post',
+            name="Post",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('record_id', models.PositiveIntegerField()),
-                ('title', models.CharField(max_length=45)),
-                ('description', models.CharField(max_length=45)),
-                ('tag', models.CharField(max_length=45)),
-                ('expirationDate', models.DateTimeField()),
-                ('like_count', models.IntegerField(default=0)),
-                ('dislike_count', models.IntegerField(default=0)),
-                ('imgur_user', models.ForeignKey(default=None, on_delete=django.db.models.deletion.SET_DEFAULT, to='imgur.imguruser')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("record_id", models.PositiveIntegerField()),
+                ("title", models.CharField(max_length=45)),
+                ("description", models.CharField(max_length=45)),
+                ("tag", models.CharField(max_length=45)),
+                ("expirationDate", models.DateTimeField()),
+                ("like_count", models.IntegerField(default=0)),
+                ("dislike_count", models.IntegerField(default=0)),
+                (
+                    "imgur_user",
+                    models.ForeignKey(
+                        default=None,
+                        on_delete=django.db.models.deletion.SET_DEFAULT,
+                        to="imgur.imguruser",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Image',
+            name="Image",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=45)),
-                ('size', models.CharField(max_length=45)),
-                ('mime_type', models.CharField(max_length=45)),
-                ('path', models.CharField(max_length=90)),
-                ('post', models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='imgur.post')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=45)),
+                ("size", models.CharField(max_length=45)),
+                ("mime_type", models.CharField(max_length=45)),
+                ("path", models.CharField(max_length=90)),
+                (
+                    "post",
+                    models.ForeignKey(
+                        default=None,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="imgur.post",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='comment',
-            name='imgur_user',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.SET_DEFAULT, to='imgur.imguruser'),
+            model_name="comment",
+            name="imgur_user",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.SET_DEFAULT,
+                to="imgur.imguruser",
+            ),
         ),
         migrations.AddField(
-            model_name='comment',
-            name='post',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='imgur.post'),
+            model_name="comment",
+            name="post",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="imgur.post"
+            ),
         ),
     ]

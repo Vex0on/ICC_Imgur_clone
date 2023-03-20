@@ -13,11 +13,13 @@ class ImgurUser(User):
     phone_number = models.CharField(max_length=9, unique=True, null=True)
 
     def __str__(self):
-        return f'{self.username} {self.email}'
+        return f"{self.username} {self.email}"
 
 
 class Post(Record):
-    imgur_user = models.ForeignKey(ImgurUser, on_delete=models.SET_DEFAULT, default=None)
+    imgur_user = models.ForeignKey(
+        ImgurUser, on_delete=models.SET_DEFAULT, default=None
+    )
     title = models.CharField(max_length=45)
     description = models.CharField(max_length=45)
     tag = models.CharField(max_length=45)
@@ -35,7 +37,9 @@ class Image(models.Model):
 
 
 class Comment(Record):
-    imgur_user = models.ForeignKey(ImgurUser, on_delete=models.SET_DEFAULT, default=None)
+    imgur_user = models.ForeignKey(
+        ImgurUser, on_delete=models.SET_DEFAULT, default=None
+    )
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     text = models.CharField(max_length=140)
     like_count = models.IntegerField(default=0)
@@ -56,7 +60,11 @@ class Reaction(models.Model):
     record_id = models.PositiveIntegerField()
 
 
-models.signals.pre_delete.connect(lambda instance, **kwargs: setattr(instance, 'username', "DELETED_USER"),
-                                  sender=ImgurUser)
-models.signals.pre_delete.connect(lambda instance, **kwargs: setattr(instance.ImgurUser, 'username', "DELETED_USER"),
-                                  sender=Comment)
+models.signals.pre_delete.connect(
+    lambda instance, **kwargs: setattr(instance, "username", "DELETED_USER"),
+    sender=ImgurUser,
+)
+models.signals.pre_delete.connect(
+    lambda instance, **kwargs: setattr(instance.ImgurUser, "username", "DELETED_USER"),
+    sender=Comment,
+)
