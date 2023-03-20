@@ -19,10 +19,9 @@ jobs:
 
       - name: Lint Code Base
         uses: github/super-linter@v4
-        with:
-          args: "--linter-rules=pylint/E0402,pylint/E1120,flake8/F403 --format-exclude backend/backend/settings.py --disable=isort"
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: "main"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEBUG: true
+          FILTER_REGEX_EXCLUDE: '(pylint/E0402|pylint/E1120|flake8/F403|isort)'
