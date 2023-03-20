@@ -47,12 +47,6 @@ def update_user_view(request):
     return update_imgur_user(request)
 
 
-@api_view(['POST'])
-def login(request):    
-    username = request.data.get('username')
-    password = request.data.get('password')
-
-
 @api_view(["GET"])
 def get_post_view(request):
     return get_post(request)
