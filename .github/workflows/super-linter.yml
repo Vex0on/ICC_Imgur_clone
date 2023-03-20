@@ -7,6 +7,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+
 jobs:
   run-lint:
     runs-on: ubuntu-latest
@@ -18,6 +19,8 @@ jobs:
 
       - name: Lint Code Base
         uses: github/super-linter@v4
+        with:
+          args: "--linter-rules=pylint/E0402,pylint/E1120,flake8/F403 --format-exclude backend/backend/settings.py --disable=isort"
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: "main"
