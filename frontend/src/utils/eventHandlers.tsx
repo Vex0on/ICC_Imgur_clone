@@ -7,6 +7,13 @@ export const handleEmailChange = (
     setEmail(e.target.value)
 }
 
+export const handleUsernameChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setUsername: React.Dispatch<React.SetStateAction<string>>
+) => {
+    setUsername(e.target.value)
+}
+
 export const handlePasswordChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     setPassword: React.Dispatch<React.SetStateAction<string>>

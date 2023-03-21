@@ -7,10 +7,10 @@ import styles from './Registration.module.scss'
 import { BsEnvelope } from 'react-icons/bs'
 import { AiOutlineLock } from 'react-icons/ai'
 
-import { handleEmailChange, handlePasswordChange, handleRepeatPasswordChange } from '../../utils/eventHandlers'
+import { handleUsernameChange, handlePasswordChange, handleRepeatPasswordChange } from '../../utils/eventHandlers'
 
 export const Registration = () => {
-    const [email, setEmail] = useState("")
+    const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [repeatPassword, setRepeatPassword] = useState("")
     const [error, setError] = useState("")
@@ -21,10 +21,10 @@ export const Registration = () => {
         e.preventDefault();
         setInformationRegister('')
 
-        if(repeatPassword === password && password !== "" && email !== ""){
-            axios.post('http://127.0.0.1:8000/api/register', { email, password })
+        if(repeatPassword === password && password !== "" && username !== ""){
+            axios.post('http://127.0.0.1:8000/api/register', { username, password })
                 .then(response => {
-                    setEmail('')
+                    setUsername('')
                     setPassword('')
                     setRepeatPassword('')
                     setSuccess(true)
@@ -37,8 +37,8 @@ export const Registration = () => {
         else if(password === "") {
             setInformationRegister('Hasło nie może być puste')
         }
-        else if(email === "") {
-            setInformationRegister('Email nie może być puste')
+        else if(username === "") {
+            setInformationRegister('Email nie może być pusty')
         }
         else {
             setInformationRegister('Hasła muszą być identyczne')
@@ -66,19 +66,19 @@ export const Registration = () => {
             <form className={styles.form} onSubmit={e => submitRegister(e)}>
                 <label 
                     className={styles.form__label}
-                    htmlFor='email'>
+                    htmlFor='username'>
                     Email
                 </label>
                 <div className={styles.container__icon__input}>
                     <BsEnvelope className={styles.form__icon}/>   
                     <input
                         className={styles.form__input} 
-                        type='email' 
-                        id='email'
-                        placeholder='Wpisz swój email'
+                        type='text' 
+                        id='username'
+                        placeholder='Wpisz swój Email'
                         maxLength={45}
-                        value={email}
-                        onChange={event => handleEmailChange(event, setEmail)}/>
+                        value={username}
+                        onChange={event => handleUsernameChange(event, setUsername)}/>
                 </div>
 
                 <label 

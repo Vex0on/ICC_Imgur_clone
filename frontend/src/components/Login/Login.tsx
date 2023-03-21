@@ -7,10 +7,10 @@ import styles from './Login.module.scss'
 import { BsEnvelope } from 'react-icons/bs';
 import { AiOutlineLock } from 'react-icons/ai';
 
-import { handleEmailChange, handlePasswordChange } from '../../utils/eventHandlers';
+import { handleUsernameChange, handlePasswordChange } from '../../utils/eventHandlers';
 
 export const Login = () => {
-    const [email, setEmail] = useState('')
+    const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [currentUser, setCurrentUser] = useState(false)
     const [informationLogin, setInformationLogin] = useState('')
@@ -19,8 +19,8 @@ export const Login = () => {
 
     const submitLogin = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if(email !== "" || password !== ""){
-            axios.post('http://127.0.0.1:8000/api/login', { email, password })
+        if(username !== "" || password !== ""){
+            axios.post('http://127.0.0.1:8000/api/login', { username, password })
                 .then(response => {
                     setCurrentUser(true);
                     navigate('/profile', {
@@ -59,19 +59,19 @@ export const Login = () => {
             <form className={styles.form} onSubmit={e => submitLogin(e)}>
                 <label 
                     className={styles.form__label}
-                    htmlFor='email'>
+                    htmlFor='username'>
                     Email
                 </label>
                 <div className={styles.container__icon__input}>
                     <BsEnvelope className={styles.form__icon}/>   
                     <input
                         className={styles.form__input} 
-                        name='email'
-                        type='email' 
-                        id='email'
-                        placeholder='Wpisz swój email'
-                        value={email}
-                        onChange={event => handleEmailChange(event, setEmail)}/>
+                        name='username'
+                        type='text' 
+                        id='username'
+                        placeholder='Wpisz swoją nazwę użytkownika'
+                        value={username}
+                        onChange={event => handleUsernameChange(event, setUsername)}/>
                 </div>
 
                 <label 
