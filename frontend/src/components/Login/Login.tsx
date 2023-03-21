@@ -53,14 +53,16 @@ export const Login = () => {
                     <Link className={styles.headers__link} to='/registration'>Zarejestrować się tutaj!</Link>
                 </p>
 
-                {informationLogin && <p>{informationLogin}</p>}
+                <p className={styles.information__login}>
+                    {informationLogin && <span>{informationLogin}</span>}
+                </p>
             </div>
 
             <form className={styles.form} onSubmit={e => submitLogin(e)}>
                 <label 
                     className={styles.form__label}
                     htmlFor='username'>
-                    Email
+                    Nazwa użytkownika
                 </label>
                 <div className={styles.container__icon__input}>
                     <BsEnvelope className={styles.form__icon}/>   

@@ -13,7 +13,6 @@ export const Registration = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [repeatPassword, setRepeatPassword] = useState("")
-    const [error, setError] = useState("")
     const [success, setSuccess] = useState(false)
     const [informationRegister, setInformationRegister] = useState('')
 
@@ -59,8 +58,11 @@ export const Registration = () => {
                     <Link className={styles.headers__link} to='/login'>Zalogować się tutaj!</Link>
                 </p>
 
-                {success && <p>Rejestracja pomyślna</p>}
-                {informationRegister && <p>{informationRegister}</p>}
+                
+                <p className={styles.information}>
+                    {informationRegister && <span className={styles.information__register}>{informationRegister}</span>}
+                    {success && <span className={styles.information__success}>Rejestracja pomyślna</span>}
+                </p>
             </div>
 
             <form className={styles.form} onSubmit={e => submitRegister(e)}>
