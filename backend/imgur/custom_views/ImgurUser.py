@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from ..models import ImgurUser
 from ..serializers import ImgurUserSerializer
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 
 
 @api_view(["POST"])
@@ -27,7 +28,12 @@ def login(request):
     user = authenticate(request, username=username, password=password)
 
     if user is not None:
-        return Response({"message": "HTTP_200_OK"}, status=status.HTTP_200_OK)
+        access_token = AccessToken.for_user(user)
+        refresh_token = RefreshToken.for_user(user)
+        return Response({
+            "access_token": str(access_token),
+            "refresh_token": str(refresh_token)
+        })
     else:
         return Response(
             {"message": "HTTP_404_NOT_FOUND"}, status=status.HTTP_404_NOT_FOUND
