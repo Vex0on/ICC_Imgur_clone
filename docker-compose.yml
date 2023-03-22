@@ -26,7 +26,7 @@ services:
       - "8000:8000"
     depends_on:
       - db
-    command: python manage.py runserver 0.0.0.0:8000; python manage.py makemigrations; python manage.py migrate; python manage.py loaddata backend/fixtures/test_data.yml
+    command: python manage.py runserver 0.0.0.0:8000; python manage.py makemigrations; python manage.py migrate; python manage.py loaddata backend/fixtures/test_data.yaml
 
   frontend:
     container_name: imgur_frontend
