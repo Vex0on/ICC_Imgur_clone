@@ -14,6 +14,7 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    restart: always
   
   backend:
     container_name: imgur_backend
@@ -26,7 +27,8 @@ services:
       - "8000:8000"
     depends_on:
       - db
-    command: python manage.py runserver 0.0.0.0:8000; python manage.py makemigrations; python manage.py migrate; python manage.py loaddata backend/fixtures/test_data.yaml
+    command: /bin/bash -c "python manage.py loaddata fixtures/test_data.yaml && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    restart: always
 
   frontend:
     container_name: imgur_frontend
@@ -43,5 +45,6 @@ services:
     depends_on:
       - backend
     command: npm start 0.0.0.0:3000
+    restart: always
 
 
