@@ -27,7 +27,14 @@ services:
       - "8000:8000"
     depends_on:
       - db
-    command: /bin/bash -c "python manage.py loaddata fixtures/test_data.yaml && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command:
+      - /bin/bash
+      - -c
+      - |
+        python manage.py makemigrations &&
+        python manage.py migrate &&
+        python manage.py loaddata fixtures/test_data.yaml &&
+        python manage.py runserver 0.0.0.0:8000
     restart: always
 
   frontend:
