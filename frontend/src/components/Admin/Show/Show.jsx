@@ -29,7 +29,8 @@ export const Show = () => {
     axios
       .put(`http://127.0.0.1:8000/api/update/${editUser.id}`, {
         email: editUser.email,
-        username: editUser.username
+        username: editUser.username,
+        password: 'elo'
       })
       .then((response) => {
         setEditUser(null);
