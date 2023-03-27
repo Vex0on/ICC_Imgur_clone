@@ -28,3 +28,16 @@ export const handleRepeatPasswordChange = (
     setRepeatPassword(e.target.value)
 }
 
+export const handleImageChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setImage: React.Dispatch<React.SetStateAction<string>>
+) => {
+    setImage(e.target.value)
+}
+
+export const handleNameChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setName: React.Dispatch<React.SetStateAction<string>>
+) => {
+    setName(e.target.value)
+}
