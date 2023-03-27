@@ -1,3 +1,4 @@
+import PIL
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -33,7 +34,15 @@ class Image(models.Model):
     size = models.CharField(max_length=45)
     mime_type = models.CharField(max_length=45)
     path = models.CharField(max_length=90)
+    image = models.ImageField(upload_to='images/%Y/%m/%d', null=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, default=None)
+
+    def save(self, *args, **kwargs):
+        self.size = str(self.image.size)
+        self.mime_type = PIL.Image.open(self.image).format.__str__()
+        self.path = str(self.image.path)
+        super().save(*args, **kwargs)
+
 
 
 class Comment(Record):

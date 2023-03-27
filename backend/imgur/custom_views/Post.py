@@ -1,3 +1,4 @@
+from rest_framework import status
 from rest_framework.decorators import api_view
 from ..models import Post
 from ..serializers import PostSerializer

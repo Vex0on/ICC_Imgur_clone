@@ -8,7 +8,7 @@ from .custom_views.ImgurUser import (
     update_imgur_user,
 )
 from .custom_views.Post import get_post, get_posts
-from .custom_views.Image import get_image, get_images
+from .custom_views.Image import get_image, get_images, create_image, update_image, delete_image
 from .custom_views.Comment import get_comment, get_comments
 from .custom_views.Subcomment import get_subcomment, get_subcomments
 from .custom_views.Reaction import get_reaction, get_reactions
@@ -60,6 +60,11 @@ def get_posts_view(request):
     return get_posts(request)
 
 
+@api_view(["POST"])
+def create_post_view(request):
+    return create_post(request)
+
+
 # Image
 
 
@@ -72,6 +77,20 @@ def get_images_view(request):
 def get_image_view(request):
     return get_image(request)
 
+
+@api_view(["POST"])
+def create_image_view(request):
+    return create_image(request)
+
+
+@api_view(["PUT"])
+def update_image_view(request, id):
+    return update_image(request, id)
+
+
+@api_view(["DELETE"])
+def delete_image_view(request, id):
+    return delete_image(request, id)
 
 # COMMENT
 
