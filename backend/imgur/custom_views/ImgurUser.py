@@ -1,7 +1,9 @@
 from django.contrib.auth import authenticate
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from ..models import ImgurUser
 from ..serializers import ImgurUserSerializer
 
@@ -27,10 +29,20 @@ def login(request):
     user = authenticate(request, username=username, password=password)
 
     if user is not None:
-        return Response({"message": "HTTP_200_OK"}, status=status.HTTP_200_OK)
+        access_token = AccessToken.for_user(user)
+        refresh_token = RefreshToken.for_user(user)
+        response = Response(
+            {"access_token": str(access_token)}, status=status.HTTP_200_OK
+        )
+        response.set_cookie(
+            key="refresh_token", value=str(refresh_token), httponly=True
+        )
+
+        return response
+
     else:
         return Response(
-            {"message": "HTTP_404_NOT_FOUND"}, status=status.HTTP_404_NOT_FOUND
+            {"message": "HTTP_401_UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED
         )
 
 
