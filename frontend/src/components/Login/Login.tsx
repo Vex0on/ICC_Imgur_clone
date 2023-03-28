@@ -9,6 +9,7 @@ import { AiOutlineLock } from 'react-icons/ai';
 
 import { handleUsernameChange, handlePasswordChange } from '../../utils/eventHandlers';
 
+
 export const Login = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -17,12 +18,28 @@ export const Login = () => {
 
     const navigate = useNavigate()
 
+    const setAuthToken = (token: any) => {
+        if (token) {
+            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        }
+        else
+            delete axios.defaults.headers.common["Authorization"];
+     }
+
     const submitLogin = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if(username !== "" || password !== ""){
             axios.post('http://127.0.0.1:8000/api/login', { username, password })
                 .then(response => {
                     setCurrentUser(true);
+                    const token  =  response.data.token;
+ 
+                    //set JWT token to local
+                    localStorage.setItem("token", token);
+                
+                    //set token to axios common header
+                    setAuthToken(token);
+
                     navigate('/profile', {
                         state: {
                             currentUser: true
