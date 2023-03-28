@@ -14,6 +14,7 @@ class ImgurUserSerializer(serializers.ModelSerializer):
         imgur_user = ImgurUser.objects.create(
             email=validated_data.get("username"),
             username=validated_data.get("username"),
+            phone_number=validated_data.get("phone_number"),
             is_active=True,  # True - dostep do logowania, False - brak dostepu
         )
         # set_password haszuje haslo
