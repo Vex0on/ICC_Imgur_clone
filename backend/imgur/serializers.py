@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+import PIL
 
 
 class ImgurUserSerializer(serializers.ModelSerializer):
@@ -33,6 +34,22 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = "__all__"
+
+    def create(self, validated_data):
+        image = validated_data.get("image")
+        pil_image = PIL.Image.open(image)
+
+        new_image = Image.objects.create(
+            name=image.name,
+            size=pil_image.size,
+            mime_type=pil_image.format,
+            image=image,
+            # post=validated_data.get('post')
+        )
+        new_image.path = new_image.image.path
+        new_image.save()
+
+        return new_image
 
 
 class CommentSerializer(serializers.ModelSerializer):

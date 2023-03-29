@@ -1,4 +1,3 @@
-import PIL
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -30,19 +29,14 @@ class Post(Record):
 
 
 class Image(models.Model):
-    name = models.CharField(max_length=45)
-    size = models.CharField(max_length=45)
-    mime_type = models.CharField(max_length=45)
-    path = models.CharField(max_length=90)
-    image = models.ImageField(upload_to='images/%Y/%m/%d', null=True)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, default=None)
-
-    def save(self, *args, **kwargs):
-        self.size = str(self.image.size)
-        self.mime_type = PIL.Image.open(self.image).format.__str__()
-        self.path = str(self.image.path)
-        super().save(*args, **kwargs)
-
+    name = models.CharField(max_length=45, null=True)
+    size = models.CharField(max_length=45, null=True)
+    mime_type = models.CharField(max_length=45, null=True)
+    path = models.CharField(max_length=90, null=True)
+    image = models.ImageField(upload_to='')
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, default=None, null=True
+    )
 
 
 class Comment(Record):
@@ -57,7 +51,8 @@ class Comment(Record):
 
 class Subcomment(Record):
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
-    user = models.ForeignKey(ImgurUser, on_delete=models.SET_DEFAULT, default=None)
+    user = models.ForeignKey(
+        ImgurUser, on_delete=models.SET_DEFAULT, default=None)
     text = models.CharField(max_length=140)
     like_count = models.IntegerField(default=0)
     dislike_count = models.IntegerField(default=0)
@@ -74,6 +69,7 @@ models.signals.pre_delete.connect(
     sender=ImgurUser,
 )
 models.signals.pre_delete.connect(
-    lambda instance, **kwargs: setattr(instance.ImgurUser, "username", "DELETED_USER"),
+    lambda instance, **kwargs: setattr(instance.ImgurUser,
+                                       "username", "DELETED_USER"),
     sender=Comment,
 )
