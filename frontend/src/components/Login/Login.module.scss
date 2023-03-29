@@ -60,13 +60,20 @@
             text-decoration: underline;
         }
     }
+
+    .information__login {
+        height: 1rem;
+
+        color:#f62e2e;
+    }
+
+    
 }
 
 .form {
     display: flex;
     flex-direction: column;
 
-    margin-top: 1rem;
     margin-bottom: 1rem;
 
     .form__label {
@@ -92,7 +99,7 @@
             position: absolute;
             top: 0.5rem;
 
-            color: #000842;
+            color: $font-secondary-color;
         }
 
         .form__input {
@@ -106,7 +113,7 @@
             outline: none;
 
             @include mixin.small {
-                width: 17rem;
+                width: 18.5rem;
             }
 
             @include mixin.desktop-larger-min {
@@ -114,7 +121,8 @@
             }
 
             &::placeholder {
-                color: #000842;
+                color: $font-secondary-color;
+                font-size: 1rem;
             }
 
             &:focus::placeholder {
@@ -200,4 +208,8 @@
 .form__label__check,
 .form__forgot {
     caret-color: transparent;
+}
+
+.information__success {
+    color: green!important;
 }

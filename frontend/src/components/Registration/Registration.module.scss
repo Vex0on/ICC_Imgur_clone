@@ -60,13 +60,25 @@
             text-decoration: underline;
         }
     }
+
+    .information {
+        height: 1rem;
+
+        .information__register {
+            color: red;
+        }
+    
+        .information__success {
+            color: green;
+        }
+    }
+
 }
 
 .form {
     display: flex;
     flex-direction: column;
 
-    margin-top: 1rem;
     margin-bottom: 1rem;
 
     .form__label {
@@ -92,7 +104,7 @@
             position: absolute;
             top: 0.5rem;
 
-            color: #000842;
+            color: $font-secondary-color;
         }
 
         .form__input {
@@ -114,7 +126,7 @@
             }
 
             &::placeholder {
-                color: #000842;
+                color: $font-secondary-color;
             }
 
             &:focus::placeholder {
