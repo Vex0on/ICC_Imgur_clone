@@ -50,6 +50,19 @@ class ImageSerializer(serializers.ModelSerializer):
         new_image.save()
 
         return new_image
+    
+    def update(self, instance, validated_data):
+        image = validated_data.get("image")
+        pill_image = PIL.Image.open(image)
+        
+        instance.name = image.name
+        instance.size = pill_image.size
+        instance.mime_type = pill_image.format
+        instance.image = image
+
+        instance.save()
+
+        return instance
 
 
 class CommentSerializer(serializers.ModelSerializer):
