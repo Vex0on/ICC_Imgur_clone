@@ -59,7 +59,7 @@ class ImageSerializer(serializers.ModelSerializer):
         instance.size = pill_image.size
         instance.mime_type = pill_image.format
         instance.image = image
-
+        instance.path = instance.image.path
         instance.save()
 
         return instance
