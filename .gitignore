@@ -130,3 +130,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 postgres-data/
+
+# local images directory
+/backend/images
