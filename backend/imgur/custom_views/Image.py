@@ -39,7 +39,7 @@ def create_image(request):
 def update_image(request, pk):
     try:
         image = Image.objects.get(id=pk)
-        serializer = Image(instance=image, data=request.data)
+        serializer = ImageSerializer(instance=image, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
