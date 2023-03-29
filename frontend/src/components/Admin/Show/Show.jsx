@@ -30,6 +30,7 @@ export const Show = () => {
       .put(`http://127.0.0.1:8000/api/update/${editUser.id}`, {
         email: editUser.email,
         username: editUser.username,
+        phone_number: editUser.phone_number,
         password: 'elo'
       })
       .then((response) => {
