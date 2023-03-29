@@ -23,8 +23,8 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 STATIC_URL = '/static/'
-MEDIA_URL = './frontend/public/images/'
-MEDIA_ROOT = os.path.join(BASE_DIR, './frontend/public/images/')
+MEDIA_URL = 'images/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'images')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
