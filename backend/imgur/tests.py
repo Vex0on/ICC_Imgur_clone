@@ -1,13 +1,14 @@
-from io import BytesIO
-
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import check_password
+from django.urls import reverse
+from django.contrib.auth.hashers import check_password, make_password
 from django.core.files.uploadedfile import SimpleUploadedFile
-from rest_framework.test import APITestCase
+from rest_framework import status
+from rest_framework.test import APIClient, APITestCase
 from .models import ImgurUser, Image
 
 
+# Modele
 class UserModelTest(TestCase):
     def setUp(self):
         self.UserModel = get_user_model()
@@ -17,6 +18,7 @@ class UserModelTest(TestCase):
         user = self.UserModel.objects.create_user(
             username="testuser@gmail.com", password=password
         )
+        # asserty sprawdzaja czy np. user.username zgadza sie z "testuser@gmail.com"
         self.assertEqual(user.username, "testuser@gmail.com")
         self.assertTrue(check_password(password, user.password))
         self.assertTrue(user.is_active)
@@ -29,6 +31,7 @@ class UserModelTest(TestCase):
             username="testsuperuser@gmail.com", password=password
         )
         self.assertEqual(superuser.username, "testsuperuser@gmail.com")
+        # check_password sprawdza czy haslo zostało zapisane jako zahaszowane
         self.assertTrue(check_password(password, superuser.password))
         self.assertTrue(superuser.is_active)
         self.assertTrue(superuser.is_staff)
@@ -78,3 +81,67 @@ class ImageModelTest(TestCase):
         self.assertEqual(image.mime_type, "image/png")
         self.assertEqual(image.path, "/path/to/testimage.png")
         self.assertEqual(image.image.read(), b"binarydata")
+
+
+# Widok ImgurUser(Custom)
+class ImgurUserTestCase(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = ImgurUser.objects.create(
+            username="testlogin@gmail.com",
+            password=make_password("testpassword")
+        )
+
+    def test_register_user(self):
+        url = reverse("register_user")  # funkcja reverse do uzyskania URL'a
+        data = {
+            "username": "testuser1@gmail.com",
+            "password": "password123",
+        }
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_register_user_with_existing_username(self):
+        url = reverse("register_user")
+        data = {
+            "username": "testuser1@gmail.com",
+            "password": "password123",
+        }
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+    def test_register_user_with_missing_fields(self):
+        url = reverse("register_user")
+        data = {"username": "testuser"}
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+    def test_login_user(self):
+        url = reverse("login_user")
+        data = {
+            "username": "testlogin@gmail.com",
+            "password": "testpassword",
+        }
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user = ImgurUser.objects.get(username="testlogin@gmail.com")
+        self.assertTrue(check_password(data["password"], user.password))
+
+    def test_get_imgur_users(self):
+        url = reverse("imgurUsers")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_imgur_user(self):
+        user_id = self.user.id
+        url = reverse("imgurUser", args=[user_id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_delete_imgur_user(self):
+        user_id = self.user.id
+        url = reverse("delete-user", args=[user_id])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
