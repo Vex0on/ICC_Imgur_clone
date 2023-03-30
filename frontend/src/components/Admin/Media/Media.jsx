@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Media.module.scss";
 import {
   handleNameChange,
@@ -17,6 +17,10 @@ export const Media = () => {
   const [name, setName] = useState("");
   const [image, setImage] = useState([]);
 
+  useEffect(() => {
+    fetchData()
+  }, [])
+
   const handleShowFormAdd = () => {
     setShowFormAdd(!showFormAdd);
   };
@@ -26,7 +30,7 @@ export const Media = () => {
   };
 
   const handleFileSelect = (event) => {
-    const files = event.target.files;
+    const files = event.target.files[0];
     setImage(files);
   };
 
@@ -42,6 +46,7 @@ export const Media = () => {
       .get("http://127.0.0.1:8000/api/images")
       .then((response) => {
         setData(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -50,7 +55,7 @@ export const Media = () => {
 
   const deleteImage = (id) => {
     axios
-      .delete(`http://127.0.0.1:8000/api/delete_image/${id}`)
+      .delete(`http://127.0.0.1:8000/api/images/delete/${id}`)
       .then((response) => {
         fetchData();
       })
@@ -61,9 +66,16 @@ export const Media = () => {
 
   const submitAdd = (e) => {
     e.preventDefault();
-    axios
-      .post("http://127.0.0.1:8000/api/add_image", { name, image })
+    const image2 = new FormData();
+    image2.append('image', image)
+
+    const headers = {
+      'Content-Type': 'multipart/form-data'
+    };
+
+    axios.post("http://127.0.0.1:8000/api/images/add", image2, { headers })
       .then((response) => {
+        console.log(response);
         fetchData();
       })
       .catch((err) => {
@@ -74,7 +86,7 @@ export const Media = () => {
   const submitEdit = (e) => {
     e.preventDefault();
     axios
-      .put(`http://127.0.0.1:8000/api/update_image/${editImage.id}`, {
+      .put(`http://127.0.0.1:8000/api/images/update/${editImage.id}`, {
         name: editImage.name,
         file: editImage.file,
       })
@@ -111,9 +123,6 @@ export const Media = () => {
                 <td className={styles.td}>{data.id}</td>
                 <td className={styles.td}>{data.name}</td>
                 <td className={styles.td}>{data.path}</td>
-                <td className={styles.td}>
-                  <img src={`/media/${data.path}`} alt="" />
-                </td>
                 <td className={styles.td}>
                   <button onClick={() => deleteImage(data.id)}>Usuń</button>
                   <button onClick={() => handleSetEditImage(data)}>
