@@ -57,7 +57,7 @@ export const Users = () => {
 
   const fetchData = () => {
     UserService
-      .fetchData()
+      .fetchUsers()
       .then((response) => {
         setData(response)
       })
@@ -110,7 +110,7 @@ export const Users = () => {
               <th className={styles.th}></th>
             </tr>
           </thead>
-          
+
           <tbody>
             {data.map((user) => (
               <tr className={styles.tr} key={user.id}>
