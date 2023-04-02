@@ -5,6 +5,7 @@ import styles from "./Nav.module.scss"
 import { BsHouseGearFill, BsImageFill } from "react-icons/bs"
 import { RiDashboardFill } from "react-icons/ri"
 import { HiUsers } from "react-icons/hi"
+import { BiLogOut } from "react-icons/bi"
 
 type NavProps = {
     onLinkClick: (name: string) => void
@@ -54,7 +55,7 @@ export const Nav: React.FunctionComponent<NavProps> = ({ onLinkClick }) => {
                 </li>
             </ul>
 
-            <a className={styles.logout} href="#">Wyloguj się</a>
+            <a className={styles.logout} href="#"><BiLogOut className={styles.logout__icon}/> Wyloguj się</a>
         </nav>
       </>
     );
