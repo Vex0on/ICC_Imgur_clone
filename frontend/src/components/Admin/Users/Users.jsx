@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-import styles from './Show.module.scss'
+import styles from './Users.module.scss'
 
 import { AiOutlinePlus } from "react-icons/ai";
 import { RxCross2 } from 'react-icons/rx'
 
 import { handleUsernameChange, handlePasswordChange, handleRepeatPasswordChange } from '../../../utils/eventHandlers'
 
-export const Show = () => {
+export const Users = () => {
   const [data, setData] = useState([])
   const [showFormAdd, setShowFormAdd] = useState(false)
   const [editUser, setEditUser] = useState(null);
