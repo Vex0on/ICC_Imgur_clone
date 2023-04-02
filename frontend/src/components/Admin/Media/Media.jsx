@@ -1,15 +1,16 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+
 import styles from "./Media.module.scss";
-import {
-  handleNameChange,
-} from "../../../utils/eventHandlers";
+
+import { handleChangeText } from "../../../utils/eventHandlers";
+import MediaService from "../../../services/MediaServices/MediaService";
+import { API_URL } from "../../../services/Api/Api";
+
 import { AiOutlinePlus } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";
 
 export const Media = () => {
-  // const images = ['media-01.jpg', 'media-02.jpg', 'media-03.jpg', 'media-04.jpg'];
-
   const [data, setData] = useState([]);
   const [showFormAdd, setShowFormAdd] = useState(false);
   const [editImage, setEditImage] = useState(null);
@@ -18,8 +19,8 @@ export const Media = () => {
   const [image, setImage] = useState([]);
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   const handleShowFormAdd = () => {
     setShowFormAdd(!showFormAdd);
@@ -42,11 +43,9 @@ export const Media = () => {
   };
 
   const fetchData = () => {
-    axios
-      .get("http://127.0.0.1:8000/api/images")
+    MediaService.fetchImages()
       .then((response) => {
-        setData(response.data);
-        console.log(response.data);
+        setData(response);
       })
       .catch((error) => {
         console.log(error);
@@ -55,7 +54,7 @@ export const Media = () => {
 
   const deleteImage = (id) => {
     axios
-      .delete(`http://127.0.0.1:8000/api/images/delete/${id}`)
+      .delete(API_URL + `images/delete/${id}`)
       .then((response) => {
         fetchData();
       })
@@ -67,13 +66,14 @@ export const Media = () => {
   const submitAdd = (e) => {
     e.preventDefault();
     const image2 = new FormData();
-    image2.append('image', image)
+    image2.append("image", image);
 
     const headers = {
-      'Content-Type': 'multipart/form-data'
+      "Content-Type": "multipart/form-data",
     };
 
-    axios.post("http://127.0.0.1:8000/api/images/add", image2, { headers })
+    axios
+      .post(API_URL + "images/add", image2, { headers })
       .then((response) => {
         console.log(response);
         fetchData();
@@ -86,7 +86,7 @@ export const Media = () => {
   const submitEdit = (e) => {
     e.preventDefault();
     axios
-      .put(`http://127.0.0.1:8000/api/images/update/${editImage.id}`, {
+      .put(API_URL + `images/update/${editImage.id}`, {
         name: editImage.name,
         file: editImage.file,
       })
@@ -115,14 +115,17 @@ export const Media = () => {
               <th className={styles.th}>Nazwa</th>
               <th className={styles.th}>Obraz</th>
               <th className={styles.th}></th>
+              <th className={styles.th}></th>
             </tr>
           </thead>
+
           <tbody>
             {data.map((data) => (
               <tr className={styles.tr} key={data.id}>
                 <td className={styles.td}>{data.id}</td>
                 <td className={styles.td}>{data.name}</td>
                 <td className={styles.td}>{data.path}</td>
+                <td className={styles.td}><img width="100" src={"http://localhost:8000/" + data.image}/></td>
                 <td className={styles.td}>
                   <button onClick={() => deleteImage(data.id)}>Usuń</button>
                   <button onClick={() => handleSetEditImage(data)}>
@@ -146,6 +149,7 @@ export const Media = () => {
               className={styles.form__icon}
               onClick={handleShowFormAdd}
             />
+            
             <label className={styles.form__label} htmlFor="name">
               Nazwa
             </label>
@@ -156,10 +160,14 @@ export const Media = () => {
               id="name"
               maxLength={45}
               value={name}
-              onChange={(event) => handleNameChange(event, setName)}
+              onChange={(event) => handleChangeText(event, setName)}
             />
 
-            <input className={styles.form__file} type="file" onChange={handleFileSelect} />
+            <input
+              className={styles.form__file}
+              type="file"
+              onChange={handleFileSelect}
+            />
 
             <button className={styles.form__button} type="submit">
               Dodaj
@@ -179,9 +187,11 @@ export const Media = () => {
               className={styles.form__icon}
               onClick={() => setEditImage(null)}
             />
+
             <label className={styles.form__label} htmlFor="name">
               Nazwa
             </label>
+
             <input
               className={styles.form__input}
               type="text"
@@ -190,9 +200,11 @@ export const Media = () => {
               value={editImage.name}
               onChange={(event) => handleEditImageChange(event, "name")}
             />
+
             <label className={styles.form__label} htmlFor="file">
               Obraz
             </label>
+
             <input
               type="file"
               id="file"
