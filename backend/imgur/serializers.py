@@ -1,6 +1,21 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from .models import *
 import PIL
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        if user.is_superuser:
+            token['is_superuser'] = True
+        else:
+            token['is_superuser'] = False
+
+        return token
 
 
 class ImgurUserSerializer(serializers.ModelSerializer):
