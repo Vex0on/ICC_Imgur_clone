@@ -79,20 +79,27 @@
     }
 
     &:hover {
-        padding: 0.1rem 0.5rem;
+        font-size: 1.30rem;
 
         color: #222;
     }
 }
 
 .logout {
-    font-size: 2rem;
+    display: flex;
+
+    font-size: 1.4rem;
 
     position: absolute;
     bottom: 10%;
-    left: 18%;
+    left: 16.5%;
 
     text-decoration: none;
 
     color: $font-tertiary-color;
+
+    .logout__icon {
+        font-size: 2rem;
+        margin-right: 0.5rem;
+    }
 }

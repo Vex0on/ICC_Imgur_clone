@@ -41,3 +41,10 @@ export const handleNameChange = (
 ) => {
     setName(e.target.value)
 }
+
+export const handleChangeText = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setName: React.Dispatch<React.SetStateAction<string>>
+) => {
+    setName(e.target.value)
+}
