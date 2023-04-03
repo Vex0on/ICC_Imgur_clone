@@ -13,8 +13,8 @@ class ImgurUserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         imgur_user = ImgurUser.objects.create(
-            email=validated_data.get("username"),
-            username=validated_data.get("username"),
+            email=validated_data.get("email"),
+            username=validated_data.get("email"),
             phone_number=validated_data.get("phone_number"),
             is_active=True,  # True - dostep do logowania, False - brak dostepu
         )
@@ -22,6 +22,20 @@ class ImgurUserSerializer(serializers.ModelSerializer):
         imgur_user.set_password(validated_data.get("password"))
         imgur_user.save()
         return imgur_user
+    
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('email', instance.email)
+        instance.username = validated_data.get('username', instance.username)
+        instance.phone_number = validated_data.get('phone_number', instance.phone_number)
+        instance.is_active = validated_data.get('is_active', instance.is_active)
+
+        password = validated_data.get('password')
+        if password:
+            instance.set_password(password)
+
+        instance.save()
+        return instance
+
 
 
 class PostSerializer(serializers.ModelSerializer):
