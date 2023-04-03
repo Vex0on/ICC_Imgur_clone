@@ -1,5 +1,22 @@
-- model: auth.user
+- model: imgur.ImgurUser
   pk: 1
+  fields:
+    password: pbkdf2_sha256$390000$etXBoCGWXLqx5bczVoz6lK$guS49tvzkJ4LbtUwHBVKDj+jlvBUY8VbFxuUMIR3cPo=
+    last_login: null
+    is_superuser: true
+    username: admin@gmail.com
+    first_name: ''
+    last_name: ''
+    email: admin@gmail.com
+    is_staff: true
+    is_active: true
+    date_joined: 2023-03-20 19:44:31.360350+00:00
+    groups: []
+    user_permissions: []
+    phone_number: null
+
+- model: imgur.ImgurUser
+  pk: 2
   fields:
     password: pbkdf2_sha256$390000$NaxRPq5MoB2O4cRwNcwh5X$2ZCvLPcsUPD1pfKqyu7Eaigm2P59sArhD5dnnPnWxBQ=
     last_login: null
@@ -13,8 +30,10 @@
     date_joined: 2023-03-20 19:44:31.360350+00:00
     groups: []
     user_permissions: []
-- model: auth.user
-  pk: 2
+    phone_number: 333456777
+
+- model: imgur.ImgurUser
+  pk: 3
   fields:
     password: pbkdf2_sha256$390000$ui8UjpKFUKiwxq42HZLGjL$b6qiYs03o7/EUDzWlcWgzLzYT/TGZkc/6mEMtEaQbvg=
     last_login: null
@@ -28,13 +47,4 @@
     date_joined: 2023-03-22 18:56:28.896670+00:00
     groups: []
     user_permissions: []
-
-- model: imgur.ImgurUser
-  pk: 1
-  fields:
-    phone_number: 333456777
-
-- model: imgur.ImgurUser
-  pk: 2
-  fields:
     phone_number: 888777696
