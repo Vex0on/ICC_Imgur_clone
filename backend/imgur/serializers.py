@@ -37,6 +37,20 @@ class ImgurUserSerializer(serializers.ModelSerializer):
         imgur_user.set_password(validated_data.get("password"))
         imgur_user.save()
         return imgur_user
+    
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('email', instance.email)
+        instance.username = validated_data.get('username', instance.username)
+        instance.phone_number = validated_data.get('phone_number', instance.phone_number)
+        instance.is_active = validated_data.get('is_active', instance.is_active)
+
+        password = validated_data.get('password')
+        if password:
+            instance.set_password(password)
+
+        instance.save()
+        return instance
+
 
     def update(self, instance, validated_data):
         instance.email = validated_data.get('email', instance.email)
