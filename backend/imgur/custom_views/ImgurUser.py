@@ -22,11 +22,11 @@ def register_user(request):
 
 @api_view(["POST"])
 def login(request):
-    username = request.data.get("username")
+    email = request.data.get("email")
     password = request.data.get("password")
 
     # authenticate haszuje haslo z forma i sprawdza z haszowanym z baza
-    user = authenticate(request, username=username, password=password)
+    user = authenticate(request, email=email, password=password)
 
     if user is not None:
         access_token = AccessToken.for_user(user)
@@ -48,7 +48,7 @@ def login(request):
 
 @api_view(["GET"])
 def get_imgur_users(request):
-    users = ImgurUser.objects.all()
+    users = ImgurUser.objects.filter(is_superuser=False)
     serializer = ImgurUserSerializer(users, many=True)
     return Response(serializer.data)
 
