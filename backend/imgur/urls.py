@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 from . import views
 
@@ -22,3 +24,4 @@ urlpatterns = [
     path("reactions", views.get_reactions, name="reactions"),
     path("reactions/<int:pk>", views.get_reaction, name="reaction"),
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,3 +1,5 @@
+import os
+
 from rest_framework import status
 from rest_framework.decorators import api_view
 from ..models import Image
@@ -55,6 +57,7 @@ def update_image(request, pk):
 def delete_image(request, pk):
     try:
         image = Image.objects.get(id=pk)
+        os.remove(image.path)
         image.delete()
         return Response(
             {"message": "HTTP_204_NO_CONTENT"}, status=status.HTTP_204_NO_CONTENT
