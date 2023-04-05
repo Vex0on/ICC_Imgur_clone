@@ -25,9 +25,9 @@ export const Nav: React.FunctionComponent<NavProps> = ({ onLinkClick }) => {
 
             <ul className={styles.menu}>
                 <li className={styles.menu__item}>
-                    <a className={styles.menu__link} href="#">
+                    <p className={styles.menu__link}>
                         <RiDashboardFill className={styles.link__icon} /> <span className={styles.link__title}> Panel </span>
-                    </a> 
+                    </p> 
                 </li>
                 
                 <div className={styles.menu__line}></div>
@@ -37,15 +37,15 @@ export const Nav: React.FunctionComponent<NavProps> = ({ onLinkClick }) => {
                 </li>
 
                 <li className={styles.menu__item}>
-                    <a className={styles.menu__link} onClick={() => handleLinkClick('users')}>
+                    <p className={styles.menu__link} onClick={() => handleLinkClick('users')}>
                         <HiUsers className={styles.link__icon} /> <span className={styles.link__title}> Użytkownicy </span>
-                    </a> 
+                    </p> 
                 </li>
 
                 <li className={styles.menu__item}>
-                    <a className={styles.menu__link} onClick={() => handleLinkClick('media')}>
+                    <p className={styles.menu__link} onClick={() => handleLinkClick('media')}>
                         <BsImageFill className={styles.link__icon} /> <span className={styles.link__title}> Obrazy </span>
-                    </a>
+                    </p>
                 </li>
 
                 <div className={styles.menu__line}></div>
@@ -55,7 +55,7 @@ export const Nav: React.FunctionComponent<NavProps> = ({ onLinkClick }) => {
                 </li>
             </ul>
 
-            <a className={styles.logout} href="#"><BiLogOut className={styles.logout__icon}/> Wyloguj się</a>
+            <p className={styles.logout} ><BiLogOut className={styles.logout__icon}/> Wyloguj się</p>
         </nav>
       </>
     );

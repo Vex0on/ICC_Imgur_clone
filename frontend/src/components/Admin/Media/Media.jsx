@@ -1,38 +1,38 @@
-import axios from "axios";
-import React, { useState, useEffect } from "react";
+import axios from "axios"
+import React, { useState, useEffect } from "react"
 
-import styles from "./Media.module.scss";
+import styles from "./Media.module.scss"
 
-import { handleChangeText } from "../../../utils/eventHandlers";
-import MediaService from "../../../services/MediaServices/MediaService";
-import { API_URL } from "../../../services/Api/Api";
+import { handleChangeText } from "../../../utils/eventHandlers"
+import MediaService from "../../../services/MediaServices/MediaService"
+import { API_URL } from "../../../services/Api/Api"
 
-import { AiOutlinePlus } from "react-icons/ai";
-import { RxCross2 } from "react-icons/rx";
+import { AiOutlinePlus } from "react-icons/ai"
+import { RxCross2 } from "react-icons/rx"
 
 export const Media = () => {
-  const [data, setData] = useState([]);
-  const [showFormAdd, setShowFormAdd] = useState(false);
-  const [editImage, setEditImage] = useState(null);
+  const [data, setData] = useState([])
+  const [showFormAdd, setShowFormAdd] = useState(false)
+  const [editImage, setEditImage] = useState(null)
 
-  const [name, setName] = useState("");
-  const [image, setImage] = useState([]);
+  const [name, setName] = useState("")
+  const [image, setImage] = useState([])
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const handleShowFormAdd = () => {
-    setShowFormAdd(!showFormAdd);
+    setShowFormAdd(!showFormAdd)
   };
 
   const handleSetEditImage = (user) => {
-    setEditImage(user);
+    setEditImage(user)
   };
 
   const handleFileSelect = (event) => {
-    const files = event.target.files[0];
-    setImage(files);
+    const files = event.target.files[0]
+    setImage(files)
   };
 
   const handleEditImageChange = (event, key) => {
@@ -56,17 +56,17 @@ export const Media = () => {
     axios
       .delete(API_URL + `images/delete/${id}`)
       .then((response) => {
-        fetchData();
+        fetchData()
       })
       .catch((err) => {
-        console.log("Błąd");
+        console.log("Błąd")
       });
   };
 
   const submitAdd = (e) => {
     e.preventDefault();
-    const image2 = new FormData();
-    image2.append("image", image);
+    const image2 = new FormData()
+    image2.append("image", image)
 
     const headers = {
       "Content-Type": "multipart/form-data",
@@ -75,27 +75,27 @@ export const Media = () => {
     axios
       .post(API_URL + "images/add", image2, { headers })
       .then((response) => {
-        console.log(response);
-        fetchData();
+        console.log(response)
+        fetchData()
       })
       .catch((err) => {
-        console.log("Błąd");
+        console.log("Błąd")
       });
   };
 
   const submitEdit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     axios
       .put(API_URL + `images/update/${editImage.id}`, {
         name: editImage.name,
         file: editImage.file,
       })
       .then((response) => {
-        setEditImage(null);
-        fetchData();
+        setEditImage(null)
+        fetchData()
       })
       .catch((err) => {
-        console.log("Błąd");
+        console.log("Błąd")
       });
   };
 
@@ -125,7 +125,7 @@ export const Media = () => {
                 <td className={styles.td}>{data.id}</td>
                 <td className={styles.td}>{data.name}</td>
                 <td className={styles.td}>{data.path}</td>
-                <td className={styles.td}><img width="100" src={"http://localhost:8000/" + data.image}/></td>
+                <td className={styles.td}><img width="100" alt="" src={"http://localhost:8000/" + data.image}/></td>
                 <td className={styles.td}>
                   <button onClick={() => deleteImage(data.id)}>Usuń</button>
                   <button onClick={() => handleSetEditImage(data)}>

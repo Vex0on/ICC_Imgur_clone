@@ -1,29 +1,29 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import axios from "axios";
+import React, { useState } from "react"
+import { Link } from "react-router-dom"
+import axios from "axios"
 
-import styles from './Registration.module.scss'
+import styles from "./Registration.module.scss"
 
-import { BsEnvelope } from 'react-icons/bs'
-import { AiOutlineLock } from 'react-icons/ai'
+import { BsEnvelope } from "react-icons/bs"
+import { AiOutlineLock } from "react-icons/ai"
 
-import { handleUsernameChange, handlePasswordChange, handleRepeatPasswordChange } from '../../utils/eventHandlers'
+import { handleChangeText } from "../../utils/eventHandlers"
 
 export const Registration = () => {
-    const [username, setUsername] = useState("")
+    const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [repeatPassword, setRepeatPassword] = useState("")
     const [success, setSuccess] = useState(false)
     const [informationRegister, setInformationRegister] = useState('')
 
     const submitRegister = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+        e.preventDefault()
         setInformationRegister('')
 
-        if(repeatPassword === password && password !== "" && username !== ""){
-            axios.post('http://127.0.0.1:8000/api/register', { username, password })
+        if(repeatPassword === password && password !== "" && email !== ""){
+            axios.post('http://127.0.0.1:8000/api/register', { email, password })
                 .then(response => {
-                    setUsername('')
+                    setEmail('')
                     setPassword('')
                     setRepeatPassword('')
                     setSuccess(true)
@@ -36,7 +36,7 @@ export const Registration = () => {
         else if(password === "") {
             setInformationRegister('Hasło nie może być puste')
         }
-        else if(username === "") {
+        else if(email === "") {
             setInformationRegister('Email nie może być pusty')
         }
         else {
@@ -68,19 +68,19 @@ export const Registration = () => {
             <form className={styles.form} onSubmit={e => submitRegister(e)}>
                 <label 
                     className={styles.form__label}
-                    htmlFor='username'>
+                    htmlFor='email'>
                     Email
                 </label>
                 <div className={styles.container__icon__input}>
                     <BsEnvelope className={styles.form__icon}/>   
                     <input
                         className={styles.form__input} 
-                        type='text' 
-                        id='username'
+                        type='email' 
+                        id='email'
                         placeholder='Wpisz swój Email'
                         maxLength={45}
-                        value={username}
-                        onChange={event => handleUsernameChange(event, setUsername)}/>
+                        value={email}
+                        onChange={event => handleChangeText(event, setEmail)}/>
                 </div>
 
                 <label 
@@ -88,6 +88,7 @@ export const Registration = () => {
                     htmlFor='password'>
                     Hasło
                 </label>
+
                 <div className={styles.container__icon__input}>
                     <AiOutlineLock className={styles.form__icon}/>
                     <input 
@@ -97,7 +98,7 @@ export const Registration = () => {
                         placeholder='Hasło'
                         minLength={8}
                         value={password}
-                        onChange={event => handlePasswordChange(event, setPassword)}/>
+                        onChange={event => handleChangeText(event, setPassword)}/>
                 </div>
 
                 <label 
@@ -105,6 +106,7 @@ export const Registration = () => {
                     htmlFor='repeat-password'>
                     Powtórz hasło
                 </label>
+
                 <div className={styles.container__icon__input}>
                     <AiOutlineLock className={styles.form__icon}/>
                     <input 
@@ -114,7 +116,7 @@ export const Registration = () => {
                         placeholder='Powtórz swoje hasło'
                         minLength={8}
                         value={repeatPassword}
-                        onChange={event => handleRepeatPasswordChange(event, setRepeatPassword)}/>
+                        onChange={event => handleChangeText(event, setRepeatPassword)}/>
                 </div>
 
                 <div className={styles.container__check__forgot}>

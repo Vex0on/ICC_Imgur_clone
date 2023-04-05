@@ -9,11 +9,11 @@ import { Media } from "../../components/Admin/Media/Media"
 import { Nav } from "../../components/Admin/Nav/Nav"
  
 export const AdminPage = () => {
-  const [activeLink, setActiveLink] = useState('users');
-  const [superUser, setSuperUser] = useState(false);
+  const [activeLink, setActiveLink] = useState('users')
+  const [superUser, setSuperUser] = useState(false)
 
   const handleLinkClick = (link: any) => {
-    setActiveLink(link);
+    setActiveLink(link)
   }
 
   const navigate = useNavigate()
@@ -33,13 +33,13 @@ export const AdminPage = () => {
         }
     
       } else {
-        console.log("Nie znaleziono tokenu w Local Storage");
+        console.log("Nie znaleziono tokenu w Local Storage")
       }
     } catch (error) {
-      console.log("Błąd dekodowania tokena JWT", error);
+      console.log("Błąd dekodowania tokena JWT", error)
       navigate('/login')
     }
-  }, []);
+  }, [navigate]);
 
 
   return (
