@@ -15,20 +15,20 @@ class ImgurUserModelTest(TestCase):
             "email": "test@example.com",
             "username": "test@example.com",
             "password": "password123",
-            "phone_number": "123456789"
+            "phone_number": "123456789",
         }
 
     def test_create_user(self):
-        password = 'password123'
+        password = "password123"
         user = ImgurUser.objects.create_user(
-            email='test@example.com',
-            username='test@example.com',
-            phone_number='123456789',
-            password=password
+            email="test@example.com",
+            username="test@example.com",
+            phone_number="123456789",
+            password=password,
         )
-        self.assertEqual(user.email, 'test@example.com')
-        self.assertEqual(user.username, 'test@example.com')
-        self.assertEqual(user.phone_number, '123456789')
+        self.assertEqual(user.email, "test@example.com")
+        self.assertEqual(user.username, "test@example.com")
+        self.assertEqual(user.phone_number, "123456789")
         self.assertTrue(user.is_active)
         self.assertFalse(user.is_staff)
         self.assertFalse(user.is_superuser)
@@ -37,14 +37,14 @@ class ImgurUserModelTest(TestCase):
     def test_create_superuser(self):
         password = "password123"
         superuser = ImgurUser.objects.create_superuser(
-            email='testsuperuser@gmail.com',
-            username='testsuperuser@gmail.com',
-            phone_number='123456789',
-            password=password
+            email="testsuperuser@gmail.com",
+            username="testsuperuser@gmail.com",
+            phone_number="123456789",
+            password=password,
         )
-        self.assertEqual(superuser.email, 'testsuperuser@gmail.com')
-        self.assertEqual(superuser.username, 'testsuperuser@gmail.com')
-        self.assertEqual(superuser.phone_number, '123456789')
+        self.assertEqual(superuser.email, "testsuperuser@gmail.com")
+        self.assertEqual(superuser.username, "testsuperuser@gmail.com")
+        self.assertEqual(superuser.phone_number, "123456789")
         self.assertTrue(superuser.is_active)
         self.assertTrue(superuser.is_superuser)
         self.assertTrue(check_password(password, superuser.password))
@@ -77,8 +77,7 @@ class ImgurUserTestCase(APITestCase):
     def setUp(self):
         self.client = APIClient()
         self.user = ImgurUser.objects.create(
-            email="testlogin@gmail.com",
-            password=make_password("testpassword")
+            email="testlogin@gmail.com", password=make_password("testpassword")
         )
 
     def test_register_user(self):
