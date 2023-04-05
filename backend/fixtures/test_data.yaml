@@ -48,3 +48,22 @@
     groups: []
     user_permissions: []
     phone_number: 888777696
+
+- model: imgur.image
+  pk: 1
+  fields:
+    name: user.png
+    size: (512, 512)
+    mime_type: PNG
+    path: /backend-dir/images/user.png
+    image: user.png
+    post: null
+- model: imgur.image
+  pk: 2
+  fields:
+    name: plusik.png
+    size: (512, 512)
+    mime_type: PNG
+    path: /backend-dir/images/plusik.png
+    image: plusik.png
+    post: null
