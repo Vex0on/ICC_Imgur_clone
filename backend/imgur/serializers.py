@@ -52,6 +52,19 @@ class ImgurUserSerializer(serializers.ModelSerializer):
         return instance
 
 
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('email', instance.email)
+        instance.username = validated_data.get('username', instance.username)
+        instance.phone_number = validated_data.get('phone_number', instance.phone_number)
+        instance.is_active = validated_data.get('is_active', instance.is_active)
+
+        password = validated_data.get('password')
+        if password:
+            instance.set_password(password)
+
+        instance.save()
+        return instance
+
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
@@ -79,19 +92,6 @@ class ImageSerializer(serializers.ModelSerializer):
         new_image.save()
 
         return new_image
-    
-    def update(self, instance, validated_data):
-        image = validated_data.get("image")
-        pill_image = PIL.Image.open(image)
-        
-        instance.name = image.name
-        instance.size = pill_image.size
-        instance.mime_type = pill_image.format
-        instance.image = image
-        instance.path = instance.image.path
-        instance.save()
-
-        return instance
 
     def update(self, instance, validated_data):
         image = validated_data.get("image")
