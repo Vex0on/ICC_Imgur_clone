@@ -67,9 +67,10 @@ export const Users = () => {
   };
 
   const submitAdd = (e) => {
-    e.preventDefault();
+    e.preventDefault()
+    let email = username
     axios
-      .post(API_URL + "register", { username, password })
+      .post(API_URL + "register", { email, password })
       .then((response) => {
         setUsername("")
         setPassword("")

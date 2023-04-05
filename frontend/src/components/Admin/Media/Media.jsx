@@ -73,7 +73,7 @@ export const Media = () => {
     };
 
     axios
-      .post(API_URL + "images/add", image2, { headers })
+      .post(API_URL + "images/add", image2, name, { headers })
       .then((response) => {
         console.log(response)
         fetchData()
@@ -128,9 +128,9 @@ export const Media = () => {
                 <td className={styles.td}><img width="100" alt="" src={"http://localhost:8000/" + data.image}/></td>
                 <td className={styles.td}>
                   <button onClick={() => deleteImage(data.id)}>Usuń</button>
-                  <button onClick={() => handleSetEditImage(data)}>
+                  {/* <button onClick={() => handleSetEditImage(data)}>
                     Edytuj
-                  </button>
+                  </button> */}
                 </td>
               </tr>
             ))}
@@ -150,7 +150,7 @@ export const Media = () => {
               onClick={handleShowFormAdd}
             />
             
-            <label className={styles.form__label} htmlFor="name">
+            {/* <label className={styles.form__label} htmlFor="name">
               Nazwa
             </label>
 
@@ -161,7 +161,7 @@ export const Media = () => {
               maxLength={45}
               value={name}
               onChange={(event) => handleChangeText(event, setName)}
-            />
+            /> */}
 
             <input
               className={styles.form__file}

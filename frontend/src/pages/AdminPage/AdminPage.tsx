@@ -39,7 +39,7 @@ export const AdminPage = () => {
       console.log("Błąd dekodowania tokena JWT", error)
       navigate('/login')
     }
-  }, [navigate]);
+  }, []);
 
 
   return (

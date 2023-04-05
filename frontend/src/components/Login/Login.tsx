@@ -30,15 +30,15 @@ export const Login = () => {
         if(email !== "" || password !== ""){
             axios.post('http://127.0.0.1:8000/api/login', { email, password })
                 .then(response => {
-                    const token  =  response.data.token
- 
+                    const token  =  response.data.access_token
+                    console.log(response)
                     //set JWT token to local
                     localStorage.setItem("token", token)
                 
                     //set token to axios common header
                     setAuthToken(token)
 
-                    navigate('/profile')
+                    navigate('/')
                 })
                 .catch(err => {
                     setInformationLogin('Nieprawidłowe dane logowania')
