@@ -1,53 +1,46 @@
-import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import React, { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import axios from "axios"
 
-import styles from './Login.module.scss'
+import styles from "./Login.module.scss"
 
-import { BsEnvelope } from 'react-icons/bs';
-import { AiOutlineLock } from 'react-icons/ai';
+import { BsEnvelope } from "react-icons/bs"
+import { AiOutlineLock } from "react-icons/ai"
 
-import { handleUsernameChange, handlePasswordChange } from '../../utils/eventHandlers';
+import { handleChangeText } from "../../utils/eventHandlers"
 
 
 export const Login = () => {
-    const [username, setUsername] = useState('')
+    const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [currentUser, setCurrentUser] = useState(false)
     const [informationLogin, setInformationLogin] = useState('')
 
     const navigate = useNavigate()
 
     const setAuthToken = (token: any) => {
         if (token) {
-            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
         }
         else
-            delete axios.defaults.headers.common["Authorization"];
+            delete axios.defaults.headers.common["Authorization"]
      }
 
     const submitLogin = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if(username !== "" || password !== ""){
-            axios.post('http://127.0.0.1:8000/api/login', { username, password })
+        e.preventDefault()
+        if(email !== "" || password !== ""){
+            axios.post('http://127.0.0.1:8000/api/login', { email, password })
                 .then(response => {
-                    setCurrentUser(true);
-                    const token  =  response.data.token;
- 
+                    const token  =  response.data.access_token
+                    console.log(response)
                     //set JWT token to local
-                    localStorage.setItem("token", token);
+                    localStorage.setItem("token", token)
                 
                     //set token to axios common header
-                    setAuthToken(token);
+                    setAuthToken(token)
 
-                    navigate('/profile', {
-                        state: {
-                            currentUser: true
-                        }
-                    })
+                    navigate('/')
                 })
                 .catch(err => {
-                    setCurrentUser(false)
                     setInformationLogin('Nieprawidłowe dane logowania')
                 })
         }
@@ -78,19 +71,19 @@ export const Login = () => {
             <form className={styles.form} onSubmit={e => submitLogin(e)}>
                 <label 
                     className={styles.form__label}
-                    htmlFor='username'>
-                    Nazwa użytkownika
+                    htmlFor='email'>
+                    Email
                 </label>
                 <div className={styles.container__icon__input}>
                     <BsEnvelope className={styles.form__icon}/>   
                     <input
                         className={styles.form__input} 
-                        name='username'
-                        type='text' 
-                        id='username'
-                        placeholder='Wpisz swoją nazwę użytkownika'
-                        value={username}
-                        onChange={event => handleUsernameChange(event, setUsername)}/>
+                        name='email'
+                        type='email' 
+                        id='email'
+                        placeholder='Wpisz swój email'
+                        value={email}
+                        onChange={event => handleChangeText(event, setEmail)}/>
                 </div>
 
                 <label 
@@ -107,7 +100,7 @@ export const Login = () => {
                         id='password'
                         placeholder='Wpisz swoje hasło'
                         value={password}
-                        onChange={event => handlePasswordChange(event, setPassword)}/>
+                        onChange={event => handleChangeText(event, setPassword)}/>
                 </div>
 
                 <div className={styles.container__check__forgot}>
