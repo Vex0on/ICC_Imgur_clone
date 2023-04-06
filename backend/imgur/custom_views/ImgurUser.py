@@ -19,7 +19,7 @@ def register_user(request):
         serializer.save()  # aktywuje funkcje create() serializera
         return Response({"message": "HTTP_201_CREATED"}, status=status.HTTP_201_CREATED)
     return Response(
-        {"message": "HTTP_422_UNPROCESSABLE_ENTITY"},
+        serializer.errors,
         status=status.HTTP_422_UNPROCESSABLE_ENTITY,
     )
 
@@ -92,7 +92,7 @@ def update_imgur_user(request, pk):
             return Response(serializer.data)
         else:
             return Response(
-                {"message": "HTTP_400_BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST
+                serializer.errors, status=status.HTTP_400_BAD_REQUEST
             )
     except ImgurUser.DoesNotExist:
         return Response(
