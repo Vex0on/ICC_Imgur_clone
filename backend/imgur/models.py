@@ -39,8 +39,10 @@ class Image(models.Model):
     size = models.CharField(max_length=45, null=True)
     mime_type = models.CharField(max_length=45, null=True)
     path = models.CharField(max_length=90, null=True)
-    image = models.ImageField(upload_to="")
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, default=None, null=True)
+    image = models.ImageField(upload_to='images')
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, default=None, null=True
+    )
 
 
 class Comment(Record):
