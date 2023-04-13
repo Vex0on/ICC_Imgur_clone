@@ -19,20 +19,54 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
-class ImgurUserSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(validators=[validate_username], required=False)
-    email = serializers.EmailField(validators=[validate_email], required=False)
-    password = serializers.CharField(validators=[validate_password], required=False)
-    phone_number = serializers.CharField(
-        validators=[validate_phone_number], required=False
-    )
-
+# ImgurUserSerializer
+class ImgurUserBaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImgurUser
         fields = "__all__"
-        extra_kwargs = {
-            "password": {"write_only": True},
-        }
+
+    error_messages = {
+        "required": "To pole jest wymagane.",
+        "blank": "To pole nie może być puste.",
+        "invalid": "Niepoprawny adres email.",
+    }
+
+    username = serializers.CharField(
+        validators=[validate_username],
+        error_messages=error_messages,
+        required=False,
+    )
+
+    email = serializers.EmailField(
+        validators=[validate_email],
+        error_messages=error_messages,
+        required=False,
+    )
+
+    password = serializers.CharField(
+        validators=[validate_password],
+        error_messages=error_messages,
+        write_only=True,
+        required=False,
+    )
+
+    phone_number = serializers.CharField(
+        validators=[validate_phone_number],
+        error_messages=error_messages,
+        required=False,
+    )
+
+    first_name = serializers.CharField(
+        validators=[validate_first_name],
+        error_messages=error_messages,
+        required=False,
+    )
+
+    last_name = serializers.CharField(
+        validators=[validate_last_name],
+        error_messages=error_messages,
+        required=False,
+    )
 
     def create(self, validated_data):
         imgur_user = ImgurUser.objects.create(
@@ -53,6 +87,8 @@ class ImgurUserSerializer(serializers.ModelSerializer):
             "phone_number", instance.phone_number
         )
         instance.is_active = validated_data.get("is_active", instance.is_active)
+        instance.first_name = validated_data.get("first_name", instance.first_name)
+        instance.last_name = validated_data.get("last_name", instance.last_name)
 
         password = validated_data.get("password")
         if password:
@@ -62,6 +98,26 @@ class ImgurUserSerializer(serializers.ModelSerializer):
         return instance
 
 
+class ImgurUserCreateSerializer(ImgurUserBaseSerializer):
+    class Meta:
+        model = ImgurUser
+        fields = "__all__"
+
+    email = serializers.EmailField(
+        validators=[validate_email],
+        error_messages=ImgurUserBaseSerializer.error_messages,
+        required=True,
+    )
+
+    password = serializers.CharField(
+        validators=[validate_password],
+        error_messages=ImgurUserBaseSerializer.error_messages,
+        write_only=True,
+        required=True,
+    )
+
+
+# PostSerialzier
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
