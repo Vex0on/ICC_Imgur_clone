@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from .models import ImgurUser
 
 # ImgurUser validators
@@ -25,9 +26,11 @@ def validate_username(username):
         )
     if username.isdigit():
         raise serializers.ValidationError("Nazwa użytkownika nie może być liczbą.")
-    
+
     if len(username) > 45:
-        raise serializers.ValidationError("Nazwa użytkownika przekracza dozwoloną długość (45) znaków.")
+        raise serializers.ValidationError(
+            "Nazwa użytkownika przekracza dozwoloną długość (45) znaków."
+        )
 
     return username
 
@@ -67,7 +70,9 @@ def validate_first_name(first_name):
     if not first_name[0].isupper():
         raise serializers.ValidationError("Imię powinno zaczynać się z dużej litery.")
     if len(first_name) > 30:
-        raise serializers.ValidationError("Imię przekracza dozwoloną długość (30) znaków.")
+        raise serializers.ValidationError(
+            "Imię przekracza dozwoloną długość (30) znaków."
+        )
 
     return first_name
 
@@ -76,8 +81,12 @@ def validate_last_name(last_name):
     if len(last_name) < 2:
         raise serializers.ValidationError("Nazwisko nie może być krótsze niż 2 litery.")
     if not last_name[0].isupper():
-        raise serializers.ValidationError("Nazwisko powinno zaczynać się z dużej litery.")
+        raise serializers.ValidationError(
+            "Nazwisko powinno zaczynać się z dużej litery."
+        )
     if len(last_name) > 30:
-        raise serializers.ValidationError("Nazwisko przekracza dozwoloną długość (30) znaków.")
-    
+        raise serializers.ValidationError(
+            "Nazwisko przekracza dozwoloną długość (30) znaków."
+        )
+
     return last_name
