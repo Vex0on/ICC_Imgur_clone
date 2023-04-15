@@ -4,9 +4,9 @@
 
 .nav {
     position: fixed;
-    z-index: 3;
     top: 0;
     left: 0;
+    z-index: 2;
 
     display: flex;
     align-items: center;
@@ -209,18 +209,18 @@
 
 .menu__list {
     position: absolute;
-    z-index: -1;
-    top: -100px;
+    z-index: 1;
+    top: 80px;
     left: 0;
+    height: 0;
+    overflow: hidden;
 
     display: none;
     align-items: start!important;
     flex-direction: column;
 
     width: 100%;
-    padding: 1rem 1.4rem;
-
-    transition: all 0.5s;
+    padding: 0 1.4rem;
 
     background-color: $background-secondary-color;
 
@@ -233,14 +233,14 @@
 
         color: $font-secondary-color;
     }
+    transition: all 0.5s ease-in-out;
 
     @include mixin.desktop-xl { 
         display: flex!important;
     }
-
 }
 
 .menu__show {
-    z-index: 1;
-    top: 80px;
+    height: 155px;
+    padding: 1rem 1.4rem;
 }
