@@ -1,0 +1,246 @@
+@use '../../../styles/mixin.scss' as mixin;
+
+@import '../../../styles/variables.scss';
+
+.nav {
+    position: fixed;
+    z-index: 3;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    width: 100%;
+    height: 100px;
+
+    background-color: $background-secondary-color;
+
+    div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 1.2rem;
+
+        @include mixin.desktop-xl { 
+            gap: 0.4rem;
+        }
+    }
+
+    @include mixin.desktop-xl { 
+        justify-content: start;
+        padding-left: 0.75rem;
+    }
+}
+
+.container__logo {
+    .logo {
+        font-size: 2.5rem;
+        font-weight: 600;
+
+        cursor: pointer;
+
+        a {
+            text-decoration: none;
+
+            color: $font-secondary-color;
+        }
+    }
+
+    .input__add {
+        font-size: 1.4rem;
+        font-weight: 300;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        height: 2.5rem;
+        padding: 0 1.4rem;
+
+        cursor: pointer;
+        transition: all 0.3s;
+
+        color: $font-primary-color;
+        border-radius: 2.12rem;
+        background-color: $background-primary-color;
+
+        gap: 0.6rem;
+
+        &:hover {
+            background-color: #501a9b;
+        }
+    }
+}
+
+.container__search {
+    position: relative;
+
+    width: 24rem;
+    height: 2.5rem;
+
+    .input__search {
+        font-size: 1.2rem;
+
+        width: 23.5rem;
+        height: 2.5rem;
+        margin-left: -0.5rem;
+        padding: 0 1.2rem;
+
+        cursor: pointer;
+        transition: all 0.5s;
+
+        border: 0.1rem solid #ccc;
+        border-radius: 5.5rem;
+
+        &:focus {
+            width: 24rem
+        }
+
+        @include mixin.desktop-xl { 
+            width: 20rem;
+
+            &:focus {
+                width: 20rem;
+            }
+        }
+    }
+
+    .icon__search {
+        font-size: 1.75rem;
+
+        position: absolute;
+        top: 14%;
+        right: 4%;
+
+        cursor: pointer;
+
+        color: #555;
+    }
+
+    @include mixin.desktop-xl { width: 19rem;
+        margin-left: -0.5rem;
+    }
+}
+
+.link__login {
+    font-size: 1.2rem;
+    font-weight: 600;
+
+    position: relative;
+
+    overflow: hidden;
+
+    transition: all 1s;
+    text-decoration: none;
+
+    color: $font-secondary-color;
+
+    &::before {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+
+        width: 0;
+        height: 0.1rem;
+
+        content: '';
+        transition: all 0.5s;
+
+        background-color: #555;
+    }
+
+    &:hover::before {
+        left: 0;
+
+        width: 100%;
+    }
+}
+
+.link__register {
+    font-size: 1.2rem;
+    font-weight: 300;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 2.5rem;
+    padding: 0 1.4rem;
+
+    transition: all 0.3s;
+    text-decoration: none;
+
+    color: $font-primary-color;
+    border-radius: 2.12rem;
+    background-color: $background-primary-color;
+
+    &:hover {
+        background-color: #501a9b;
+    }
+}
+
+/* Responsive */
+
+.hamburger {
+    font-size: 2rem;
+
+    position: absolute;
+    right: 2%;
+
+    display: none;
+
+    cursor: pointer;
+
+    color: $font-secondary-color;
+
+    @include mixin.desktop-xl { display: block;
+}
+
+}
+
+.d__none {
+    @include mixin.desktop-xl { 
+        display: none!important;
+    }
+}
+
+.menu__list {
+    position: absolute;
+    z-index: -1;
+    top: -100px;
+    left: 0;
+
+    display: none;
+    align-items: start!important;
+    flex-direction: column;
+
+    width: 100%;
+    padding: 1rem 1.4rem;
+
+    transition: all 0.5s;
+
+    background-color: $background-secondary-color;
+
+    gap: 0.5rem;
+
+    .menu__item {
+        font-size: 1.4rem;
+
+        text-decoration: none;
+
+        color: $font-secondary-color;
+    }
+
+    @include mixin.desktop-xl { 
+        display: flex!important;
+    }
+
+}
+
+.menu__show {
+    z-index: 1;
+    top: 80px;
+}
