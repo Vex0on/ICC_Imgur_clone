@@ -1,13 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './HomePage.module.scss'
 import { Link } from 'react-router-dom'
 
 import { Nav } from '../../components/Home/Nav/Nav'
 import { Tags } from '../../components/Home/Tags/Tags'
 import { Media } from '../../components/Home/Media/Media'
-import rocket from '../../assets/img/homepage-01.png'
+import rocketLeft from '../../assets/img/homepage-01.png'
+import rocketRight from '../../assets/img/homepage-02.png'
 
 export const HomePage = () => {
+    const [scrollY, setScrollY] = useState(0);
+
+    const handleScroll = () => {
+        setScrollY(window.scrollY);
+    };
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+        window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
+    const parallaxStyle = {
+        transform: `translateY(${scrollY * 0.7}px)`
+      };
+
     return(
         <>
             <Nav />
@@ -17,7 +35,8 @@ export const HomePage = () => {
                 <Media />
             </main>
 
-            <img src={rocket} />
+            <img className={styles.rocket__left} src={rocketLeft} style={parallaxStyle} />
+            <img className={styles.rocket__right} src={rocketRight} style={parallaxStyle} />
 
         </>
     )

@@ -17,3 +17,24 @@
     letter-spacing: 0.05rem;
     text-align: center;
 }
+
+.rocket__left {
+    position: absolute;
+    top: 10%;
+    left: 0;
+    z-index: -1;
+    @include mixin.desktop-larger { 
+        display: none;
+    }
+}
+
+.rocket__right {
+    position: absolute;
+    top: 30%;
+    right: 0;
+    z-index: -1;
+    @include mixin.desktop-larger { 
+        display: none;
+    }
+}
+
