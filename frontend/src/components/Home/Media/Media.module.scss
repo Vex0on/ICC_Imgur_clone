@@ -1,0 +1,60 @@
+@use '../../../styles/mixin.scss' as mixin;
+
+@import '../../../styles/variables.scss';
+
+.media {
+    width: 95%;
+    margin-top: 2rem;
+}
+
+.masonry__grid {
+    display: flex;
+    margin-left: -2rem;
+    width: auto;
+}
+  
+.masonry__grid__column {
+    padding-left:1.2rem;
+}
+
+.image__container {
+    background: white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.2rem;
+    cursor: pointer;
+    scale: 1;
+    transition: all 0.5s;
+
+    &:hover {
+        scale: 1.02;
+    }
+}
+  
+.image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+  
+.image__info {
+    margin-top: 0.5rem;
+    color: $font-secondary-color;
+}
+  
+.title {
+    font-size: 1.4rem;
+    padding-left: 1rem;
+}
+  
+.informations {
+    font-size: 1rem;
+    padding: 0.4rem 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.informations p {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
