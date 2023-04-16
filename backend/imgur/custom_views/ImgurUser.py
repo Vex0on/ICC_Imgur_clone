@@ -1,15 +1,9 @@
 from django.contrib.auth import authenticate
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework_simplejwt.views import TokenObtainPairView
-
 from ..models import ImgurUser
 from ..serializers import ImgurUserSerializer, MyTokenObtainPairSerializer
-
-
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
 
 
 @api_view(["POST"])
@@ -35,10 +29,10 @@ def login(request):
     if user is not None:
         custom_token = MyTokenObtainPairSerializer.get_token(user)
         response = Response(
-            {"access_token": str(custom_token.access_token)}, status=status.HTTP_200_OK
+            {"access": str(custom_token.access_token)}, status=status.HTTP_200_OK
         )
         response.set_cookie(
-            key="refresh_token", value=str(custom_token), httponly=True
+            key="refresh", value=str(custom_token), httponly=True, samesite="Lax"
         )
 
         return response
