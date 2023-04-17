@@ -1,3 +1,5 @@
+import datetime
+
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -52,12 +54,6 @@ class ImgurUserSerializer(serializers.ModelSerializer):
         return instance
 
 
-class PostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Post
-        fields = "__all__"
-
-
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
@@ -90,6 +86,37 @@ class ImageSerializer(serializers.ModelSerializer):
         instance.path = instance.image.path
         instance.save()
 
+        return instance
+
+
+class PostSerializer(serializers.ModelSerializer):
+    # image = ImageSerializer(required=True)
+
+    class Meta:
+        model = Post
+        exclude = ['expirationDate']
+
+    def create(self, validated_data):
+        expiration_date = datetime.datetime.now() + datetime.timedelta(days=30)
+        validated_data['expirationDate'] = expiration_date
+        post = Post.objects.create(
+            imgur_user=validated_data.get('imgur_user'),
+            title=validated_data.get('title'),
+            description=validated_data.get('description'),
+            tag=validated_data.get('tag'),
+            expirationDate=validated_data.get('expirationDate'),
+            like_count=validated_data.get('like_count'),
+            dislike_count=validated_data.get('like_count'),
+            record_id=validated_data.get('record_id')
+        )
+        return post
+
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get('title', instance.title)
+        instance.description = validated_data.get('description', instance.description)
+        instance.tag = validated_data.get('tag', instance.tag)
+
+        instance.save()
         return instance
 
 
