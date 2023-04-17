@@ -119,13 +119,7 @@ class ImgurUserCreateSerializer(ImgurUserBaseSerializer):
     )
 
 
-# PostSerialzier
-class PostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Post
-        fields = "__all__"
-
-
+# ImageSerializer
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
