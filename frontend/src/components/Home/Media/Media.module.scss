@@ -3,13 +3,12 @@
 @import '../../../styles/variables.scss';
 
 .media {
-    width: 95%;
+    width: 93%;
     margin-top: 2rem;
 }
 
 .masonry__grid {
     display: flex;
-    margin-left: -2rem;
     width: auto;
 }
   
@@ -38,17 +37,18 @@
   
 .image__info {
     margin-top: 0.5rem;
+    padding-top: 0.5rem;
     color: $font-secondary-color;
+    border-top: 1px solid #eee;
+    padding: 0.5rem 0.6rem;
 }
   
 .title {
     font-size: 1.4rem;
-    padding-left: 1rem;
 }
   
 .informations {
     font-size: 1rem;
-    padding: 0.4rem 1rem;
     display: flex;
     justify-content: space-between;
 }

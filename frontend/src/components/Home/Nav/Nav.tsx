@@ -11,7 +11,7 @@ export const Nav = () => {
 
     return(
         <>
-        <nav className={styles.nav}>
+        <nav className={`${styles.nav} ${window.scrollY > 0 ? styles.nav__scroll : ''}` }>
             <div className={styles.container__logo}>
                 <p className={styles.logo}> <a href="/">Imguur </a> </p>
 
@@ -41,9 +41,6 @@ export const Nav = () => {
                 </li>
             </ul>
         </nav>
-
-        
-
         </>
     )
 }
