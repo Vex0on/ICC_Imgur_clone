@@ -1,11 +1,16 @@
 from django.contrib.auth import authenticate
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from ..models import ImgurUser
-from ..serializers import ImgurUserSerializer, MyTokenObtainPairSerializer
+from ..serializers import (
+    ImgurUserBaseSerializer,
+    ImgurUserCreateSerializer,
+    MyTokenObtainPairSerializer,
+)
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -14,12 +19,12 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 @api_view(["POST"])
 def register_user(request):
-    serializer = ImgurUserSerializer(data=request.data)
+    serializer = ImgurUserCreateSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()  # aktywuje funkcje create() serializera
         return Response({"message": "HTTP_201_CREATED"}, status=status.HTTP_201_CREATED)
     return Response(
-        {"message": "HTTP_422_UNPROCESSABLE_ENTITY"},
+        serializer.errors,
         status=status.HTTP_422_UNPROCESSABLE_ENTITY,
     )
 
@@ -37,9 +42,10 @@ def login(request):
         response = Response(
             {"access_token": str(custom_token.access_token)}, status=status.HTTP_200_OK
         )
-        response.set_cookie(
-            key="refresh_token", value=str(custom_token), httponly=True
-        )
+        response.set_cookie(key="refresh_token", value=str(custom_token), httponly=True)
+
+        user.last_login = timezone.now()
+        user.save(update_fields=["last_login"])
 
         return response
 
@@ -52,7 +58,7 @@ def login(request):
 @api_view(["GET"])
 def get_imgur_users(request):
     users = ImgurUser.objects.filter(is_superuser=False)
-    serializer = ImgurUserSerializer(users, many=True)
+    serializer = ImgurUserBaseSerializer(users, many=True)
     return Response(serializer.data)
 
 
@@ -60,7 +66,7 @@ def get_imgur_users(request):
 def get_imgur_user(request, pk):
     try:
         user = ImgurUser.objects.get(id=pk)
-        serializer = ImgurUserSerializer(user, many=False)
+        serializer = ImgurUserBaseSerializer(user, many=False)
         return Response(serializer.data)
     except ImgurUser.DoesNotExist:
         return Response(
@@ -86,14 +92,12 @@ def delete_imgur_user(request, pk):
 def update_imgur_user(request, pk):
     try:
         user = ImgurUser.objects.get(id=pk)
-        serializer = ImgurUserSerializer(instance=user, data=request.data)
+        serializer = ImgurUserBaseSerializer(instance=user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         else:
-            return Response(
-                {"message": "HTTP_400_BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except ImgurUser.DoesNotExist:
         return Response(
             {"message": "HTTP_404_NOT_FOUND"}, status=status.HTTP_404_NOT_FOUND
