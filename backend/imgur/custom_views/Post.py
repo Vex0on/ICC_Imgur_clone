@@ -1,3 +1,5 @@
+import datetime
+
 from rest_framework import status
 from rest_framework.decorators import api_view
 from ..models import Post
@@ -21,11 +23,13 @@ def get_posts(request):
 
 @api_view(["POST"])
 def create_post(request):
-    serializer = PostSerializer(data=request.data)
+    data = request.data.copy()
+    data['expirationDate'] = datetime.datetime.now() + datetime.timedelta(days=30)
+    serializer = PostSerializer(data=data)
     if serializer.is_valid():
         post = serializer.save()
-        return Response(post, status=status.HTTP_201_CREATED)
-    return Response({"message": "HTTP_422_UNPROCESSABLE_ENTITY"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        return Response(PostSerializer(post).data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 
 @api_view(["PUT"])
