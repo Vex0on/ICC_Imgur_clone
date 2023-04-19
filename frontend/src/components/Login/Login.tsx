@@ -28,9 +28,9 @@ export const Login = () => {
     const submitLogin = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if(email !== "" || password !== ""){
-            axios.post('http://127.0.0.1:8000/api/login', { email, password })
+            axios.post('http://127.0.0.1:8000/api/login', { email, password }, { withCredentials: true })
                 .then(response => {
-                    const token  =  response.data.access_token
+                    const token  =  response.data.access
                     console.log(response)
                     //set JWT token to local
                     localStorage.setItem("token", token)
