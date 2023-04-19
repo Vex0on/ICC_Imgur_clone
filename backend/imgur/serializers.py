@@ -1,6 +1,6 @@
-import PIL
 import datetime
 
+import PIL
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -119,6 +119,23 @@ class ImgurUserCreateSerializer(ImgurUserBaseSerializer):
     )
 
 
+class LoginSerializer(ImgurUserBaseSerializer):
+    class Meta:
+        model = ImgurUser
+        fields = ["email", "password"]
+
+    email = serializers.EmailField(
+        error_messages = ImgurUserBaseSerializer.error_messages,
+        required=True,
+        write_only=True,
+    )
+    password = serializers.CharField(
+        error_messages = ImgurUserBaseSerializer.error_messages,
+        required=True,
+        write_only=True,
+    )
+
+
 # ImageSerializer
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -160,27 +177,27 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        exclude = ['expirationDate']
+        exclude = ["expirationDate"]
 
     def create(self, validated_data):
         expiration_date = datetime.datetime.now() + datetime.timedelta(days=30)
-        validated_data['expirationDate'] = expiration_date
+        validated_data["expirationDate"] = expiration_date
         post = Post.objects.create(
-            imgur_user=validated_data.get('imgur_user'),
-            title=validated_data.get('title'),
-            description=validated_data.get('description'),
-            tag=validated_data.get('tag'),
-            expirationDate=validated_data.get('expirationDate'),
-            like_count=validated_data.get('like_count'),
-            dislike_count=validated_data.get('like_count'),
-            record_id=validated_data.get('record_id')
+            imgur_user=validated_data.get("imgur_user"),
+            title=validated_data.get("title"),
+            description=validated_data.get("description"),
+            tag=validated_data.get("tag"),
+            expirationDate=validated_data.get("expirationDate"),
+            like_count=validated_data.get("like_count"),
+            dislike_count=validated_data.get("like_count"),
+            record_id=validated_data.get("record_id"),
         )
         return post
 
     def update(self, instance, validated_data):
-        instance.title = validated_data.get('title', instance.title)
-        instance.description = validated_data.get('description', instance.description)
-        instance.tag = validated_data.get('tag', instance.tag)
+        instance.title = validated_data.get("title", instance.title)
+        instance.description = validated_data.get("description", instance.description)
+        instance.tag = validated_data.get("tag", instance.tag)
 
         instance.save()
         return instance
