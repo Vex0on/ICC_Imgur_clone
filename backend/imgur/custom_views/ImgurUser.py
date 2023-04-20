@@ -15,7 +15,7 @@ from ..serializers import (
 def register_user(request):
     serializer = ImgurUserCreateSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()  # aktywuje funkcje create() serializera
+        serializer.save()
         return Response({"message": "HTTP_201_CREATED"}, status=status.HTTP_201_CREATED)
     return Response(
         serializer.errors,
@@ -88,7 +88,7 @@ def update_imgur_user(request, pk):
         serializer = ImgurUserBaseSerializer(instance=user, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except ImgurUser.DoesNotExist:
