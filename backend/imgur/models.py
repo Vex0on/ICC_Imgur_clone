@@ -24,7 +24,7 @@ class ImgurUser(AbstractUser):
 
 class Post(Record):
     imgur_user = models.ForeignKey(
-        ImgurUser, on_delete=models.SET_DEFAULT, default=None
+        ImgurUser, on_delete=models.SET_DEFAULT, default=None, null=True
     )
     title = models.CharField(max_length=45)
     description = models.CharField(max_length=45)

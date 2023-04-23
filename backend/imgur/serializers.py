@@ -164,10 +164,11 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     # image = ImageSerializer(required=True)
-
+    record_id = serializers.IntegerField(required=False)
     class Meta:
         model = Post
-        exclude = ["expirationDate"]
+        # exclude = ["expirationDate"]
+        fields = "__all__"
 
     def create(self, validated_data):
         expiration_date = datetime.datetime.now() + datetime.timedelta(days=30)
@@ -178,9 +179,7 @@ class PostSerializer(serializers.ModelSerializer):
             description=validated_data.get("description"),
             tag=validated_data.get("tag"),
             expirationDate=validated_data.get("expirationDate"),
-            like_count=validated_data.get("like_count"),
-            dislike_count=validated_data.get("like_count"),
-            record_id=validated_data.get("record_id"),
+            record_id=0,
         )
         return post
 
