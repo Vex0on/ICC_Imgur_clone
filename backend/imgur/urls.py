@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .custom_views import Comment, Reaction
 
 urlpatterns = [
     path("register", views.register_user, name="register_user"),
@@ -18,10 +19,11 @@ urlpatterns = [
     path("images/add", views.create_image, name="add-image"),
     path("images/update/<int:pk>", views.update_image, name="update-image"),
     path("images/delete/<int:pk>", views.delete_image, name="delete-image"),
-    path("comments", views.get_comments, name="comments"),
-    path("comments/<int:pk>", views.get_comment, name="comment"),
+    path("comments", Comment.CommentList.as_view(), name="comments"),
+    path("comments/<int:pk>", Comment.CommentDetail.as_view(), name="comment"),
     path("subcomments", views.get_subcomments, name="subcomments"),
     path("subcomments/<int:pk>", views.get_subcomment, name="subcomment"),
-    path("reactions", views.get_reactions, name="reactions"),
-    path("reactions/<int:pk>", views.get_reaction, name="reaction"),
+    path("reactions", Reaction.ReactionList.as_view(), name="reactions"),
+    path("reactions/<int:pk>", Reaction.ReactionDetail.as_view(), name="reaction"),
+
 ]
