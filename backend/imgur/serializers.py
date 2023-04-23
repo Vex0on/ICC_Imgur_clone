@@ -121,6 +121,13 @@ class ImgurUserCreateSerializer(ImgurUserBaseSerializer):
 
 # ImageSerializer
 class ImageSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(
+        validators=[
+            validate_image,
+            validate_image_name,
+        ]
+    )
+
     class Meta:
         model = Image
         fields = "__all__"
