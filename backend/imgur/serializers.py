@@ -27,46 +27,46 @@ class ImgurUserBaseSerializer(serializers.ModelSerializer):
         model = ImgurUser
         fields = "__all__"
 
-    error_messages = {
-        "required": "To pole jest wymagane.",
-        "blank": "To pole nie może być puste.",
-        "invalid": "Niepoprawny adres email.",
-    }
+    # error_messages = {
+    #     "required": "To pole jest wymagane.",
+    #     "blank": "To pole nie może być puste.",
+    #     "invalid": "Niepoprawny adres email.",
+    # }
 
     username = serializers.CharField(
         validators=[validate_username],
-        error_messages=error_messages,
+        # error_messages=error_messages,
         required=False,
     )
 
     email = serializers.EmailField(
         validators=[validate_email],
-        error_messages=error_messages,
+        # error_messages=error_messages,
         required=False,
     )
 
     password = serializers.CharField(
         validators=[validate_password],
-        error_messages=error_messages,
+        # error_messages=error_messages,
         write_only=True,
         required=False,
     )
 
     phone_number = serializers.CharField(
         validators=[validate_phone_number],
-        error_messages=error_messages,
+        # error_messages=error_messages,
         required=False,
     )
 
     first_name = serializers.CharField(
         validators=[validate_first_name],
-        error_messages=error_messages,
+        # error_messages=error_messages,
         required=False,
     )
 
     last_name = serializers.CharField(
         validators=[validate_last_name],
-        error_messages=error_messages,
+        # error_messages=error_messages,
         required=False,
     )
 
@@ -107,32 +107,15 @@ class ImgurUserCreateSerializer(ImgurUserBaseSerializer):
 
     email = serializers.EmailField(
         validators=[validate_email],
-        error_messages=ImgurUserBaseSerializer.error_messages,
+        # error_messages=ImgurUserBaseSerializer.error_messages,
         required=True,
     )
 
     password = serializers.CharField(
         validators=[validate_password],
-        error_messages=ImgurUserBaseSerializer.error_messages,
+        # error_messages=ImgurUserBaseSerializer.error_messages,
         write_only=True,
         required=True,
-    )
-
-
-class LoginSerializer(ImgurUserBaseSerializer):
-    class Meta:
-        model = ImgurUser
-        fields = ["email", "password"]
-
-    email = serializers.EmailField(
-        error_messages = ImgurUserBaseSerializer.error_messages,
-        required=True,
-        write_only=True,
-    )
-    password = serializers.CharField(
-        error_messages = ImgurUserBaseSerializer.error_messages,
-        required=True,
-        write_only=True,
     )
 
 

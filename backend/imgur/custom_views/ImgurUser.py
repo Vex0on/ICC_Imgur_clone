@@ -1,14 +1,13 @@
-from django.contrib.auth import authenticate
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 
 from ..models import ImgurUser
 from ..serializers import (
     ImgurUserBaseSerializer,
     ImgurUserCreateSerializer,
-    LoginSerializer,
     MyTokenObtainPairSerializer,
 )
 
@@ -30,39 +29,33 @@ def register_user(request):
 
 @api_view(["POST"])
 def login(request):
-    serializer = LoginSerializer(data=request.data)
-    if serializer.is_valid():
-        email = request.data.get("email")
-        password = request.data.get("password")
+    email = request.data.get("email")
+    password = request.data.get("password")
 
-        # authenticate haszuje haslo z forma i sprawdza z haszowanym z baza
-        user = authenticate(request, email=email, password=password)
+    user = ImgurUser.objects.filter(email=email).first()
 
-        if user is not None:
-            custom_token = MyTokenObtainPairSerializer.get_token(user)
-            response = Response(
-                {"access": str(custom_token.access_token)},
-                status=status.HTTP_200_OK,
-            )
-            response.set_cookie(
-                key="refresh",
-                value=str(custom_token),
-                httponly=True,
-                samesite="Lax",
-            )
+    if user is None:
+        raise AuthenticationFailed("User not found.")
 
-            return response
+    if not user.check_password(password):
+        raise AuthenticationFailed("Incorrect password.")
 
-        else:
-            return Response(
-                {"unauthorized": ["Niepoprawny email lub hasło."]},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
-    else:
-        return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+    user.last_login = timezone.now()
+    user.save(update_fields=["last_login"])
+
+    custom_token = MyTokenObtainPairSerializer.get_token(user)
+    response = Response(
+        {"access": str(custom_token.access_token)},
+        status=status.HTTP_200_OK,
+    )
+    response.set_cookie(
+        key="refresh",
+        value=str(custom_token),
+        httponly=True,
+        samesite="Lax",
+    )
+
+    return response
 
 
 @api_view(["GET"])

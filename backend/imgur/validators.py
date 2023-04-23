@@ -7,11 +7,11 @@ from .models import ImgurUser
 
 def validate_email(email):
     if any(letter.isupper() for letter in email):
-        raise serializers.ValidationError("Email nie może zawierać dużych liter.")
+        raise serializers.ValidationError("Email cannot contain capital letters.")
 
     if ImgurUser.objects.filter(email=email):
         raise serializers.ValidationError(
-            "Użytkownik z takim adresem email już istnieje."
+            "A user with this email address already exists."
         )
 
     return email
@@ -19,17 +19,17 @@ def validate_email(email):
 
 def validate_username(username):
     if ImgurUser.objects.filter(username=username):
-        raise serializers.ValidationError("Nazwa użytkownika jest już zajęta.")
+        raise serializers.ValidationError("The username is already taken.")
     if len(username) < 3:
         raise serializers.ValidationError(
-            "Nazwa użytkownika nie może być krótsza niż 3 znaki."
+            "The username cannot be shorter than 3 characters."
         )
     if username.isdigit():
-        raise serializers.ValidationError("Nazwa użytkownika nie może być liczbą.")
+        raise serializers.ValidationError("The username cannot be a number.")
 
     if len(username) > 45:
         raise serializers.ValidationError(
-            "Nazwa użytkownika przekracza dozwoloną długość (45) znaków."
+            "The username cannot be longer than (45) characters."
         )
 
     return username
@@ -40,14 +40,14 @@ def validate_password(password):
     oneBig = any(letter.isupper() for letter in password)
 
     if len(password) < 8:
-        raise serializers.ValidationError("Hasło nie może być krótsze niż 8 znaków.")
+        raise serializers.ValidationError("The password cannot be shorter than 8 characters.")
     if not oneNumber:
         raise serializers.ValidationError(
-            "Hasło powinno zawierać conajmniej jedną cyfrę."
+            "The password should contain at least one number."
         )
     if not oneBig:
         raise serializers.ValidationError(
-            "Hasło powinno zawierać conajmniej jedną dużą literę."
+            "The password should contain at least one capital letter."
         )
 
     return password
@@ -55,23 +55,23 @@ def validate_password(password):
 
 def validate_phone_number(phone_number):
     if not phone_number.isdigit():
-        raise serializers.ValidationError("Nieprawidłowy numer telefonu.")
+        raise serializers.ValidationError("Invalid phone number.")
     if len(phone_number) != 9:
-        raise serializers.ValidationError("Numer telefonu powinien zawierać 9 cyfr.")
+        raise serializers.ValidationError("The phone number should contain 9 digits.")
     if ImgurUser.objects.filter(phone_number=phone_number):
-        raise serializers.ValidationError("Numer telefonu jest już użyty.")
+        raise serializers.ValidationError("The phone number is already used.")
 
     return phone_number
 
 
 def validate_first_name(first_name):
     if len(first_name) < 3:
-        raise serializers.ValidationError("Imię nie może być krótsze niż 3 litery.")
+        raise serializers.ValidationError("The name cannot be shorter than 3 letters.")
     if not first_name[0].isupper():
-        raise serializers.ValidationError("Imię powinno zaczynać się z dużej litery.")
+        raise serializers.ValidationError("The name should start with a capital letter.")
     if len(first_name) > 30:
         raise serializers.ValidationError(
-            "Imię przekracza dozwoloną długość (30) znaków."
+            "The name cannot be longer than (30) characters."
         )
 
     return first_name
@@ -79,14 +79,14 @@ def validate_first_name(first_name):
 
 def validate_last_name(last_name):
     if len(last_name) < 2:
-        raise serializers.ValidationError("Nazwisko nie może być krótsze niż 2 litery.")
+        raise serializers.ValidationError("The last name cannot be shorter than 2 letters.")
     if not last_name[0].isupper():
         raise serializers.ValidationError(
-            "Nazwisko powinno zaczynać się z dużej litery."
+            "The last name should start with a capital letter."
         )
     if len(last_name) > 30:
         raise serializers.ValidationError(
-            "Nazwisko przekracza dozwoloną długość (30) znaków."
+            "The last name cannot be longer than (30) characters."
         )
 
     return last_name
