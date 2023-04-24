@@ -52,18 +52,54 @@
 - model: imgur.image
   pk: 1
   fields:
-    name: user.png
-    size: (512, 512)
+    name: Hogwart_dziobak.png
+    size: (1920, 1080)
     mime_type: PNG
-    path: /backend-dir/images/user.png
-    image: user.png
+    path: /backend-dir/images/Hogwart_dziobak_2UYg1Wk.png
+    image: images/Hogwart_dziobak_2UYg1Wk.png
     post: null
 - model: imgur.image
   pk: 2
   fields:
-    name: plusik.png
-    size: (512, 512)
+    name: Pretty_lady.jpg
+    size: (1792, 3600)
+    mime_type: JPEG
+    path: /backend-dir/images/Pretty_lady_YYlo8F8.jpg
+    image: images/Pretty_lady_YYlo8F8.jpg
+    post: null
+- model: imgur.image
+  pk: 3
+  fields:
+    name: Holmes.jpg
+    size: (2240, 2880)
+    mime_type: JPEG
+    path: /backend-dir/images/Holmes.jpg
+    image: images/Holmes.jpg
+    post: null
+- model: imgur.image
+  pk: 4
+  fields:
+    name: Spiderman.jpg
+    size: (2256, 2928)
+    mime_type: JPEG
+    path: /backend-dir/images/Spiderman.jpg
+    image: images/Spiderman.jpg
+    post: null
+- model: imgur.image
+  pk: 5
+  fields:
+    name: Hogwart_drzwi.png
+    size: (679, 888)
     mime_type: PNG
-    path: /backend-dir/images/plusik.png
-    image: plusik.png
+    path: /backend-dir/images/Hogwart_drzwi.png
+    image: images/Hogwart_drzwi.png
+    post: null
+- model: imgur.image
+  pk: 6
+  fields:
+    name: Wilczek.jpg
+    size: (2032, 2720)
+    mime_type: JPEG
+    path: /backend-dir/images/Wilczek.jpg
+    image: images/Wilczek.jpg
     post: null
