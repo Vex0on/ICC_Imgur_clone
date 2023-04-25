@@ -1,10 +1,11 @@
-import datetime
+import json
 
 from rest_framework import status
 from rest_framework.decorators import api_view
-from ..models import Post
-from ..serializers import PostSerializer, ImageSerializer
 from rest_framework.response import Response
+
+from ..models import Post
+from ..serializers import ImageSerializer, PostSerializer
 
 
 @api_view(["GET"])
@@ -23,20 +24,20 @@ def get_posts(request):
 
 @api_view(["POST"])
 def create_post(request):
-    image = request.data['image']
-    image_serializer = ImageSerializer(image)
-    if image_serializer.is_valid():
-        image = image_serializer.save()
+    image = request.data.get("image")
+    post_data = json.loads(request.POST.get("post"))
+    post_serializer = PostSerializer(data=post_data)
+    if post_serializer.is_valid():
+        new_post = post_serializer.save()
 
-    data = request.data['post'].copy()
-    data['expirationDate'] = datetime.datetime.now() + datetime.timedelta(days=30)
-    serializer = PostSerializer(data=data)
-    if serializer.is_valid():
-        post = serializer.save()
-        image.post = post
-        image_serializer.update(image_serializer.data, image)
-        return Response(PostSerializer(post).data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+    image_serializer = ImageSerializer(data={"image": image, "post": new_post.id})
+    if image_serializer.is_valid():
+        image_serializer.save()
+
+        return Response(image_serializer.data, status=status.HTTP_201_CREATED)
+    return Response(
+        image_serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY
+    )
 
 
 @api_view(["PUT"])
