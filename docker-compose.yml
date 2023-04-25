@@ -54,4 +54,10 @@ services:
     command: npm start 0.0.0.0:3000
     restart: always
 
-
+  mailhog:
+    container_name: mailhog
+    image: mailhog/mailhog:latest
+    restart: always
+    ports:
+      - "1025:1025"
+      - "8025:8025"

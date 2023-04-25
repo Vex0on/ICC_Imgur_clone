@@ -6,7 +6,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import *
 from .validators import *
-
+from allauth.account.models import EmailAddress
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -75,11 +75,12 @@ class ImgurUserBaseSerializer(serializers.ModelSerializer):
             email=validated_data.get("email"),
             username=validated_data.get("email"),
             phone_number=validated_data.get("phone_number"),
-            is_active=True,  # True - dostep do logowania, False - brak dostepu
+            is_active=False,  # True - dostep do logowania, False - brak dostepu
         )
         # set_password haszuje haslo
         imgur_user.set_password(validated_data.get("password"))
         imgur_user.save()
+        email_address = EmailAddress.objects.create(user=imgur_user, email=validated_data['email'], primary=True, verified=False)
         return imgur_user
 
     def update(self, instance, validated_data):
