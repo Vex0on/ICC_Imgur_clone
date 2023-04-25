@@ -1,0 +1,69 @@
+@use '../../../styles/mixin.scss' as mixin;
+
+@import '../../../styles/variables.scss';
+
+.tags {
+    width: 100%;
+    margin-top: 0.4rem;
+}
+
+.container__tags {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.5rem;
+
+    .tags__more {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+    
+    .tags__icon {
+        font-size: 2.5rem;
+    }
+}
+
+
+.container__content {
+    display: flex;
+    justify-content: center;
+    padding-top: 0.2rem;
+    flex-wrap: wrap;
+    max-height: 100px;
+    overflow: hidden;
+    gap: 1rem;
+    transition: all 0.4s ease-in;
+
+    @include mixin.tablet { 
+        justify-content: center;
+    }
+}
+
+.showMore {
+    max-height: 800px;
+}
+
+.tag {
+    text-align: center;
+    padding: 1rem 0rem;
+    background-color: #6941C6;
+    cursor: pointer;
+    width: 18rem;
+
+    .tag__name {
+        font-size: 1.75rem;
+    }
+
+    .tag__count {
+        color: #D3D3D3;
+    }
+
+    &:nth-child(even){
+        background-color: $font-primary-color;
+        color: $font-secondary-color;
+    } 
+
+    &:nth-child(even) .tag__count {
+        color: $font-secondary-color;
+    }
+}
