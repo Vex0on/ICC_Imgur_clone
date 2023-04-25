@@ -141,7 +141,7 @@ class ImageSerializer(serializers.ModelSerializer):
             size=pil_image.size,
             mime_type=pil_image.format,
             image=image,
-            # post=validated_data.get('post')
+            post=validated_data.get("post"),
         )
         new_image.path = new_image.image.path
         new_image.save()
@@ -165,10 +165,11 @@ class ImageSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     # image = ImageSerializer(required=True)
     record_id = serializers.IntegerField(required=False)
+
     class Meta:
         model = Post
-        # exclude = ["expirationDate"]
-        fields = "__all__"
+        exclude = ["expirationDate"]
+        # fields = "__all__"
 
     def create(self, validated_data):
         expiration_date = datetime.datetime.now() + datetime.timedelta(days=30)
@@ -178,7 +179,7 @@ class PostSerializer(serializers.ModelSerializer):
             title=validated_data.get("title"),
             description=validated_data.get("description"),
             tag=validated_data.get("tag"),
-            expirationDate=validated_data.get("expirationDate"),
+            expirationDate=datetime.datetime.now() + datetime.timedelta(days=30),
             record_id=0,
         )
         return post
