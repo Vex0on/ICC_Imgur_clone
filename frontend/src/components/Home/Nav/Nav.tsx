@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import styles from "./Nav.module.scss"
 import { FiUpload, FiSearch, FiMenu } from "react-icons/fi"
 
@@ -8,6 +8,19 @@ export const Nav = () => {
     const handleHamburgerClick = () => {
         setMenuVisible(!menuVisible)
     }
+    
+    const [scrollY, setScrollY] = useState(0);
+
+    const handleScroll = () => {
+        setScrollY(window.scrollY);
+    };
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+        window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     return(
         <>
