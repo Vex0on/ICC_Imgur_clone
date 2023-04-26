@@ -1,0 +1,36 @@
+@use '../../../styles/mixin.scss' as mixin;
+@import '../../../styles/variables.scss';
+
+.header {
+    font-weight: 400;
+    border-bottom: 1px solid #ccc;
+    padding-right: 5rem;
+}
+
+.container__posts {
+    display: flex;
+    flex-direction: column;
+
+    .posts {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        gap: 1rem;
+        cursor: pointer;
+        transition: all 0.5s;
+
+        &:hover {
+            transform: translateX(3px);
+        }
+    }
+    
+    .image {
+        object-fit: cover;
+        border-radius: 0.5rem;
+    }
+}
+
+.more {
+    text-align: end;
+    cursor: pointer;
+}

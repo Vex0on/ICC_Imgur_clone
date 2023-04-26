@@ -4,6 +4,7 @@ import styles from './PostPage.module.scss'
 import { Nav } from '../../components/Home/Nav/Nav'
 import { Interactions } from '../../components/Post/Interactions/Interactions'
 import { Card } from '../../components/Post/Card/Card'
+import { LatestPosts } from '../../components/Post/LatestPosts/LatestPosts'
 
 export const PostPage = () => {
     return(
@@ -20,7 +21,7 @@ export const PostPage = () => {
                 </div>
 
                 <div>
-
+                    <LatestPosts />
                 </div>
             </main>
         </>
