@@ -209,6 +209,12 @@ EMAIL_USE_TLS = False
 # ACCOUNT_EMAIL_VERIFICATION
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory' # wymagane potwierdzenie adresu email
 
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = 'http://127.0.0.1:3000/login' # przekierowanie po potwierdzeniu maila
+
+BASE_URL = 'http://localhost:8000'
+
+ACCOUNT_ADAPTER = 'imgur.adapter.CustomAllauthAdapter'
+
 # ACCOUNT_AUTHENTICATION_METHOD
 ACCOUNT_AUTHENTICATION_METHOD = 'email' # uwierzytelnianie przez adres email
 
