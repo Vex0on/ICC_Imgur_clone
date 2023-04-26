@@ -1,6 +1,6 @@
-import PIL
 import datetime
 
+import PIL
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -27,46 +27,46 @@ class ImgurUserBaseSerializer(serializers.ModelSerializer):
         model = ImgurUser
         fields = "__all__"
 
-    error_messages = {
-        "required": "To pole jest wymagane.",
-        "blank": "To pole nie może być puste.",
-        "invalid": "Niepoprawny adres email.",
-    }
+    # error_messages = {
+    #     "required": "To pole jest wymagane.",
+    #     "blank": "To pole nie może być puste.",
+    #     "invalid": "Niepoprawny adres email.",
+    # }
 
     username = serializers.CharField(
         validators=[validate_username],
-        error_messages=error_messages,
+        # error_messages=error_messages,
         required=False,
     )
 
     email = serializers.EmailField(
         validators=[validate_email],
-        error_messages=error_messages,
+        # error_messages=error_messages,
         required=False,
     )
 
     password = serializers.CharField(
         validators=[validate_password],
-        error_messages=error_messages,
+        # error_messages=error_messages,
         write_only=True,
         required=False,
     )
 
     phone_number = serializers.CharField(
         validators=[validate_phone_number],
-        error_messages=error_messages,
+        # error_messages=error_messages,
         required=False,
     )
 
     first_name = serializers.CharField(
         validators=[validate_first_name],
-        error_messages=error_messages,
+        # error_messages=error_messages,
         required=False,
     )
 
     last_name = serializers.CharField(
         validators=[validate_last_name],
-        error_messages=error_messages,
+        # error_messages=error_messages,
         required=False,
     )
 
@@ -107,13 +107,13 @@ class ImgurUserCreateSerializer(ImgurUserBaseSerializer):
 
     email = serializers.EmailField(
         validators=[validate_email],
-        error_messages=ImgurUserBaseSerializer.error_messages,
+        # error_messages=ImgurUserBaseSerializer.error_messages,
         required=True,
     )
 
     password = serializers.CharField(
         validators=[validate_password],
-        error_messages=ImgurUserBaseSerializer.error_messages,
+        # error_messages=ImgurUserBaseSerializer.error_messages,
         write_only=True,
         required=True,
     )
@@ -121,6 +121,13 @@ class ImgurUserCreateSerializer(ImgurUserBaseSerializer):
 
 # ImageSerializer
 class ImageSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(
+        validators=[
+            validate_image,
+            validate_image_name,
+        ]
+    )
+
     class Meta:
         model = Image
         fields = "__all__"
@@ -157,30 +164,29 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     # image = ImageSerializer(required=True)
-
+    record_id = serializers.IntegerField(required=False)
     class Meta:
         model = Post
-        exclude = ['expirationDate']
+        # exclude = ["expirationDate"]
+        fields = "__all__"
 
     def create(self, validated_data):
         expiration_date = datetime.datetime.now() + datetime.timedelta(days=30)
-        validated_data['expirationDate'] = expiration_date
+        validated_data["expirationDate"] = expiration_date
         post = Post.objects.create(
-            imgur_user=validated_data.get('imgur_user'),
-            title=validated_data.get('title'),
-            description=validated_data.get('description'),
-            tag=validated_data.get('tag'),
-            expirationDate=validated_data.get('expirationDate'),
-            like_count=validated_data.get('like_count'),
-            dislike_count=validated_data.get('like_count'),
-            record_id=validated_data.get('record_id')
+            imgur_user=validated_data.get("imgur_user"),
+            title=validated_data.get("title"),
+            description=validated_data.get("description"),
+            tag=validated_data.get("tag"),
+            expirationDate=validated_data.get("expirationDate"),
+            record_id=0,
         )
         return post
 
     def update(self, instance, validated_data):
-        instance.title = validated_data.get('title', instance.title)
-        instance.description = validated_data.get('description', instance.description)
-        instance.tag = validated_data.get('tag', instance.tag)
+        instance.title = validated_data.get("title", instance.title)
+        instance.description = validated_data.get("description", instance.description)
+        instance.tag = validated_data.get("tag", instance.tag)
 
         instance.save()
         return instance

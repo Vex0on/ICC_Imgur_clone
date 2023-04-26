@@ -10,7 +10,8 @@ import { LoginPage } from './pages/LoginPage/LoginPage'
 import { RegistrationPage } from './pages/RegistrationPage/RegistrationPage'
 import { ResetPasswordPage } from './pages/ResetPassword/ResetPasswordPage'
 import { ProfilePage } from './pages/ProfilePage/ProfilePage'
-import { AdminPage } from './pages/AdminPage/AdminPage';
+import { AdminPage } from './pages/AdminPage/AdminPage'
+import { PostPage } from './pages/PostPage/PostPage'
 
 import './styles/globals.scss'
 
@@ -25,6 +26,7 @@ function App() {
             <Route path='/profile' element={<ProfilePage />} />
             <Route path='/reset' element={<ResetPasswordPage />}/>
             <Route path='/admin' element={<AdminPage />}/>
+            <Route path='/post' element={<PostPage />}/>
             <Route path='*' element={<HomePage />}/>
         </Routes> 
       </Router>
