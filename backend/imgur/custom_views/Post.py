@@ -35,9 +35,13 @@ def create_post(request):
     if image_serializer.is_valid():
         image_serializer.save()
 
-        return Response(image_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(
+            image_serializer.data,
+            status=status.HTTP_201_CREATED,
+        )
     return Response(
-        image_serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY
+        image_serializer.errors,
+        status=status.HTTP_422_UNPROCESSABLE_ENTITY,
     )
 
 
@@ -51,11 +55,13 @@ def update_post(request, pk):
             return Response(serializer.data)
         else:
             return Response(
-                {"message": "HTTP_400_BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST
+                {"message": "HTTP_400_BAD_REQUEST"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
     except Post.DoesNotExist:
         return Response(
-            {"message": "HTTP_404_NOT_FOUND"}, status=status.HTTP_404_NOT_FOUND
+            {"message": "HTTP_404_NOT_FOUND"},
+            status=status.HTTP_404_NOT_FOUND,
         )
 
 
@@ -68,9 +74,11 @@ def delete_post(request, pk):
             os.remove(image.path)
         post.delete()
         return Response(
-            {"message": "HTTP_204_NO_CONTENT"}, status=status.HTTP_204_NO_CONTENT
+            {"message": "HTTP_204_NO_CONTENT"},
+            status=status.HTTP_204_NO_CONTENT,
         )
     except Post.DoesNotExist:
         return Response(
-            {"message": "HTTP_404_NOT_FOUND"}, status=status.HTTP_404_NOT_FOUND
+            {"message": "HTTP_404_NOT_FOUND"},
+            status=status.HTTP_404_NOT_FOUND,
         )

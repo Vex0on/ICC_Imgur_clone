@@ -1,4 +1,5 @@
 from django.urls import path
+
 from . import views
 from .custom_views import Comment, Reaction
 
@@ -24,9 +25,17 @@ urlpatterns = [
     path("subcomments", views.get_subcomments, name="subcomments"),
     path("subcomments/<int:pk>", views.get_subcomment, name="subcomment"),
     path("subcomments/add", views.create_subcomment, name="add-subcomment"),
-    path("subcomments/update/<int:pk>", views.update_subcomment, name="update-subcomment"),
-    path("subcomments/delete/<int:pk>", views.delete_subcomment, name="update-subcomment"),
+    path(
+        "subcomments/update/<int:pk>",
+        views.update_subcomment,
+        name="update-subcomment",
+    ),
+    path(
+        "subcomments/delete/<int:pk>",
+        views.delete_subcomment,
+        name="update-subcomment",
+    ),
     path("reactions", Reaction.ReactionList.as_view(), name="reactions"),
     path("reactions/<int:pk>", Reaction.ReactionDetail.as_view(), name="reaction"),
-    path("full-posts", views.get_full_posts, name="full-posts")
+    path("full-posts", views.get_full_posts, name="full-posts"),
 ]

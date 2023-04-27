@@ -224,9 +224,18 @@ class CommentSerializer(serializers.ModelSerializer):
 class ShorterCommentSerializer(serializers.ModelSerializer):
     subcomments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     subcomments = SubcommentSerializer(subcomments, many=True)
+
     class Meta:
         model = Comment
-        fields = ["id", "text", "like_count", "dislike_count", "imgur_user", "subcomments"]
+        fields = [
+            "id",
+            "text",
+            "like_count",
+            "dislike_count",
+            "imgur_user",
+            "subcomments",
+        ]
+
 
 class FullPostSerializer(serializers.ModelSerializer):
     images = serializers.StringRelatedField(many=True, read_only=True)

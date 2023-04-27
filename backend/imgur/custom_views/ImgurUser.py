@@ -1,9 +1,9 @@
+from allauth.account.models import EmailAddress
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
-from allauth.account.models import EmailAddress
 
 from ..models import ImgurUser
 from ..serializers import (
@@ -42,7 +42,7 @@ def login(request):
 
     if not user.check_password(password):
         raise AuthenticationFailed("Incorrect password.")
-    
+
     if not user.is_active:
         raise AuthenticationFailed("Confirm your email.")
 
@@ -107,7 +107,10 @@ def update_imgur_user(request, pk):
         serializer = ImgurUserBaseSerializer(instance=user, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK,
+            )
         else:
             return Response(
                 serializer.errors,
