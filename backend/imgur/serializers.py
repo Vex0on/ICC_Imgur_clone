@@ -193,6 +193,29 @@ class PostSerializer(serializers.ModelSerializer):
         return instance
 
 
+class ShorterImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = ["id", "image"]
+
+
+class ShorterUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImgurUser
+        fields = ["id", "username", "email"]
+
+
+class FullPostSerializer(serializers.ModelSerializer):
+    images = serializers.StringRelatedField(many=True, read_only=True)
+    images = ShorterImageSerializer(images, many=True)
+
+    imgur_user = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
+    imgur_user = ShorterUserSerializer(imgur_user)
+    class Meta:
+        model = Post
+        fields = "__all__"
+
+
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment

@@ -24,4 +24,6 @@ urlpatterns = [
     path("subcomments/<int:pk>", views.get_subcomment, name="subcomment"),
     path("reactions", views.get_reactions, name="reactions"),
     path("reactions/<int:pk>", views.get_reaction, name="reaction"),
+
+    path("full-posts", views.get_full_posts, name="full-posts")
 ]

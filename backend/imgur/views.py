@@ -12,7 +12,7 @@ from .custom_views.Image import get_image, get_images, create_image, update_imag
 from .custom_views.Comment import get_comment, get_comments
 from .custom_views.Subcomment import get_subcomment, get_subcomments
 from .custom_views.Reaction import get_reaction, get_reactions
-
+from .custom_views.FullPost import get_full_posts
 
 # IMGUR USER
 
@@ -48,7 +48,9 @@ def update_user_view(request):
 
 
 # Post
-
+@api_view(["GET"])
+def get_full_post_view(request):
+    return get_full_posts(request)
 
 @api_view(["GET"])
 def get_post_view(request):

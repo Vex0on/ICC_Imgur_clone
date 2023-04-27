@@ -1,10 +1,11 @@
 import json
+import os
 
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from ..models import Post
+from ..models import Image, Post
 from ..serializers import ImageSerializer, PostSerializer
 
 
@@ -62,6 +63,9 @@ def update_post(request, pk):
 def delete_post(request, pk):
     try:
         post = Post.objects.get(id=pk)
+        images = Image.objects.filter(post=pk)
+        for image in images:
+            os.remove(image.path)
         post.delete()
         return Response(
             {"message": "HTTP_204_NO_CONTENT"}, status=status.HTTP_204_NO_CONTENT

@@ -41,7 +41,7 @@ class Image(models.Model):
     path = models.CharField(max_length=90, null=True)
     image = models.ImageField(upload_to='images')
     post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, default=None, null=True, blank=True
+        Post, on_delete=models.CASCADE, default=None, null=True, blank=True, related_name='images'
     )
 
 
