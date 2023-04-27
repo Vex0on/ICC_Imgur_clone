@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
+from allauth.account.models import EmailAddress
 
 from ..models import ImgurUser
 from ..serializers import (
@@ -16,7 +17,9 @@ from ..serializers import (
 def register_user(request):
     serializer = ImgurUserCreateSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()  # aktywuje funkcje create() serializera
+        user = serializer.save()  # aktywuje funkcje create() serializera
+        email_address = EmailAddress.objects.get(user=user, primary=True)
+        email_address.send_confirmation()
         return Response(
             {"message": "HTTP_201_CREATED"},
             status=status.HTTP_201_CREATED,
@@ -39,6 +42,9 @@ def login(request):
 
     if not user.check_password(password):
         raise AuthenticationFailed("Incorrect password.")
+    
+    if not user.is_active:
+        raise AuthenticationFailed("Confirm your email.")
 
     user.last_login = timezone.now()
     user.save(update_fields=["last_login"])

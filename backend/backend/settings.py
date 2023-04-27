@@ -50,6 +50,10 @@ INSTALLED_APPS = [
     "imgur.apps.ImgurConfig",
     "rest_framework",
     "corsheaders",
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount'
 ]
 
 MIDDLEWARE = [
@@ -190,3 +194,29 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+SITE_ID = 1
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# EMAIL_BACKEND
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # tymczasowy backend dla testów, w produkcji wymaga zmiany
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mailhog'
+EMAIL_PORT = 1025
+EMAIL_USE_TLS = False
+# ACCOUNT_EMAIL_VERIFICATION
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory' # wymagane potwierdzenie adresu email
+
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = 'http://127.0.0.1:3000/login' # przekierowanie po potwierdzeniu maila
+
+BASE_URL = 'http://localhost:8000'
+
+ACCOUNT_ADAPTER = 'imgur.adapter.CustomAllauthAdapter'
+
+# ACCOUNT_AUTHENTICATION_METHOD
+ACCOUNT_AUTHENTICATION_METHOD = 'email' # uwierzytelnianie przez adres email
+
+# ACCOUNT_EMAIL_REQUIRED
+ACCOUNT_EMAIL_REQUIRED = True # wymagany adres email podczas rejestracji

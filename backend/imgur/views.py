@@ -9,10 +9,11 @@ from .custom_views.ImgurUser import (
 )
 from .custom_views.Post import get_post, get_posts, create_post, update_post, delete_post
 from .custom_views.Image import get_image, get_images, create_image, update_image, delete_image
-from .custom_views.Comment import get_comment, get_comments
 from .custom_views.Subcomment import get_subcomment, get_subcomments
-from .custom_views.Reaction import get_reaction, get_reactions
+from .custom_views.Comment import CommentList, CommentDetail
+from .custom_views.Reaction import ReactionList, ReactionDetail
 from .custom_views.FullPost import get_full_posts
+
 
 # IMGUR USER
 
@@ -104,18 +105,6 @@ def update_image_view(request, id):
 def delete_image_view(request, id):
     return delete_image(request, id)
 
-# COMMENT
-
-
-@api_view(["GET"])
-def get_comment_view(request):
-    return get_comment(request)
-
-
-@api_view(["GET"])
-def get_comments_view(request):
-    return get_comments(request)
-
 
 # SUBCOMMENT
 
@@ -130,14 +119,3 @@ def get_subcomments_view(request):
     return get_subcomments(request)
 
 
-# REACTION
-
-
-@api_view(["GET"])
-def get_reaction_view(request):
-    return get_reaction(request)
-
-
-@api_view(["GET"])
-def get_reactions_view(request):
-    return get_reactions(request)
