@@ -26,7 +26,7 @@ class CommentList(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response(
-                    {"message": "HTTP_400_BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST
+                    serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY
                 )
 
         except Comment.DoesNotExist:

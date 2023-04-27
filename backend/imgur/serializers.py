@@ -1,12 +1,13 @@
 import datetime
 
 import PIL
+from allauth.account.models import EmailAddress
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import *
 from .validators import *
-from allauth.account.models import EmailAddress
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -80,7 +81,9 @@ class ImgurUserBaseSerializer(serializers.ModelSerializer):
         # set_password haszuje haslo
         imgur_user.set_password(validated_data.get("password"))
         imgur_user.save()
-        email_address = EmailAddress.objects.create(user=imgur_user, email=validated_data['email'], primary=True, verified=False)
+        email_address = EmailAddress.objects.create(
+            user=imgur_user, email=validated_data["email"], primary=True, verified=False
+        )
         return imgur_user
 
     def update(self, instance, validated_data):
@@ -206,14 +209,9 @@ class ShorterUserSerializer(serializers.ModelSerializer):
         fields = ["id", "username", "email"]
 
 
-class FullPostSerializer(serializers.ModelSerializer):
-    images = serializers.StringRelatedField(many=True, read_only=True)
-    images = ShorterImageSerializer(images, many=True)
-
-    imgur_user = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
-    imgur_user = ShorterUserSerializer(imgur_user)
+class SubcommentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Post
+        model = Subcomment
         fields = "__all__"
 
 
@@ -223,9 +221,25 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class SubcommentSerializer(serializers.ModelSerializer):
+class ShorterCommentSerializer(serializers.ModelSerializer):
+    subcomments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    subcomments = SubcommentSerializer(subcomments, many=True)
     class Meta:
-        model = Subcomment
+        model = Comment
+        fields = ["id", "text", "like_count", "dislike_count", "imgur_user", "subcomments"]
+
+class FullPostSerializer(serializers.ModelSerializer):
+    images = serializers.StringRelatedField(many=True, read_only=True)
+    images = ShorterImageSerializer(images, many=True)
+
+    imgur_user = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
+    imgur_user = ShorterUserSerializer(imgur_user)
+
+    comments = serializers.StringRelatedField(many=True, read_only=True)
+    comments = ShorterCommentSerializer(comments, many=True)
+
+    class Meta:
+        model = Post
         fields = "__all__"
 
 

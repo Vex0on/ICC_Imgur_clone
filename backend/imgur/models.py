@@ -49,22 +49,22 @@ class Comment(Record):
     imgur_user = models.ForeignKey(
         ImgurUser, on_delete=models.SET_DEFAULT, default=None
     )
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     text = models.CharField(max_length=140)
     like_count = models.IntegerField(default=0)
     dislike_count = models.IntegerField(default=0)
 
 
 class Subcomment(Record):
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
-    user = models.ForeignKey(ImgurUser, on_delete=models.SET_DEFAULT, default=None)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='subcomments')
+    imgur_user = models.ForeignKey(ImgurUser, on_delete=models.SET_DEFAULT, default=None)
     text = models.CharField(max_length=140)
     like_count = models.IntegerField(default=0)
     dislike_count = models.IntegerField(default=0)
 
 
 class Reaction(models.Model):
-    user = models.ForeignKey(ImgurUser, on_delete=models.CASCADE)
+    imgur_user = models.ForeignKey(ImgurUser, on_delete=models.CASCADE)
     reaction = models.BooleanField(null=True)
     record_id = models.PositiveIntegerField()
 

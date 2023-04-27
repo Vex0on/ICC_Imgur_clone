@@ -1,19 +1,37 @@
 from rest_framework.decorators import api_view
+
+from .custom_views.Comment import CommentDetail, CommentList
+from .custom_views.FullPost import get_full_posts
+from .custom_views.Image import (
+    create_image,
+    delete_image,
+    get_image,
+    get_images,
+    update_image,
+)
 from .custom_views.ImgurUser import (
-    register_user,
-    login,
-    get_imgur_users,
-    get_imgur_user,
     delete_imgur_user,
+    get_imgur_user,
+    get_imgur_users,
+    login,
+    register_user,
     update_imgur_user,
 )
-from .custom_views.Post import get_post, get_posts, create_post, update_post, delete_post
-from .custom_views.Image import get_image, get_images, create_image, update_image, delete_image
-from .custom_views.Subcomment import get_subcomment, get_subcomments
-from .custom_views.Comment import CommentList, CommentDetail
-from .custom_views.Reaction import ReactionList, ReactionDetail
-from .custom_views.FullPost import get_full_posts
-
+from .custom_views.Post import (
+    create_post,
+    delete_post,
+    get_post,
+    get_posts,
+    update_post,
+)
+from .custom_views.Reaction import ReactionDetail, ReactionList
+from .custom_views.Subcomment import (
+    create_subcomment,
+    delete_subcomment,
+    get_subcomment,
+    get_subcomments,
+    update_subcomment,
+)
 
 # IMGUR USER
 
@@ -52,6 +70,7 @@ def update_user_view(request):
 @api_view(["GET"])
 def get_full_post_view(request):
     return get_full_posts(request)
+
 
 @api_view(["GET"])
 def get_post_view(request):
@@ -119,3 +138,16 @@ def get_subcomments_view(request):
     return get_subcomments(request)
 
 
+@api_view(["POST"])
+def create_subcomment_view(request):
+    return create_subcomment(request)
+
+
+@api_view(["PUT"])
+def update_subcomment_view(request):
+    return update_subcomment(request)
+
+
+@api_view(["GET"])
+def delete_subcomment_view(request):
+    return delete_subcomment(request)
