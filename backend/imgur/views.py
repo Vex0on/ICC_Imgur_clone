@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 
 from .custom_views.Comment import CommentDetail, CommentList
-from .custom_views.FullPost import get_full_posts
+from .custom_views.FullPost import get_full_post, get_full_posts
 from .custom_views.Image import (
     create_image,
     delete_image,
@@ -68,8 +68,13 @@ def update_user_view(request):
 
 # Post
 @api_view(["GET"])
-def get_full_post_view(request):
+def get_full_posts_view(request):
     return get_full_posts(request)
+
+
+@api_view(["GET"])
+def get_full_post_view(request):
+    return get_full_post(request)
 
 
 @api_view(["GET"])

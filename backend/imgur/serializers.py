@@ -200,13 +200,34 @@ class PostSerializer(serializers.ModelSerializer):
 class ShorterImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ["id", "image"]
+        fields = [
+            "image",
+            "name",
+        ]
+
+
+class ReactionSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Reaction
+        fields = "__all__"
+
+
+class ShorterReactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reaction
+        fields = ["reaction"]
 
 
 class ShorterUserSerializer(serializers.ModelSerializer):
+    reactions = serializers.StringRelatedField(read_only=True, many=False)
+    reactions = ShorterReactionSerializer(reactions, many=False)
+
     class Meta:
         model = ImgurUser
-        fields = ["id", "username", "email"]
+        fields = [
+            "username",
+            "reactions",
+        ]
 
 
 class SubcommentSerializer(serializers.ModelSerializer):
@@ -221,17 +242,37 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ShorterSubcommentSerializer(serializers.ModelSerializer):
+    imgur_user = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
+    imgur_user = ShorterUserSerializer(imgur_user, many=False)
+
+    class Meta:
+        model = Subcomment
+        fields = [
+            "text",
+            "like_count",
+            "dislike_count",
+            "created_time",
+            "updated_time",
+            "imgur_user",
+        ]
+
+
 class ShorterCommentSerializer(serializers.ModelSerializer):
     subcomments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    subcomments = SubcommentSerializer(subcomments, many=True)
+    subcomments = ShorterSubcommentSerializer(subcomments, many=True)
+
+    imgur_user = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
+    imgur_user = ShorterUserSerializer(imgur_user, many=False)
 
     class Meta:
         model = Comment
         fields = [
-            "id",
             "text",
             "like_count",
             "dislike_count",
+            "created_time",
+            "updated_time",
             "imgur_user",
             "subcomments",
         ]
@@ -249,10 +290,17 @@ class FullPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = "__all__"
-
-
-class ReactionSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Reaction
-        fields = "__all__"
+        fields = [
+            "id",
+            "title",
+            "description",
+            "tag",
+            "expirationDate",
+            "like_count",
+            "dislike_count",
+            "created_time",
+            "updated_time",
+            "imgur_user",
+            "images",
+            "comments",
+        ]

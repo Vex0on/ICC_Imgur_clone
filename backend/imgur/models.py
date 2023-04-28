@@ -32,6 +32,8 @@ class Post(Record):
     expirationDate = models.DateTimeField()
     like_count = models.IntegerField(default=0)
     dislike_count = models.IntegerField(default=0)
+    created_time = models.DateTimeField(auto_now_add=True)
+    updated_time = models.DateTimeField(auto_now=True)
 
 
 class Image(models.Model):
@@ -64,6 +66,8 @@ class Comment(Record):
     text = models.CharField(max_length=140)
     like_count = models.IntegerField(default=0)
     dislike_count = models.IntegerField(default=0)
+    created_time = models.DateTimeField(auto_now_add=True)
+    updated_time = models.DateTimeField(auto_now=True)
 
 
 class Subcomment(Record):
@@ -80,12 +84,15 @@ class Subcomment(Record):
     text = models.CharField(max_length=140)
     like_count = models.IntegerField(default=0)
     dislike_count = models.IntegerField(default=0)
+    created_time = models.DateTimeField(auto_now_add=True)
+    updated_time = models.DateTimeField(auto_now=True)
 
 
 class Reaction(models.Model):
     imgur_user = models.ForeignKey(
         ImgurUser,
         on_delete=models.CASCADE,
+        related_name="reactions",
     )
     reaction = models.BooleanField(null=True)
     record_id = models.PositiveIntegerField()

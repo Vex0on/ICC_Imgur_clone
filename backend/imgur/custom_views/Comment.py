@@ -72,7 +72,7 @@ class CommentDetail(APIView):
                 )
             else:
                 return Response(
-                    {"message": "HTTP_400_BAD_REQUEST"},
+                    serializer.errors,
                     status=status.HTTP_400_BAD_REQUEST,
                 )
         except Comment.DoesNotExist:

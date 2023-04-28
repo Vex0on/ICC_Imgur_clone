@@ -38,4 +38,5 @@ urlpatterns = [
     path("reactions", Reaction.ReactionList.as_view(), name="reactions"),
     path("reactions/<int:pk>", Reaction.ReactionDetail.as_view(), name="reaction"),
     path("full-posts", views.get_full_posts, name="full-posts"),
+    path("full-posts/<int:pk>", views.get_full_post, name="full-post"),
 ]
