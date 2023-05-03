@@ -13,7 +13,8 @@ import { ProfilePage } from './pages/ProfilePage/ProfilePage'
 import { AdminPage } from './pages/AdminPage/AdminPage'
 import { PostPage } from './pages/PostPage/PostPage'
 import { ActivateUserPage } from './pages/ActivateUser/ActivateUserPage'
-import { ResetPasswordSendPage } from './pages/ResetPasswordSend/ResetPasswordSendPage';
+import { ResetPasswordSendPage } from './pages/ResetPasswordSend/ResetPasswordSendPage'
+import { AddPostPage } from './pages/AddPostPage/AddPostPage'
 
 import './styles/globals.scss'
 
@@ -31,6 +32,7 @@ function App() {
             <Route path='/activate/:uid/:token' element={<ActivateUserPage />} />
             <Route path='/admin' element={<AdminPage />}/>
             <Route path='/post/:id' element={<PostPage />}/>
+            <Route path='/add/post' element={<AddPostPage />}/>
             <Route path='*' element={<HomePage />}/>
         </Routes> 
       </Router>

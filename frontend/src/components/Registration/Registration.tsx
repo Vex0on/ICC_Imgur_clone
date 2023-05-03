@@ -20,7 +20,7 @@ export const Registration = () => {
         e.preventDefault()
         setInformationRegister('')
         let username = email;
-        
+
         if(repeatPassword === password && password !== "" && email !== ""){
             axios.post('http://localhost:8000/auth/users/', { email, username, password })
                 .then(response => {
