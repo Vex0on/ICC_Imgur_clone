@@ -1,10 +1,9 @@
 import datetime
 
 import PIL
-from allauth.account.models import EmailAddress
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-
+from djoser.serializers import UserCreateSerializer
 from .models import *
 from .validators import *
 
@@ -81,9 +80,6 @@ class ImgurUserBaseSerializer(serializers.ModelSerializer):
         # set_password haszuje haslo
         imgur_user.set_password(validated_data.get("password"))
         imgur_user.save()
-        email_address = EmailAddress.objects.create(
-            user=imgur_user, email=validated_data["email"], primary=True, verified=False
-        )
         return imgur_user
 
     def update(self, instance, validated_data):

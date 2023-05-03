@@ -50,10 +50,8 @@ INSTALLED_APPS = [
     "imgur.apps.ImgurConfig",
     "rest_framework",
     "corsheaders",
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount'
+    "django.contrib.sites",
+    "djoser",
 ]
 
 MIDDLEWARE = [
@@ -150,6 +148,18 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+DOMAIN = ('127.0.0.1:3000')
+SITE_NAME = ('Imguur')
+DJOSER = {
+    'LOGIN_FIELD': 'email',
+    'PASSWORD_RESET_CONFIRM_URL': 'reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SERIALIZERS': {
+        # 'user-create': 'accounts.serializers.UserCreateSerializer'
+        'user-create': 'imgur.serializers.ImgurUserCreateSerializer'
+    },
+}
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -208,12 +218,6 @@ EMAIL_PORT = 1025
 EMAIL_USE_TLS = False
 # ACCOUNT_EMAIL_VERIFICATION
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory' # wymagane potwierdzenie adresu email
-
-ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = 'http://127.0.0.1:3000/login' # przekierowanie po potwierdzeniu maila
-
-BASE_URL = 'http://localhost:8000'
-
-ACCOUNT_ADAPTER = 'imgur.adapter.CustomAllauthAdapter'
 
 # ACCOUNT_AUTHENTICATION_METHOD
 ACCOUNT_AUTHENTICATION_METHOD = 'email' # uwierzytelnianie przez adres email

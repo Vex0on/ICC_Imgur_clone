@@ -1,6 +1,4 @@
 from rest_framework.decorators import api_view
-
-from .custom_views.Comment import CommentDetail, CommentList
 from .custom_views.FullPost import get_full_post, get_full_posts
 from .custom_views.Image import (
     create_image,
@@ -24,7 +22,6 @@ from .custom_views.Post import (
     get_posts,
     update_post,
 )
-from .custom_views.Reaction import ReactionDetail, ReactionList
 from .custom_views.Subcomment import (
     create_subcomment,
     delete_subcomment,
