@@ -30,7 +30,7 @@ function App() {
             <Route path='/reset' element={<ResetPasswordSendPage />}/>
             <Route path='/activate/:uid/:token' element={<ActivateUserPage />} />
             <Route path='/admin' element={<AdminPage />}/>
-            <Route path='/post' element={<PostPage />}/>
+            <Route path='/post/:id' element={<PostPage />}/>
             <Route path='*' element={<HomePage />}/>
         </Routes> 
       </Router>

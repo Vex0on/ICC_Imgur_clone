@@ -19,9 +19,10 @@ export const Registration = () => {
     const submitRegister = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setInformationRegister('')
-
+        let username = email;
+        
         if(repeatPassword === password && password !== "" && email !== ""){
-            axios.post('http://127.0.0.1:8000/api/register', { email, password })
+            axios.post('http://localhost:8000/auth/users/', { email, username, password })
                 .then(response => {
                     setEmail('')
                     setPassword('')
@@ -31,6 +32,7 @@ export const Registration = () => {
                 })
                 .catch(err => {
                     setInformationRegister('Podany email jest zajęty')
+                    console.log(err)
                 })
         }
         else if(password === "") {
