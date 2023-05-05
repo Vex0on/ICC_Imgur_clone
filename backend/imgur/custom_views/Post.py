@@ -1,10 +1,12 @@
-import datetime
+import json
+import os
 
 from rest_framework import status
 from rest_framework.decorators import api_view
-from ..models import Post
-from ..serializers import PostSerializer
 from rest_framework.response import Response
+
+from ..models import Image, Post
+from ..serializers import ImageSerializer, PostSerializer
 
 
 @api_view(["GET"])
@@ -23,13 +25,24 @@ def get_posts(request):
 
 @api_view(["POST"])
 def create_post(request):
-    data = request.data.copy()
-    data['expirationDate'] = datetime.datetime.now() + datetime.timedelta(days=30)
-    serializer = PostSerializer(data=data)
-    if serializer.is_valid():
-        post = serializer.save()
-        return Response(PostSerializer(post).data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+    image = request.data.get("image")
+    post_data = json.loads(request.POST.get("post"))
+    post_serializer = PostSerializer(data=post_data)
+    if post_serializer.is_valid():
+        new_post = post_serializer.save()
+
+    image_serializer = ImageSerializer(data={"image": image, "post": new_post.id})
+    if image_serializer.is_valid():
+        image_serializer.save()
+
+        return Response(
+            image_serializer.data,
+            status=status.HTTP_201_CREATED,
+        )
+    return Response(
+        image_serializer.errors,
+        status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+    )
 
 
 @api_view(["PUT"])
@@ -42,11 +55,13 @@ def update_post(request, pk):
             return Response(serializer.data)
         else:
             return Response(
-                {"message": "HTTP_400_BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST
+                {"message": "HTTP_400_BAD_REQUEST"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
     except Post.DoesNotExist:
         return Response(
-            {"message": "HTTP_404_NOT_FOUND"}, status=status.HTTP_404_NOT_FOUND
+            {"message": "HTTP_404_NOT_FOUND"},
+            status=status.HTTP_404_NOT_FOUND,
         )
 
 
@@ -54,11 +69,16 @@ def update_post(request, pk):
 def delete_post(request, pk):
     try:
         post = Post.objects.get(id=pk)
+        images = Image.objects.filter(post=pk)
+        for image in images:
+            os.remove(image.path)
         post.delete()
         return Response(
-            {"message": "HTTP_204_NO_CONTENT"}, status=status.HTTP_204_NO_CONTENT
+            {"message": "HTTP_204_NO_CONTENT"},
+            status=status.HTTP_204_NO_CONTENT,
         )
     except Post.DoesNotExist:
         return Response(
-            {"message": "HTTP_404_NOT_FOUND"}, status=status.HTTP_404_NOT_FOUND
+            {"message": "HTTP_404_NOT_FOUND"},
+            status=status.HTTP_404_NOT_FOUND,
         )

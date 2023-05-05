@@ -3,7 +3,7 @@ import datetime
 import PIL
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-
+from djoser.serializers import UserCreateSerializer
 from .models import *
 from .validators import *
 
@@ -75,7 +75,7 @@ class ImgurUserBaseSerializer(serializers.ModelSerializer):
             email=validated_data.get("email"),
             username=validated_data.get("email"),
             phone_number=validated_data.get("phone_number"),
-            is_active=True,  # True - dostep do logowania, False - brak dostepu
+            is_active=False,  # True - dostep do logowania, False - brak dostepu
         )
         # set_password haszuje haslo
         imgur_user.set_password(validated_data.get("password"))
@@ -141,7 +141,7 @@ class ImageSerializer(serializers.ModelSerializer):
             size=pil_image.size,
             mime_type=pil_image.format,
             image=image,
-            # post=validated_data.get('post')
+            post=validated_data.get("post"),
         )
         new_image.path = new_image.image.path
         new_image.save()
@@ -165,10 +165,11 @@ class ImageSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     # image = ImageSerializer(required=True)
     record_id = serializers.IntegerField(required=False)
+
     class Meta:
         model = Post
-        # exclude = ["expirationDate"]
-        fields = "__all__"
+        exclude = ["expirationDate"]
+        # fields = "__all__"
 
     def create(self, validated_data):
         expiration_date = datetime.datetime.now() + datetime.timedelta(days=30)
@@ -178,7 +179,7 @@ class PostSerializer(serializers.ModelSerializer):
             title=validated_data.get("title"),
             description=validated_data.get("description"),
             tag=validated_data.get("tag"),
-            expirationDate=validated_data.get("expirationDate"),
+            expirationDate=datetime.datetime.now() + datetime.timedelta(days=30),
             record_id=0,
         )
         return post
@@ -192,10 +193,37 @@ class PostSerializer(serializers.ModelSerializer):
         return instance
 
 
-class CommentSerializer(serializers.ModelSerializer):
+class ShorterImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Comment
+        model = Image
+        fields = [
+            "image",
+            "name",
+        ]
+
+
+class ReactionSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Reaction
         fields = "__all__"
+
+
+class ShorterReactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reaction
+        fields = ["reaction"]
+
+
+class ShorterUserSerializer(serializers.ModelSerializer):
+    reactions = serializers.StringRelatedField(read_only=True, many=False)
+    reactions = ShorterReactionSerializer(reactions, many=False)
+
+    class Meta:
+        model = ImgurUser
+        fields = [
+            "username",
+            "reactions",
+        ]
 
 
 class SubcommentSerializer(serializers.ModelSerializer):
@@ -204,7 +232,71 @@ class SubcommentSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class ReactionSerializers(serializers.ModelSerializer):
+class CommentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Reaction
+        model = Comment
         fields = "__all__"
+
+
+class ShorterSubcommentSerializer(serializers.ModelSerializer):
+    imgur_user = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
+    imgur_user = ShorterUserSerializer(imgur_user, many=False)
+
+    class Meta:
+        model = Subcomment
+        fields = [
+            "text",
+            "like_count",
+            "dislike_count",
+            "created_time",
+            "updated_time",
+            "imgur_user",
+        ]
+
+
+class ShorterCommentSerializer(serializers.ModelSerializer):
+    subcomments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    subcomments = ShorterSubcommentSerializer(subcomments, many=True)
+
+    imgur_user = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
+    imgur_user = ShorterUserSerializer(imgur_user, many=False)
+
+    class Meta:
+        model = Comment
+        fields = [
+            "text",
+            "like_count",
+            "dislike_count",
+            "created_time",
+            "updated_time",
+            "imgur_user",
+            "subcomments",
+        ]
+
+
+class FullPostSerializer(serializers.ModelSerializer):
+    images = serializers.StringRelatedField(many=True, read_only=True)
+    images = ShorterImageSerializer(images, many=True)
+
+    imgur_user = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
+    imgur_user = ShorterUserSerializer(imgur_user)
+
+    comments = serializers.StringRelatedField(many=True, read_only=True)
+    comments = ShorterCommentSerializer(comments, many=True)
+
+    class Meta:
+        model = Post
+        fields = [
+            "id",
+            "title",
+            "description",
+            "tag",
+            "expirationDate",
+            "like_count",
+            "dislike_count",
+            "created_time",
+            "updated_time",
+            "imgur_user",
+            "images",
+            "comments",
+        ]

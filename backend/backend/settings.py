@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     "imgur.apps.ImgurConfig",
     "rest_framework",
     "corsheaders",
+    "django.contrib.sites",
+    "djoser",
 ]
 
 MIDDLEWARE = [
@@ -146,6 +148,18 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+DOMAIN = ('127.0.0.1:3000')
+SITE_NAME = ('Imguur')
+DJOSER = {
+    'LOGIN_FIELD': 'email',
+    'PASSWORD_RESET_CONFIRM_URL': 'reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SERIALIZERS': {
+        # 'user-create': 'accounts.serializers.UserCreateSerializer'
+        'user-create': 'imgur.serializers.ImgurUserCreateSerializer'
+    },
+}
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -190,3 +204,22 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+SITE_ID = 1
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# EMAIL_BACKEND
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # tymczasowy backend dla testów, w produkcji wymaga zmiany
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mailhog'
+EMAIL_PORT = 1025
+EMAIL_USE_TLS = False
+# ACCOUNT_EMAIL_VERIFICATION
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory' # wymagane potwierdzenie adresu email
+
+# ACCOUNT_AUTHENTICATION_METHOD
+ACCOUNT_AUTHENTICATION_METHOD = 'email' # uwierzytelnianie przez adres email
+
+# ACCOUNT_EMAIL_REQUIRED
+ACCOUNT_EMAIL_REQUIRED = True # wymagany adres email podczas rejestracji

@@ -1,18 +1,34 @@
 from rest_framework.decorators import api_view
+from .custom_views.FullPost import get_full_post, get_full_posts
+from .custom_views.Image import (
+    create_image,
+    delete_image,
+    get_image,
+    get_images,
+    update_image,
+)
 from .custom_views.ImgurUser import (
-    register_user,
-    login,
-    get_imgur_users,
-    get_imgur_user,
     delete_imgur_user,
+    get_imgur_user,
+    get_imgur_users,
+    login,
+    register_user,
     update_imgur_user,
 )
-from .custom_views.Post import get_post, get_posts, create_post, update_post, delete_post
-from .custom_views.Image import get_image, get_images, create_image, update_image, delete_image
-from .custom_views.Comment import get_comment, get_comments
-from .custom_views.Subcomment import get_subcomment, get_subcomments
-from .custom_views.Reaction import get_reaction, get_reactions
-
+from .custom_views.Post import (
+    create_post,
+    delete_post,
+    get_post,
+    get_posts,
+    update_post,
+)
+from .custom_views.Subcomment import (
+    create_subcomment,
+    delete_subcomment,
+    get_subcomment,
+    get_subcomments,
+    update_subcomment,
+)
 
 # IMGUR USER
 
@@ -48,6 +64,14 @@ def update_user_view(request):
 
 
 # Post
+@api_view(["GET"])
+def get_full_posts_view(request):
+    return get_full_posts(request)
+
+
+@api_view(["GET"])
+def get_full_post_view(request):
+    return get_full_post(request)
 
 
 @api_view(["GET"])
@@ -102,18 +126,6 @@ def update_image_view(request, id):
 def delete_image_view(request, id):
     return delete_image(request, id)
 
-# COMMENT
-
-
-@api_view(["GET"])
-def get_comment_view(request):
-    return get_comment(request)
-
-
-@api_view(["GET"])
-def get_comments_view(request):
-    return get_comments(request)
-
 
 # SUBCOMMENT
 
@@ -128,14 +140,16 @@ def get_subcomments_view(request):
     return get_subcomments(request)
 
 
-# REACTION
+@api_view(["POST"])
+def create_subcomment_view(request):
+    return create_subcomment(request)
+
+
+@api_view(["PUT"])
+def update_subcomment_view(request):
+    return update_subcomment(request)
 
 
 @api_view(["GET"])
-def get_reaction_view(request):
-    return get_reaction(request)
-
-
-@api_view(["GET"])
-def get_reactions_view(request):
-    return get_reactions(request)
+def delete_subcomment_view(request):
+    return delete_subcomment(request)

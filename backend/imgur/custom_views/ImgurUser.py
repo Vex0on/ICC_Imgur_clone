@@ -1,4 +1,8 @@
+from django.contrib.auth import get_user_model
+from django.http import Http404
+from django.shortcuts import redirect
 from django.utils import timezone
+from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import AuthenticationFailed
@@ -12,11 +16,26 @@ from ..serializers import (
 )
 
 
+class ActivateUser(UserViewSet):
+    def get_serializer(self, *args, **kwargs):
+        serializer_class = self.get_serializer_class()
+        kwargs.setdefault('context', self.get_serializer_context())
+
+        # this line is the only change from the base implementation.
+        kwargs['data'] = {"uid": self.kwargs['uid'], "token": self.kwargs['token']}
+
+        return serializer_class(*args, **kwargs)
+
+    def activation(self, request, uid, token, *args, **kwargs):
+        super().activation(request, *args, **kwargs)
+        return redirect('http://127.0.0.1:3000/login/')
+
+
 @api_view(["POST"])
 def register_user(request):
     serializer = ImgurUserCreateSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()  # aktywuje funkcje create() serializera
+        user = serializer.save()  # aktywuje funkcje create() serializera
         return Response(
             {"message": "HTTP_201_CREATED"},
             status=status.HTTP_201_CREATED,
@@ -39,6 +58,9 @@ def login(request):
 
     if not user.check_password(password):
         raise AuthenticationFailed("Incorrect password.")
+
+    if not user.is_active:
+        raise AuthenticationFailed("Confirm your email.")
 
     user.last_login = timezone.now()
     user.save(update_fields=["last_login"])
@@ -101,7 +123,10 @@ def update_imgur_user(request, pk):
         serializer = ImgurUserBaseSerializer(instance=user, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK,
+            )
         else:
             return Response(
                 serializer.errors,

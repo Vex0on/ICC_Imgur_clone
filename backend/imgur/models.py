@@ -32,6 +32,8 @@ class Post(Record):
     expirationDate = models.DateTimeField()
     like_count = models.IntegerField(default=0)
     dislike_count = models.IntegerField(default=0)
+    created_time = models.DateTimeField(auto_now_add=True)
+    updated_time = models.DateTimeField(auto_now=True)
 
 
 class Image(models.Model):
@@ -39,32 +41,59 @@ class Image(models.Model):
     size = models.CharField(max_length=45, null=True)
     mime_type = models.CharField(max_length=45, null=True)
     path = models.CharField(max_length=90, null=True)
-    image = models.ImageField(upload_to='images')
+    image = models.ImageField(upload_to="images")
     post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, default=None, null=True, blank=True
+        Post,
+        on_delete=models.CASCADE,
+        default=None,
+        null=True,
+        blank=True,
+        related_name="images",
     )
 
 
 class Comment(Record):
     imgur_user = models.ForeignKey(
-        ImgurUser, on_delete=models.SET_DEFAULT, default=None
+        ImgurUser,
+        on_delete=models.SET_DEFAULT,
+        default=None,
     )
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name="comments",
+    )
     text = models.CharField(max_length=140)
     like_count = models.IntegerField(default=0)
     dislike_count = models.IntegerField(default=0)
+    created_time = models.DateTimeField(auto_now_add=True)
+    updated_time = models.DateTimeField(auto_now=True)
 
 
 class Subcomment(Record):
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
-    user = models.ForeignKey(ImgurUser, on_delete=models.SET_DEFAULT, default=None)
+    comment = models.ForeignKey(
+        Comment,
+        on_delete=models.CASCADE,
+        related_name="subcomments",
+    )
+    imgur_user = models.ForeignKey(
+        ImgurUser,
+        on_delete=models.SET_DEFAULT,
+        default=None,
+    )
     text = models.CharField(max_length=140)
     like_count = models.IntegerField(default=0)
     dislike_count = models.IntegerField(default=0)
+    created_time = models.DateTimeField(auto_now_add=True)
+    updated_time = models.DateTimeField(auto_now=True)
 
 
 class Reaction(models.Model):
-    user = models.ForeignKey(ImgurUser, on_delete=models.CASCADE)
+    imgur_user = models.ForeignKey(
+        ImgurUser,
+        on_delete=models.CASCADE,
+        related_name="reactions",
+    )
     reaction = models.BooleanField(null=True)
     record_id = models.PositiveIntegerField()
 

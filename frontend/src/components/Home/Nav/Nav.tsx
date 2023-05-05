@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import styles from "./Nav.module.scss"
+import { Link } from "react-router-dom"
 import { FiUpload, FiSearch, FiMenu } from "react-icons/fi"
 
 export const Nav = () => {
@@ -26,9 +27,9 @@ export const Nav = () => {
         <>
         <nav className={`${styles.nav} ${window.scrollY > 0 ? styles.nav__scroll : ''}` }>
             <div className={styles.container__logo}>
-                <p className={styles.logo}> <a href="/">Imguur </a> </p>
+                <p className={styles.logo}> <Link to="/">Imguur </Link> </p>
 
-                <button className={styles.input__add}>Dodaj <FiUpload /> </button>
+                <Link to="/add/post"><button className={styles.input__add}>Dodaj<FiUpload /> </button></Link>
             </div>
 
             <FiMenu className={styles.hamburger} onClick={handleHamburgerClick} />
@@ -39,13 +40,13 @@ export const Nav = () => {
             </div>
 
             <div className={styles.d__none}>
-                <a className={styles.link__login} href="/login">Zaloguj się</a>
-                <a className={styles.link__register} href="/registration">Zarejestruj się</a>
+                <Link className={styles.link__login} to="/login">Zaloguj się</Link>
+                <Link className={styles.link__register} to="/registration">Zarejestruj się</Link>
             </div>    
                 
             <ul className={`${styles.menu__list} ${menuVisible ? styles.menu__show : ''}`}>
-                <li><a className={styles.menu__item} href="/login">Zaloguj się</a></li>
-                <li><a className={styles.menu__item} href="/registration">Zarejestruj się</a></li>
+                <li><Link className={styles.menu__item} to="/login">Zaloguj się</Link></li>
+                <li><Link className={styles.menu__item} to="/registration">Zarejestruj się</Link></li>
                 <li>
                     <div className={`${styles.container__search} `}>
                         <input className={styles.input__search} type='text' placeholder="Wyszukaj obraz"/>

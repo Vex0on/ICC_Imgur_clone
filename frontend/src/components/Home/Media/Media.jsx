@@ -7,6 +7,7 @@ import { BiCommentDetail } from 'react-icons/bi'
 import { AiOutlineEye } from 'react-icons/ai'
 import MediaService from "../../../services/MediaServices/MediaService"
 import { API_URL } from "../../../services/Api/Api"
+import { Link } from 'react-router-dom'
 
 export const Media = () => {
   const breakpointColumnsObj = {
@@ -51,6 +52,7 @@ export const Media = () => {
           columnClassName={styles.masonry__grid__column}
         >
           {images.map((image, index) => (
+            <Link to={`/post/${image.post}`}>
             <div key={index} className={styles.image__container}>
               <img src={"http://localhost:8000/" + image.image} alt={`Gallery item ${index}`} className={styles.image} />
               <div className={styles.image__info}>
@@ -70,6 +72,7 @@ export const Media = () => {
                 </div>
               </div>
             </div>
+            </Link>
           ))}
         </Masonry>
       </InfiniteScroll>
