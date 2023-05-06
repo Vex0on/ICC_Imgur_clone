@@ -285,6 +285,7 @@ class FullPostTestCase(TestCase):
         self.assertEqual(len(response.data), Post.objects.count())
 
 
+# Sygnały
 class EmailConfirmedTestCase(TestCase):
 
     def test_email_confirmed_(self):

@@ -103,6 +103,6 @@ models.signals.pre_delete.connect(
     sender=ImgurUser,
 )
 models.signals.pre_delete.connect(
-    lambda instance, **kwargs: setattr(instance.ImgurUser, "username", "DELETED_USER"),
+    lambda instance, **kwargs: setattr(instance.imgur_user, "username", "DELETED_USER"),
     sender=Comment,
 )
