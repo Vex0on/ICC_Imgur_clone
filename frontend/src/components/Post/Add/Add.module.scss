@@ -1,3 +1,89 @@
 @use '../../../styles/mixin.scss' as mixin;
 
 @import '../../../styles/variables.scss';
+
+.form {
+    display: flex;
+    flex-direction: column;
+
+    width: 550px;
+    padding-bottom: 1rem;
+
+    gap: 1rem;
+}
+
+.form__label {
+    font-size: 1rem;
+    font-weight: bold;
+
+    margin-bottom: 0.5rem;
+
+    color: $font-primary-color;
+}
+
+.form_input,
+.form_textarea {
+    font-size: 1rem;
+
+    padding: 0.5rem;
+
+    color: $font-primary-color;
+    border: 2px solid $font-primary-color;
+    border-radius: 5px;
+    outline: none;
+    background-color: #6941C6;
+}
+
+.form_textarea {
+    height: 120px;
+
+    resize: none;
+}
+
+.form__submit {
+    font-size: 1rem;
+
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    color: $font-secondary-color;
+    border: 1px solid $font-primary-color;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.dropzone {
+    padding: 1rem;
+
+    transition: border-color 0.2s ease;
+    text-align: center;
+
+    border: 2px dashed $font-primary-color;
+    border-radius: 5px;
+    background-color: #6941C6;
+}
+
+.preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 1rem;
+    padding: 1rem;
+
+    border: 2px solid $font-primary-color;
+    border-radius: 5px;
+    background-color: #6941C6;
+}
+
+.preview img {
+    max-width: 100%;
+    max-height: 200px;
+
+    border-radius: 5px;
+
+    object-fit: contain;
+}
