@@ -2,13 +2,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class Record(models.Model):
-    record_id = models.PositiveIntegerField()
-
-    class Meta:
-        abstract = True
-
-
 class ImgurUser(AbstractUser):
     phone_number = models.CharField(max_length=9, unique=True, null=True)
     email = models.EmailField(unique=True, null=True)
@@ -22,7 +15,7 @@ class ImgurUser(AbstractUser):
         return self.email
 
 
-class Post(Record):
+class Post(models.Model):
     imgur_user = models.ForeignKey(
         ImgurUser, on_delete=models.SET_DEFAULT, default=None, null=True
     )
@@ -52,7 +45,7 @@ class Image(models.Model):
     )
 
 
-class Comment(Record):
+class Comment(models.Model):
     imgur_user = models.ForeignKey(
         ImgurUser,
         on_delete=models.SET_DEFAULT,
@@ -70,7 +63,7 @@ class Comment(Record):
     updated_time = models.DateTimeField(auto_now=True)
 
 
-class Subcomment(Record):
+class Subcomment(models.Model):
     comment = models.ForeignKey(
         Comment,
         on_delete=models.CASCADE,
@@ -96,6 +89,7 @@ class Reaction(models.Model):
     )
     reaction = models.BooleanField(null=True)
     record_id = models.PositiveIntegerField()
+    individual_id = models.PositiveIntegerField()
 
 
 models.signals.pre_delete.connect(

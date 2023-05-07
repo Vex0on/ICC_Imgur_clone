@@ -1,5 +1,4 @@
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -22,32 +21,25 @@ class ReactionList(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-    def post(self, request, pk):
-        try:
-            reaction = Reaction.objects.get(id=pk)
-            serializer = ReactionSerializers(reaction, many=False)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(
-                    serializer.data,
-                    status=status.HTTP_201_CREATED,
-                )
-            else:
-                return Response(
-                    {"message": "HTTP_400_BAD_REQUEST"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-        except Reaction.DoesNotExist:
+    def post(self, request):
+        serializer = ReactionSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
             return Response(
-                {"message": "HTTP_404_NOT_FOUND"},
-                status=status.HTTP_404_NOT_FOUND,
+                {"message": "HTTP_201_CREATED"},
+                status=status.HTTP_201_CREATED,
+            )
+        else:
+            return Response(
+                {"message": "HTTP_400_BAD_REQUEST"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
 
 class ReactionDetail(APIView):
-    def get(self, request, pk):
+    def get(self, request, record_id, individual_id, imgur_user_id):
         try:
-            reaction = Reaction.objects.get(id=pk)
+            reaction = Reaction.objects.get(record_id=record_id, individual_id=individual_id, imgur_user_id=imgur_user_id)
             serializer = ReactionSerializers(reaction, many=False)
             return Response(
                 serializer.data,
@@ -59,14 +51,14 @@ class ReactionDetail(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-    def put(self, request, pk):
+    def put(self, request, record_id, individual_id, imgur_user_id):
         try:
-            reaction = Reaction.objects.get(id=pk)
+            reaction = Reaction.objects.get(record_id=record_id, individual_id=individual_id, imgur_user_id=imgur_user_id)
             serializer = ReactionSerializers(reaction, many=False, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(
-                    serializer.data,
+                    {"message": "HTTP_200_OK"},
                     status=status.HTTP_200_OK,
                 )
             else:
@@ -80,11 +72,12 @@ class ReactionDetail(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-    def delete(self, request, pk):
+    def delete(self, request, record_id, individual_id, imgur_user_id):
         try:
-            reaction = Reaction.objects.get(id=pk)
+            reaction = Reaction.objects.get(record_id=record_id, individual_id=individual_id, imgur_user_id=imgur_user_id)
             reaction.delete()
             return Response(
+                {"message": "HTTP_204_NO_CONTENT"},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Reaction.DoesNotExist:
