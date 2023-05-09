@@ -36,8 +36,8 @@ export const AddComment: React.FC<CommentProps> = ({
 
   return (
     <>
-      <div className={styles.container__comment}>
-        <form onSubmit={handleSubmit}>
+      <div>
+        <form className={styles.container__comment} onSubmit={handleSubmit}>
           <input
             className={styles.comment__input}
             type="text"
@@ -46,7 +46,7 @@ export const AddComment: React.FC<CommentProps> = ({
             onChange={(event) => handleChangeText(event, setComment)}
           />
           <button className={styles.comment__login} type="submit">
-            Dodaj komentarz
+            Dodaj 
           </button>
         </form>
       </div>

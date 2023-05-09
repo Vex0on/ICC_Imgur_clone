@@ -50,3 +50,47 @@
     margin: 0.5rem 0;
     padding-left: 3.5rem;
 }
+
+.subcomment__form {
+    position: relative;
+
+    display: flex;
+    
+    .subcomment__input {
+        font-size: 0.75rem;
+
+        width: 100%;
+        margin-top: 1rem;
+        padding: 0.4rem 0.6rem;
+
+        color: $font-primary-color;
+        border: 0.1rem solid $background-secondary-color;
+        border-radius: 0.5rem;
+        outline: none;
+        background: transparent;
+
+        &::placeholder {
+            color: #fff;
+        }
+
+        &:focus::placeholder {
+            color: transparent;
+        }
+    }
+
+    .subcomment__submit {
+        font-size: 0.75rem;
+
+        position: absolute;
+        top: 38%;
+        right: 2%;
+
+        padding: 0.3rem 0.75rem;
+
+        cursor: pointer;
+
+        border-radius: 2rem;
+        background-color: $background-secondary-color;
+    }
+}
+

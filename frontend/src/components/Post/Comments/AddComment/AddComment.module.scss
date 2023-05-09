@@ -19,6 +19,14 @@
         border-radius: 0.5rem;
         outline: none;
         background: transparent;
+
+        &::placeholder {
+            color: #fff;
+        }
+
+        &:focus::placeholder {
+            color: transparent;
+        }
     }
 
     .comment__login {

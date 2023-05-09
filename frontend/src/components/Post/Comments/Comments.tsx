@@ -49,7 +49,7 @@ export const Comments: React.FC<CommentsProps> = ({ comments }) => {
     post: number,
     comment: any,
     record_id: number = 0,
-    imgur_user: number = 4
+    imgur_user: number = 2
   ) => {
     console.log(comment)
 
@@ -153,6 +153,7 @@ export const Comments: React.FC<CommentsProps> = ({ comments }) => {
               ))}
 
               <form
+                className={styles.subcomment__form}
                 onSubmit={(e) => {
                   e.preventDefault()
                   const subcommentInput = e.currentTarget.elements.namedItem(
@@ -168,12 +169,13 @@ export const Comments: React.FC<CommentsProps> = ({ comments }) => {
                 }}
               >
                 <input
+                  className={styles.subcomment__input}
                   type="text"
                   name="text"
-                  placeholder="Dodaj subkomentarz"
+                  placeholder="Dodaj odpowiedź"
                   required
                 />
-                <button type="submit">Dodaj</button>
+                <button className={styles.subcomment__submit} type="submit">Dodaj</button>
               </form>
             </div>
           )}
