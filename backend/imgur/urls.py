@@ -2,7 +2,7 @@ from django.urls import path
 
 from . import views
 from .custom_views import Comment, Reaction
-from .custom_views.ImgurUser import ActivateUser
+from .custom_views.ImgurUser import ActivateUser, delete_refresh_token, get_access_token
 
 urlpatterns = [
     path("register", views.register_user, name="register_user"),
@@ -41,4 +41,6 @@ urlpatterns = [
     path("full-posts", views.get_full_posts, name="full-posts"),
     path("full-posts/<int:pk>", views.get_full_post, name="full-post"),
     path("activate/<uid>/<token>", ActivateUser.as_view({'get': 'activation'}), name='activation'),
+    path("token/refresh/delete", delete_refresh_token, name="refresh_delete"),
+    path("token/access", get_access_token, name="access_get")
 ]

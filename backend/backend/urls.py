@@ -20,7 +20,7 @@ from django.urls import include, path
 from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
-    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="refresh"),
     path("admin/", admin.site.urls),
     path("api/", include("imgur.urls")),
     path("api-auth/", include("rest_framework.urls")),
