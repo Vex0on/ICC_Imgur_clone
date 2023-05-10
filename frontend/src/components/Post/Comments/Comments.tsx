@@ -4,6 +4,7 @@ import { RxThickArrowUp, RxThickArrowDown } from "react-icons/rx"
 import axios from "axios"
 import { API_URL } from "../../../services/Api/Api"
 import { useParams } from "react-router-dom"
+import jwt_decode from "jwt-decode"
 
 interface ImgurUser {
   username: string
@@ -27,6 +28,10 @@ interface CommentsProps {
   comments: CommentData[]
 }
 
+interface DecodedToken {
+  user_id: number;
+}
+
 export const Comments: React.FC<CommentsProps> = ({ comments }) => {
   const [expandedComments, setExpandedComments] = useState<number[]>([])
   const { id } = useParams<{ id: any }>()
@@ -48,30 +53,37 @@ export const Comments: React.FC<CommentsProps> = ({ comments }) => {
     text: string,
     post: number,
     comment: any,
-    record_id: number = 0,
-    imgur_user: number = 2
+    record_id: number = 0
   ) => {
-    console.log(comment)
-
-    axios
-      .post(API_URL + "subcomments/add", {
-        text,
-        post,
-        comment,
-        record_id,
-        imgur_user,
-      })
-      .then((response) => {
-        const newSubcomment = response.data
-        const updatedCommentsCopy = [...updatedComments]
-        updatedCommentsCopy[commentIndex].subcomments.push(newSubcomment)
-
-        setUpdatedComments(updatedCommentsCopy)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwt_decode(token) as DecodedToken;
+      const user_id = decodedToken?.user_id;
+      axios
+        .post(API_URL + "subcomments/add", {
+          text,
+          post,
+          comment,
+          record_id,
+          imgur_user: user_id,
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          const newSubcomment = response.data
+          const updatedCommentsCopy = [...updatedComments]
+          updatedCommentsCopy[commentIndex].subcomments.push(newSubcomment)
+  
+          setUpdatedComments(updatedCommentsCopy)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
   }
+  
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)

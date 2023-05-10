@@ -164,7 +164,6 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     # image = ImageSerializer(required=True)
-    record_id = serializers.IntegerField(required=False)
 
     class Meta:
         model = Post
@@ -180,7 +179,6 @@ class PostSerializer(serializers.ModelSerializer):
             description=validated_data.get("description"),
             tag=validated_data.get("tag"),
             expirationDate=datetime.datetime.now() + datetime.timedelta(days=30),
-            record_id=0,
         )
         return post
 

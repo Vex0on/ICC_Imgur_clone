@@ -28,12 +28,12 @@ class CommentList(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response(
-                    serializer.data,
+                    {"message": "HTTP_201_CREATED"},
                     status=status.HTTP_201_CREATED,
                 )
             else:
                 return Response(
-                    serializer.errors,
+                    {"message": "HTTP_422_UNPROCESSABLE_ENTITY"},
                     status=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 )
 
@@ -67,12 +67,12 @@ class CommentDetail(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response(
-                    serializer.data,
+                    {"message": "HTTP_200_OK"},
                     status=status.HTTP_200_OK,
                 )
             else:
                 return Response(
-                    serializer.errors,
+                    {"message": "HTTP_400_BAD_REQUEST"},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
         except Comment.DoesNotExist:

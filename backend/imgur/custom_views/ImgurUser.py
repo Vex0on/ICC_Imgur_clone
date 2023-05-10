@@ -1,5 +1,3 @@
-from django.contrib.auth import get_user_model
-from django.http import Http404
 from django.shortcuts import redirect
 from django.utils import timezone
 from djoser.views import UserViewSet
@@ -7,6 +5,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 from ..models import ImgurUser
 from ..serializers import (
@@ -16,19 +16,37 @@ from ..serializers import (
 )
 
 
-class ActivateUser(UserViewSet):
-    def get_serializer(self, *args, **kwargs):
-        serializer_class = self.get_serializer_class()
-        kwargs.setdefault('context', self.get_serializer_context())
+@api_view(["DELETE"])
+def delete_refresh_token(request):
+    response = Response()
+    response.delete_cookie("refresh")
+    response.status_code = status.HTTP_204_NO_CONTENT
 
-        # this line is the only change from the base implementation.
-        kwargs['data'] = {"uid": self.kwargs['uid'], "token": self.kwargs['token']}
+    return response
 
-        return serializer_class(*args, **kwargs)
 
-    def activation(self, request, uid, token, *args, **kwargs):
-        super().activation(request, *args, **kwargs)
-        return redirect('http://127.0.0.1:3000/login/')
+@api_view(["POST"])
+def get_access_token(request):
+    refresh_token = request.COOKIES.get("refresh")
+
+    if refresh_token:
+        try:
+            token = RefreshToken(refresh_token)
+            user = ImgurUser.objects.get(id=token['user_id'])
+            new_access_token = str(token.access_token)
+
+            response = Response({'access': new_access_token})
+            response.set_cookie('refresh', refresh_token, httponly=True)
+            return response
+        except ImgurUser.DoesNotExist:
+            return Response(
+                {"message": "HTTP_404_NOT_FOUND"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+    return Response(
+        {"message": "HTTP_400_BAD_REQUEST"},
+        status=status.HTTP_400_BAD_REQUEST,
+    )
 
 
 @api_view(["POST"])
