@@ -70,7 +70,7 @@ def update_subcomment(request, pk):
 @api_view(["DELETE"])
 def delete_subcomment(request, pk):
     try:
-        subcomment = subcomment.objects.get(id=pk)
+        subcomment = Subcomment.objects.get(id=pk)
         subcomment.delete()
         return Response(
             {"message": "HTTP_204_NO_CONTENT"},

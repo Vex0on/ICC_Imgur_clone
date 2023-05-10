@@ -34,7 +34,7 @@ urlpatterns = [
     path(
         "subcomments/delete/<int:pk>",
         views.delete_subcomment,
-        name="update-subcomment",
+        name="delete-subcomment",
     ),
     path("reactions", Reaction.ReactionList.as_view(), name="reactions"),
     path("reactions/<int:pk>", Reaction.ReactionDetail.as_view(), name="reaction"),

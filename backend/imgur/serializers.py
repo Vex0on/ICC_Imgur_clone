@@ -251,6 +251,7 @@ class ShorterSubcommentSerializer(serializers.ModelSerializer):
             "created_time",
             "updated_time",
             "imgur_user",
+            "comment",
         ]
 
 
@@ -271,6 +272,7 @@ class ShorterCommentSerializer(serializers.ModelSerializer):
             "updated_time",
             "imgur_user",
             "subcomments",
+            "id",
         ]
 
 

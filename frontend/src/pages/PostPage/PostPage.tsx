@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import { useParams } from 'react-router-dom'
+import React, { useState, useEffect } from "react"
+import axios from "axios"
+import { useParams } from "react-router-dom"
+import styles from "./PostPage.module.scss"
 
-import styles from './PostPage.module.scss'
+import { Nav } from "../../components/Home/Nav/Nav"
+import { Interactions } from "../../components/Post/Interactions/Interactions"
+import { Card } from "../../components/Post/Card/Card"
+import { LatestPosts } from "../../components/Post/LatestPosts/LatestPosts"
+import { Comments } from "../../components/Post/Comments/Comments"
+import { AddComment } from "../../components/Post/Comments/AddComment/AddComment"
 
-import { Nav } from '../../components/Home/Nav/Nav'
-import { Interactions } from '../../components/Post/Interactions/Interactions'
-import { Card } from '../../components/Post/Card/Card'
-import { LatestPosts } from '../../components/Post/LatestPosts/LatestPosts'
-import { Comment } from '../../components/Post/Comment/Comment'
-
-import { RxTriangleDown } from 'react-icons/rx'
-import { API_URL } from '../../services/Api/Api'
+import { RxTriangleDown } from "react-icons/rx"
+import { API_URL } from "../../services/Api/Api"
 
 interface Post {
   id: number
@@ -28,7 +28,6 @@ interface Post {
   comments: Array<any>
 }
 
-
 export const PostPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const [post, setPost] = useState<Post | null>(null)
@@ -39,6 +38,16 @@ export const PostPage: React.FC = () => {
       setPost(response.data)
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const handleAddComment = async (newComment: any) => {
+    if (post) {
+      setPost({
+        ...post,
+        comments: [...post.comments, newComment],
+      })
+      await fetchPosts()
     }
   }
 
@@ -72,27 +81,23 @@ export const PostPage: React.FC = () => {
                 comments={post.comments}
               />
 
-              <div className={styles.container__comment}>
-                <input
-                  className={styles.comment__input}
-                  readOnly
-                  type="text"
-                  value="Zaloguj się aby skomentować"
-                />
-                <button className={styles.comment__login}>Zaloguj się</button>
-              </div>
+              <AddComment postId={post.id} onAddComment={fetchPosts} />
 
               <div className={styles.container__comments}>
-                <p className={styles.comments__count}>{post.comments.length} Komentarzy</p>
+                <p className={styles.comments__count}>
+                  {post.comments.length} Komentarzy
+                </p>
                 <p className={styles.comments__sort}>
                   Najnowsze <RxTriangleDown />
                 </p>
               </div>
 
-              <Comment />
+              <Comments comments={post.comments} />
 
               <div className={styles.container__showall}>
-                <button className={styles.showall__input}>Pokaż więcej komentarzy</button>
+                <button className={styles.showall__input}>
+                  Pokaż więcej komentarzy
+                </button>
               </div>
             </div>
 

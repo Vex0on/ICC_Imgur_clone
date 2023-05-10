@@ -1,13 +1,14 @@
 import os
 
-from django.test import TestCase
-from django.contrib.auth import get_user_model
+from allauth.account.models import EmailAddress
+from allauth.account.signals import email_confirmed
+from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.hashers import check_password, make_password
 from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
-from .models import ImgurUser, Image
+from .models import ImgurUser, Image, Post, Comment
 from .serializers import ImageSerializer
 
 
@@ -246,3 +247,56 @@ class ImageModelTest(TestCase):
     def test_delete_nonexistent_image(self):
         response = self.client.delete("/api/images/123456/")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+# Widok FullPost
+class FullPostTestCase(TestCase):
+    def setUp(self):
+        self.post = Post.objects.create(
+            title='Avatar steam',
+            description='Kozacki avatar na steam',
+            tag='Avatary',
+            record_id=1,
+            expirationDate="2023-05-27T21:22:25.429235Z",
+            like_count=0,
+            dislike_count=0,
+        )
+
+    def test_get_full_post(self):
+        response = self.client.get(reverse('full-post', args=[self.post.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.post.title)
+        self.assertContains(response, self.post.description)
+        self.assertContains(response, self.post.tag)
+        self.assertContains(response, self.post.record_id)
+        self.assertContains(response, self.post.expirationDate)
+        self.assertContains(response, self.post.like_count)
+        self.assertContains(response, self.post.dislike_count)
+
+    def test_get_full_post_not_found(self):
+        fake_id = 9999
+        response = self.client.get(reverse('full-post', args=[fake_id]))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.data, {"message": "HTTP_404_NOT_FOUND"})
+
+    def test_get_full_posts(self):
+        response = self.client.get(reverse('full-posts'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), Post.objects.count())
+
+
+# Sygnały
+class EmailConfirmedTestCase(TestCase):
+
+    def test_email_confirmed_(self):
+        email = 'test@example.com'
+        user = ImgurUser.objects.create(email=email)
+        email_address = EmailAddress.objects.create(
+            email=email, user=user, primary=True, verified=True
+        )
+
+        email_confirmed.send(sender=self.__class__, request=None, email_address=email_address)
+        user.refresh_from_db()
+        self.assertTrue(user.is_active)
+
+
