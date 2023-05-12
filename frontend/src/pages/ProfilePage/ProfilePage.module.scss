@@ -1,0 +1,86 @@
+@use '../../styles/mixin.scss' as mixin;
+@import '../../styles/variables.scss';
+
+.main {
+    width: 80vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 9rem;
+    color: $font-secondary-color;
+}
+
+.profile {
+    background-color: $background-secondary-color;
+    display: flex;
+    width: 850px;
+    height: 500px;
+    border-radius: 10px;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+
+    .nav__profile {
+        margin-top: 2rem;
+    }
+
+    .nav__image {
+        border-radius: 50%;
+    }
+
+    .nav__username {
+        text-align: center;
+        font-size: 1.25rem;
+        font-weight: 300;
+        letter-spacing: 0.1rem;
+    }
+
+    .nav__content {
+        margin-top: 2rem;
+    }
+
+    .nav__item {
+        display: flex;
+        align-items: center;
+        font-size: 1.25rem;
+        
+        &:last-child {
+            margin-top: 1rem;
+        }
+    }
+
+    .nav__icon {
+        font-size: 2rem;
+        margin-right: 0.3rem;
+    }
+}
+
+.content {
+    width: 60%;
+}
+
+.rocket__left {
+    position: absolute;
+    top: 10%;
+    left: 0;
+    z-index: -1;
+    @include mixin.desktop-larger { 
+        display: none;
+    }
+}
+
+.rocket__right {
+    position: absolute;
+    top: 30%;
+    right: 0;
+    z-index: -1;
+    @include mixin.desktop-larger { 
+        display: none;
+    }
+}
+

@@ -1,13 +1,28 @@
 import React, { useEffect, useState } from "react";
+import jwt_decode from "jwt-decode"
+import axios from 'axios';
 import styles from "./Nav.module.scss";
 import { Link } from "react-router-dom";
 import { FiUpload, FiSearch, FiMenu } from "react-icons/fi";
 import Logout from "../../Logout/Logout";
+import { API_URL } from "../../../services/Api/Api"
+
+interface DecodedToken {
+  user_id: string;
+}
+
+interface User {
+  id: number;
+  username: string;
+}
 
 export const Nav = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-
+  const [token, setToken] = useState('');
+  const [user, setUser] = useState<User | null>(null);
+  const [loadingUser, setLoadingUser] = useState(true);
+  
   const handleHamburgerClick = () => {
     setMenuVisible(!menuVisible);
   };
@@ -26,11 +41,31 @@ export const Nav = () => {
   }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    setToken(localStorage.getItem("token") || '');
     if (token) {
       setLoggedIn(true);
     }
-  }, []);
+  }, [token]);
+
+  useEffect(() => {
+    if (token) {
+      const decoded = jwt_decode(token) as DecodedToken;
+      const userId = decoded?.user_id;
+  
+      if (userId) {
+        setLoadingUser(true);
+        axios.get(`${API_URL}users/${userId}`)
+          .then(response => {
+            setUser(response.data);
+            setLoadingUser(false);
+          })
+          .catch(error => {
+            console.error('There was an error!', error);
+            setLoadingUser(false);
+          });
+      }
+    }
+  }, [token]);
 
   return (
     <>
@@ -63,7 +98,18 @@ export const Nav = () => {
     </div>
 
     {loggedIn ? (
+      <div className={styles.d__none}>
+        <Link className={styles.link__user} to="/profile">
+        <img
+          className={styles.user__avatar}
+          width="30"
+          height="30"
+          src="https://pliki.wiki/blog/wp-content/uploads/2020/10/1601648766.jpeg"
+        />
+        {loadingUser ? 'Loading...' : user && user.username}
+      </Link>
       <Logout />
+      </div>
     ) : (
       <div className={styles.d__none}>
         <Link className={styles.link__login} to="/login">

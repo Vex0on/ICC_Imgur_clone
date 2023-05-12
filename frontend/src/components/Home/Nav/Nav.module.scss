@@ -189,6 +189,34 @@ margin-left: -0.5rem;
     }
 }
 
+.link__user {
+    font-size: 0.8rem;
+    font-weight: 300;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 2.5rem;
+    padding: 0 1.4rem;
+
+    text-decoration: none;
+
+    color: $font-primary-color;
+    border-radius: 2.12rem;
+    background-color: $background-primary-color;
+
+    &:hover {
+        background-color: #501a9b;
+    }
+}
+
+.user__avatar {
+    border-radius: 50%;
+    
+    margin-right: .3rem;
+}
+
 /* Responsive */
 
 .hamburger {
