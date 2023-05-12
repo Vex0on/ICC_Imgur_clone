@@ -15,19 +15,19 @@ import { User } from '../../components/Profile/User/User'
 
 
 interface User {
-    id: number;
-    username: string;
+    id: number
+    username: string
 }
 
 interface DecodedToken {
-    user_id: string;
+    user_id: string
 }
 
 export const ProfilePage = () => {
-    const [scrollY, setScrollY] = useState(0);
-    const [token, setToken] = useState('');
+    const [scrollY, setScrollY] = useState(0)
+    const [token, setToken] = useState('')
     const [loggedIn, setLoggedIn] = useState(false)
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>(null)
 
     const [view, setView] = useState('profile')
 
@@ -36,43 +36,43 @@ export const ProfilePage = () => {
     }
 
     const handleScroll = () => {
-        setScrollY(window.scrollY);
-    };
+        setScrollY(window.scrollY)
+    }
 
     useEffect(() => {
-        setToken(localStorage.getItem("token") || '');
+        setToken(localStorage.getItem("token") || '')
         if (token) {
-          setLoggedIn(true);
+          setLoggedIn(true)
         }
-      }, [token]);
+      }, [token])
 
     useEffect(() => {
         if (token) {
-          const decoded = jwt_decode(token) as DecodedToken;
-          const userId = decoded?.user_id;
+          const decoded = jwt_decode(token) as DecodedToken
+          const userId = decoded?.user_id
       
           if (userId) {
             axios.get(`${API_URL}users/${userId}`)
               .then(response => {
-                setUser(response.data);
+                setUser(response.data)
               })
               .catch(error => {
-                console.error('There was an error!', error);
-              });
+                console.error('There was an error!', error)
+              })
           }
         }
-      }, [token]);
+      }, [token])
 
     useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll)
         return () => {
-        window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
+        window.removeEventListener('scroll', handleScroll)
+        }
+    }, [])
 
     const parallaxStyle = {
         transform: `translateY(${scrollY * 0.7}px)`
-      };
+      }
 
     return(
         <>

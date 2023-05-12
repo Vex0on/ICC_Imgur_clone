@@ -1,28 +1,34 @@
 @use '../../styles/mixin.scss' as mixin;
+
 @import '../../styles/variables.scss';
 
 .main {
-    width: 80vw;
-    height: 100vh;
     display: flex;
     align-items: center;
     flex-direction: column;
+
+    width: 80vw;
+    height: 100vh;
     margin-top: 9rem;
+
     color: $font-secondary-color;
 }
 
 .profile {
-    background-color: $background-secondary-color;
     display: flex;
+
     width: 850px;
     height: 500px;
+
     border-radius: 10px;
+    background-color: $background-secondary-color;
 }
 
 .nav {
     display: flex;
-    flex-direction: column;
     align-items: center;
+    flex-direction: column;
+
     width: 40%;
 
     .nav__profile {
@@ -34,53 +40,62 @@
     }
 
     .nav__username {
-        text-align: center;
         font-size: 1.25rem;
         font-weight: 300;
+
+        text-align: center;
         letter-spacing: 0.1rem;
     }
 
     .nav__content {
-        margin-top: 2rem;
+        margin-top: 3rem;
     }
 
     .nav__item {
+        font-size: 1.25rem;
+
         display: flex;
         align-items: center;
-        font-size: 1.25rem;
-        
+
+        cursor: pointer;
+
         &:last-child {
             margin-top: 1rem;
+            margin-left: 2px;
         }
     }
 
     .nav__icon {
         font-size: 2rem;
-        margin-right: 0.3rem;
+
+        margin-right: 0.5rem;
     }
 }
 
 .content {
+    overflow-y: scroll;
+
     width: 60%;
 }
 
 .rocket__left {
     position: absolute;
+    z-index: -1;
     top: 10%;
     left: 0;
-    z-index: -1;
-    @include mixin.desktop-larger { 
-        display: none;
-    }
+
+    @include mixin.desktop-larger { display: none;
+}
+
 }
 
 .rocket__right {
     position: absolute;
+    z-index: -1;
     top: 30%;
     right: 0;
-    z-index: -1;
-    @include mixin.desktop-larger { 
-        display: none;
-    }
+
+    @include mixin.desktop-larger { display: none;
 }
 
+}
