@@ -59,18 +59,24 @@ class ImgurUserBaseSerializer(serializers.ModelSerializer):
         validators=[validate_phone_number],
         # error_messages=error_messages,
         required=False,
+        allow_null=True,
+        allow_blank=True,
     )
 
     first_name = serializers.CharField(
         validators=[validate_first_name],
         # error_messages=error_messages,
         required=False,
+        allow_null=True,
+        allow_blank=True,
     )
 
     last_name = serializers.CharField(
         validators=[validate_last_name],
         # error_messages=error_messages,
         required=False,
+        allow_null=True,
+        allow_blank=True,
     )
 
     profile_picture = serializers.ImageField(

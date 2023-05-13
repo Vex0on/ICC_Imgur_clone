@@ -10,17 +10,17 @@ def validate_email(email):
     if any(letter.isupper() for letter in email):
         raise serializers.ValidationError("Email cannot contain capital letters.")
 
-    if ImgurUser.objects.filter(email=email):
-        raise serializers.ValidationError(
-            "A user with this email address already exists."
-        )
+    # if ImgurUser.objects.filter(email=email):
+    #     raise serializers.ValidationError(
+    #         "A user with this email address already exists."
+    #     )
 
     return email
 
 
 def validate_username(username):
-    if ImgurUser.objects.filter(username=username):
-        raise serializers.ValidationError("The username is already taken.")
+    # if ImgurUser.objects.filter(username=username):
+    #     raise serializers.ValidationError("The username is already taken.")
     if len(username) < 3:
         raise serializers.ValidationError(
             "The username cannot be shorter than 3 characters."
@@ -61,8 +61,8 @@ def validate_phone_number(phone_number):
         raise serializers.ValidationError("Invalid phone number.")
     if len(phone_number) != 9:
         raise serializers.ValidationError("The phone number should contain 9 digits.")
-    if ImgurUser.objects.filter(phone_number=phone_number):
-        raise serializers.ValidationError("The phone number is already used.")
+    # if ImgurUser.objects.filter(phone_number=phone_number):
+    #     raise serializers.ValidationError("The phone number is already used.")
 
     return phone_number
 
