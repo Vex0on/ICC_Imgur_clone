@@ -18,6 +18,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         else:
             token["is_superuser"] = False
 
+        token["username"] = user.username
+
         return token
 
 

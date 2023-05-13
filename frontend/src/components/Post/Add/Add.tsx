@@ -1,9 +1,13 @@
 import React, { useState, ChangeEvent, FormEvent } from "react"
 import { DropzoneOptions, useDropzone } from "react-dropzone"
-
+import jwt_decode from "jwt-decode"
 import styles from "./Add.module.scss"
 import axios from "axios";
 import { API_URL } from "../../../services/Api/Api"
+
+interface DecodedToken {
+  user_id: number;
+}
 
 export const AddPost = () => {
   const [title, setTitle] = useState<string>("")
@@ -12,12 +16,22 @@ export const AddPost = () => {
   const [image, setImage] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
 
     const formData = new FormData()
 
-    formData.append('post', JSON.stringify({ title, description, tag }))
+    let user_id = null
+
+    const token = localStorage.getItem('token');
+
+    if(token){
+      const decodedToken = jwt_decode(token) as DecodedToken
+      user_id = decodedToken?.user_id
+    }
+
+    formData.append('post', JSON.stringify({ title, description, tag, imgur_user: user_id }))
 
     if (image) {
         formData.append('image', image)
