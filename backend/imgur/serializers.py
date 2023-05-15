@@ -1,9 +1,10 @@
 import datetime
 
 import PIL
+from djoser.serializers import UserCreateSerializer
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from djoser.serializers import UserCreateSerializer
+
 from .models import *
 from .validators import *
 
@@ -72,12 +73,18 @@ class ImgurUserBaseSerializer(serializers.ModelSerializer):
         required=False,
     )
 
+    profile_picture = serializers.ImageField(
+        validators=[validate_image],
+        required=False,
+    )
+
     def create(self, validated_data):
         imgur_user = ImgurUser.objects.create(
             email=validated_data.get("email"),
             username=validated_data.get("email"),
             phone_number=validated_data.get("phone_number"),
             is_active=False,  # True - dostep do logowania, False - brak dostepu
+            profile_picture=validated_data.get("profile_picture"),
         )
         # set_password haszuje haslo
         imgur_user.set_password(validated_data.get("password"))
@@ -93,7 +100,9 @@ class ImgurUserBaseSerializer(serializers.ModelSerializer):
         instance.is_active = validated_data.get("is_active", instance.is_active)
         instance.first_name = validated_data.get("first_name", instance.first_name)
         instance.last_name = validated_data.get("last_name", instance.last_name)
-
+        instance.profile_picture = validated_data.get(
+            "profile_picture", instance.profile_picture
+        )
         password = validated_data.get("password")
         if password:
             instance.set_password(password)

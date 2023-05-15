@@ -133,3 +133,4 @@ postgres-data/
 
 # local images directory
 /backend/images
+/backend/user-profile-pictures
