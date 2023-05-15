@@ -1,4 +1,5 @@
 import os
+import uuid
 
 from allauth.account.models import EmailAddress
 from allauth.account.signals import email_confirmed
@@ -188,7 +189,9 @@ class ImgurUserTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_update_imgur_user_bad_request(self):
-        user = ImgurUser.objects.create(email="testuser@test.com", password="password123")
+        user = ImgurUser.objects.create(
+            email="testuser@test.com", password="password123"
+        )
         url = reverse("update-user", args=[user.id])
         data = {"email": "newemail@test.com", "password": ""}
         response = self.client.put(url, data, format="json")
@@ -222,7 +225,9 @@ class ImageModelTest(TestCase):
             "size": "200x200",
             "mime_type": "image/png",
         }
-        response = self.client.post(reverse('add-image'), data=invalid_data, format='json')
+        response = self.client.post(
+            reverse("add-image"), data=invalid_data, format="json"
+        )
         self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY)
 
     def test_get_images(self):
@@ -235,12 +240,12 @@ class ImageModelTest(TestCase):
 
     def test_get_image(self):
         image = Image.objects.create(**self.image_data)
-        url = reverse('image', args=[1])
+        url = reverse("image", args=[1])
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_image_not_found(self):
-        url = reverse('image', args=[999])
+        url = reverse("image", args=[999])
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -253,16 +258,16 @@ class ImageModelTest(TestCase):
 class FullPostTestCase(TestCase):
     def setUp(self):
         self.post = Post.objects.create(
-            title='Avatar steam',
-            description='Kozacki avatar na steam',
-            tag='Avatary',
+            title="Avatar steam",
+            description="Kozacki avatar na steam",
+            tag="Avatary",
             expirationDate="2023-05-27T21:22:25.429235Z",
             like_count=0,
             dislike_count=0,
         )
 
     def test_get_full_post(self):
-        response = self.client.get(reverse('full-post', args=[self.post.id]))
+        response = self.client.get(reverse("full-post", args=[self.post.id]))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.post.title)
         self.assertContains(response, self.post.description)
@@ -273,28 +278,190 @@ class FullPostTestCase(TestCase):
 
     def test_get_full_post_not_found(self):
         fake_id = 9999
-        response = self.client.get(reverse('full-post', args=[fake_id]))
+        response = self.client.get(reverse("full-post", args=[fake_id]))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(response.data, {"message": "HTTP_404_NOT_FOUND"})
 
     def test_get_full_posts(self):
-        response = self.client.get(reverse('full-posts'))
+        response = self.client.get(reverse("full-posts"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), Post.objects.count())
 
 
+# Widok Comment
+class CommentTestCase(TestCase):
+    def setUp(self):
+        user = ImgurUser.objects.create(
+            email="testlogin@gmail.com", password=make_password("testpassword")
+        )
+        post = Post.objects.create(
+            title="Avatar steam",
+            description="Kozacki avatar na steam",
+            tag="Avatary",
+            expirationDate="2023-05-27T21:22:25.429235Z",
+            like_count=0,
+            dislike_count=0,
+        )
+
+        self.comment = Comment.objects.create(
+            id=1,
+            text="Testowy komentarz",
+            like_count=0,
+            dislike_count=0,
+            imgur_user=user,
+            post=post,
+        )
+
+    def test_create_comment(self):
+        Comment.objects.all().delete()
+        test_user = ImgurUser.objects.create(
+            email="testlogin3@gmail.com", password=make_password("Testpassword3")
+        )
+        test_post = Post.objects.create(
+            title="Avatar steam",
+            description="Kozacki avatar na steam",
+            tag="Avatary",
+            expirationDate="2023-05-27T21:22:25.429235Z",
+            like_count=0,
+            dislike_count=0,
+        )
+
+        data = {
+            "text": "Nowy komentarzz",
+            "like_count": 0,
+            "dislike_count": 0,
+            "imgur_user": test_user.id,
+            "post": test_post.id,
+        }
+
+        response = self.client.post(
+            reverse("comments"), data, content_type="application/json"
+        )
+
+        if response.status_code == 422:
+            print("Validation errors:")
+            print(response.data.get("errors"))
+        self.assertEqual(response.status_code, 201)
+        return response
+
+    def test_create_comment_unprocessable_entity(self):
+        data = {
+            "text": "Testowy komentarz",
+            "like_count": 0,
+            "dislike_count": 0,
+            "imgur_user": 1,
+            "post": 3,
+        }
+        response = self.client.post(
+            reverse("comments"), data, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 422)
+
+    # GET
+    def test_get_comments(self):
+        response = self.client.get(reverse("comments"))
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIsInstance(data, list)
+
+        for comment_data, comment in zip(data, Comment.objects.all()):
+            self.assertEqual(comment_data["id"], comment.id)
+            self.assertEqual(comment_data["text"], comment.text)
+            self.assertEqual(comment_data["like_count"], comment.like_count)
+            self.assertEqual(comment_data["dislike_count"], comment.dislike_count)
+            self.assertEqual(comment_data["imgur_user"], comment.imgur_user.id)
+            self.assertEqual(comment_data["post"], comment.post.id)
+
+    def test_get_comments_not_found(self):
+        bad_comment_id = 9999
+        response = self.client.get(reverse("comment", args=[bad_comment_id]))
+        self.assertEqual(response.status_code, 404)
+
+    # CommentDetail
+    def test_get_comment_detail(self):
+        comment_id = 1
+        response = self.client.get(reverse("comment", args=[comment_id]))
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_comment_detail_not_found(self):
+        nonexistent_comment_id = 9999
+        response = self.client.get(reverse("comment", args=[nonexistent_comment_id]))
+        self.assertEqual(response.status_code, 404)
+
+    def test_update_comment_detail(self):
+        comment_id = 1
+        test_user = ImgurUser.objects.create(
+            email="testlogin2@gmail.com", password=make_password("Testpassword2")
+        )
+        test_post = Post.objects.create(
+            title="Avatar steam",
+            description="Kozacki avatar na steam",
+            tag="Avatary",
+            expirationDate="2023-05-27T21:22:25.429235Z",
+            like_count=0,
+            dislike_count=0,
+        )
+        updated_data = {
+            "text": "Zaktualizowany komentarz",
+            "imgur_user": test_user.id,
+            "post": test_post.id,
+        }
+        response = self.client.put(
+            reverse("comment", args=[comment_id]),
+            data=updated_data,
+            content_type="application/json",
+        )
+        if response.status_code == 400:
+            print("Validation errors:")
+            print(response.data.get("errors"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_comment_detail_bad_request(self):
+        comment_id = 1
+        updated_data = {
+            "text": "Nowy komentarz",
+        }
+        response = self.client.put(
+            reverse("comment", args=[comment_id]),
+            data=updated_data,
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_update_comment_detail_not_found(self):
+        comment_id = 9999
+        updated_data = {
+            "text": "Nowy komentarz",
+        }
+        response = self.client.put(
+            reverse("comment", args=[comment_id]),
+            data=updated_data,
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_delete_comment_detail(self):
+        comment_id = 1
+        response = self.client.delete(reverse("comment", args=[comment_id]))
+        self.assertEqual(response.status_code, 204)
+
+    def test_delete_comment_detail_not_found(self):
+        comment_id = 9999
+        response = self.client.delete(reverse("comment", args=[comment_id]))
+        self.assertEqual(response.status_code, 404)
+
+
 # Sygnały
 class EmailConfirmedTestCase(TestCase):
-
     def test_email_confirmed_(self):
-        email = 'test@example.com'
+        email = "test@example.com"
         user = ImgurUser.objects.create(email=email)
         email_address = EmailAddress.objects.create(
             email=email, user=user, primary=True, verified=True
         )
 
-        email_confirmed.send(sender=self.__class__, request=None, email_address=email_address)
+        email_confirmed.send(
+            sender=self.__class__, request=None, email_address=email_address
+        )
         user.refresh_from_db()
         self.assertTrue(user.is_active)
-
-

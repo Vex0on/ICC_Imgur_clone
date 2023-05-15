@@ -23,24 +23,17 @@ class CommentList(APIView):
             )
 
     def post(self, request):
-        try:
-            serializer = CommentSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(
-                    {"message": "HTTP_201_CREATED"},
-                    status=status.HTTP_201_CREATED,
-                )
-            else:
-                return Response(
-                    {"message": "HTTP_422_UNPROCESSABLE_ENTITY"},
-                    status=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                )
-
-        except Comment.DoesNotExist:
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
             return Response(
-                {"message": "HTTP_404_NOT_FOUND"},
-                status=status.HTTP_404_NOT_FOUND,
+                {"message": "HTTP_201_CREATED"},
+                status=status.HTTP_201_CREATED,
+            )
+        else:
+            return Response(
+                serializer.errors,
+                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
             )
 
 

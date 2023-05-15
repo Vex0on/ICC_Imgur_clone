@@ -37,9 +37,13 @@ urlpatterns = [
         name="delete-subcomment",
     ),
     path("reactions", Reaction.ReactionList.as_view(), name="reactions"),
-    path("reactions/<int:record_id>/<int:individual_id>/<int:imgur_user_id>", Reaction.ReactionDetail.as_view(), name='reaction-detail'),
+    path(
+        "reactions/<int:record_id>/<int:individual_id>/<int:imgur_user_id>",
+        Reaction.ReactionDetail.as_view(),
+        name="reaction-detail",
+    ),
     path("full-posts", views.get_full_posts, name="full-posts"),
     path("full-posts/<int:pk>", views.get_full_post, name="full-post"),
     path("token/refresh/delete", delete_refresh_token, name="refresh_delete"),
-    path("token/access", get_access_token, name="access_get")
+    path("token/access", get_access_token, name="access_get"),
 ]
