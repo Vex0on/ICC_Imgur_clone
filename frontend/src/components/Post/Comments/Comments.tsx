@@ -48,41 +48,64 @@ export const Comments: React.FC<CommentsProps> = ({ comments }) => {
     )
   }
 
-  const handleAddSubcomment = (
-    commentIndex: number,
-    text: string,
-    post: number,
-    comment: any,
-    record_id: number = 0
-  ) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const decodedToken = jwt_decode(token) as DecodedToken;
-      const user_id = decodedToken?.user_id;
-      axios
-        .post(API_URL + "subcomments/add", {
+  const handleAddSubcomment = async (
+  commentIndex: number,
+  text: string,
+  post: number,
+  comment: any,
+  record_id: number = 0
+) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    const decodedToken = jwt_decode(token) as DecodedToken;
+    const user_id = decodedToken?.user_id;
+    try {
+      const response = await axios.post(
+        API_URL + "subcomments/add",
+        {
           text,
           post,
           comment,
           record_id,
           imgur_user: user_id,
-        }, {
+        },
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
-        .then((response) => {
-          const newSubcomment = response.data
-          const updatedCommentsCopy = [...updatedComments]
-          updatedCommentsCopy[commentIndex].subcomments.push(newSubcomment)
-  
-          setUpdatedComments(updatedCommentsCopy)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+        }
+      );
+      const newSubcomment = response.data;
+      const updatedCommentsCopy = [...updatedComments];
+      updatedCommentsCopy[commentIndex].subcomments.push(newSubcomment);
+
+      setUpdatedComments(updatedCommentsCopy);
+    } catch (commentError) {
+      if (axios.isAxiosError(commentError) && commentError.response?.status === 401) {
+        // Token expired, try to get a new one
+        try {
+          const newToken = await axios.get(`${API_URL}token/access`, {
+            withCredentials: true,
+            headers: { Accept: "application/json" },
+          });
+          localStorage.setItem("token", newToken.data.access);
+          await handleAddSubcomment(commentIndex, text, post, comment, record_id); // Try again with the new token
+        } catch (newTokenError) {
+          if (axios.isAxiosError(newTokenError) && (newTokenError.response?.status === 400 || newTokenError.response?.status === 401)) {
+            // Refresh token not found, clear localStorage and redirect to login
+            localStorage.removeItem("token")
+            window.location.href = "http://127.0.0.1:3000/login"
+            return
+          }
+        }
+      } else {
+        console.log(commentError);
+      }
     }
   }
+};
+    
+  
   
 
   const formatDate = (dateString: string) => {

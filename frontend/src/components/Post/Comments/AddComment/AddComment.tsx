@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from "react"
 import axios from "axios"
-
+import { AxiosError } from "axios";
 import { handleChangeText } from "../../../../utils/eventHandlers"
 
 import styles from "./AddComment.module.scss"
@@ -21,33 +21,57 @@ export const AddComment: React.FC<CommentProps> = ({
   onAddComment,
 }) => {
   const [comment, setComment] = useState<string | string>("")
-  const [user_id, setUser_id] = useState<number | null>(null);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault()
-    
-    const token = localStorage.getItem('token');
+    e.preventDefault();
+  
+    const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwt_decode(token) as DecodedToken;
-      setUser_id(decodedToken.user_id);
+  
       try {
         const headers = {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         };
         const response = await axios.post(
           `${API_URL}comments`,
-          { text: comment, record_id: 0, post: postId, imgur_user: user_id },
-          { headers }
-        )
+          {
+            text: comment,
+            record_id: 0,
+            post: postId,
+            imgur_user: decodedToken.user_id,
+          },
+          { headers, withCredentials: true },
+        );
         console.log(response.data)
         setComment("")
         window.location.reload()
-      } catch (error) {
-        console.error(error)
+      } catch (commentError: unknown) {  
+        if (axios.isAxiosError(commentError) && commentError.response?.status === 401) {
+          try {
+            const newTokenResponse = await axios.get(`${API_URL}token/access`, {
+              withCredentials: true,
+              headers: { Accept: "application/json" },
+            });
+            localStorage.setItem("token", newTokenResponse.data.access);
+            handleSubmit(e);
+          } catch (newTokenError: unknown) {
+            if (axios.isAxiosError(newTokenError) && (newTokenError.response?.status === 400 || newTokenError.response?.status === 401)) {
+              // Refresh token not found, clear localStorage and redirect to login
+              localStorage.removeItem("token")
+              window.location.href = "http://127.0.0.1:3000/login"
+              return
+            }
+            console.error(newTokenError)
+        }
+      }else{
+        console.error(commentError)
+      }
+        
       }
     }
-  }
+  };
 
   return (
     <>

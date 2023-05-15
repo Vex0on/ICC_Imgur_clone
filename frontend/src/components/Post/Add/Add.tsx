@@ -17,7 +17,7 @@ export const AddPost = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
 
     const formData = new FormData()
@@ -29,29 +29,70 @@ export const AddPost = () => {
     if(token){
       const decodedToken = jwt_decode(token) as DecodedToken
       user_id = decodedToken?.user_id
-    }
-
-    formData.append('post', JSON.stringify({ title, description, tag, imgur_user: user_id }))
-
-    if (image) {
+      
+      formData.append('post', JSON.stringify({ title, description, tag, imgur_user: user_id }))
+      
+      if (image) {
         formData.append('image', image)
+      }
+
+      try {
+        axios
+          .post(API_URL + 'posts/add', formData, {
+              headers: {
+                  'Content-Type': 'multipart/form-data',
+                  Authorization: `Bearer ${token}`
+              },
+          })
+          .then((response) => {
+              console.log(response)
+          })
+          .catch(async (postError) => {
+              if (axios.isAxiosError(postError) && postError.response?.status === 401) {
+                  // Token expired, try to get a new one
+                  try {
+                    const newToken = await axios.get(`${API_URL}token/access`, {
+                      withCredentials: true,
+                      headers: { Accept: "application/json" },
+                    });
+                    localStorage.setItem("token", newToken.data.access)
+                    handleSubmit(e) // Try again with the new token
+                  } catch (newTokenError) {
+                    localStorage.removeItem("token")
+                    window.location.reload()
+                  }
+              } else {
+                  console.log(postError)
+              }
+          })
+      } catch (error) {
+          console.log(error)
+      }
+    }      
+    else{
+      formData.append('post', JSON.stringify({ title, description, tag, imgur_user: user_id }))
+
+      if (image) {
+          formData.append('image', image)
+      }
+
+      axios
+          .post(API_URL + 'posts/add', formData, {
+              headers: {
+                  'Content-Type': 'multipart/form-data',
+              },
+          })
+          .then((response) => {
+              console.log(response)
+          })
+          .catch((err) => {
+              console.log('Błąd')
+          });
+
+      console.log({ title, description, tag, image })
+      }
     }
 
-    axios
-        .post(API_URL + 'posts/add', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        })
-        .then((response) => {
-            console.log(response)
-        })
-        .catch((err) => {
-            console.log('Błąd')
-        });
-
-    console.log({ title, description, tag, image })
-}
 
   const handleImageChange = (
     e: ChangeEvent<HTMLInputElement>
