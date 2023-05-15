@@ -17,6 +17,7 @@ export const AddPost = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
 
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
 
