@@ -5,6 +5,7 @@ import axios from "axios"
 import { API_URL } from "../../../services/Api/Api"
 import { useParams } from "react-router-dom"
 import jwt_decode from "jwt-decode"
+import { refreshToken } from "../../../utils/tokenUtils"
 
 interface ImgurUser {
   username: string
@@ -82,31 +83,16 @@ export const Comments: React.FC<CommentsProps> = ({ comments }) => {
       setUpdatedComments(updatedCommentsCopy);
     } catch (commentError) {
       if (axios.isAxiosError(commentError) && commentError.response?.status === 401) {
-        // Token expired, try to get a new one
-        try {
-          const newToken = await axios.get(`${API_URL}token/access`, {
-            withCredentials: true,
-            headers: { Accept: "application/json" },
-          });
-          localStorage.setItem("token", newToken.data.access);
-          await handleAddSubcomment(commentIndex, text, post, comment, record_id); // Try again with the new token
-        } catch (newTokenError) {
-          if (axios.isAxiosError(newTokenError) && (newTokenError.response?.status === 400 || newTokenError.response?.status === 401)) {
-            // Refresh token not found, clear localStorage and redirect to login
-            localStorage.removeItem("token")
-            window.location.href = "http://127.0.0.1:3000/login"
-            return
-          }
-        }
-      } else {
+        refreshToken(() =>
+          handleAddSubcomment(commentIndex, text, post, comment, record_id), "/login"
+        ); 
+      }
+      else {
         console.log(commentError);
       }
     }
   }
 };
-    
-  
-  
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)

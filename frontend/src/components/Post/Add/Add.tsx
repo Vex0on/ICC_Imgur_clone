@@ -4,6 +4,7 @@ import jwt_decode from "jwt-decode"
 import styles from "./Add.module.scss"
 import axios from "axios";
 import { API_URL } from "../../../services/Api/Api"
+import { refreshToken } from "../../../utils/tokenUtils";
 
 interface DecodedToken {
   user_id: number;
@@ -50,21 +51,8 @@ export const AddPost = () => {
           })
           .catch(async (postError) => {
               if (axios.isAxiosError(postError) && postError.response?.status === 401) {
-                  // Token expired, try to get a new one
-                  try {
-                    const newToken = await axios.get(`${API_URL}token/access`, {
-                      withCredentials: true,
-                      headers: { Accept: "application/json" },
-                    });
-                    localStorage.setItem("token", newToken.data.access)
-                    handleSubmit(e) // Try again with the new token
-                  } catch (newTokenError) {
-                    localStorage.removeItem("token")
-                    window.location.reload()
-                  }
-              } else {
-                  console.log(postError)
-              }
+                refreshToken(() => handleSubmit(e), "/add/post")
+              } 
           })
       } catch (error) {
           console.log(error)

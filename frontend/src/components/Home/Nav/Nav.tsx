@@ -44,6 +44,18 @@ export const Nav = () => {
     setToken(localStorage.getItem("token") || '');
     if (token) {
       setLoggedIn(true);
+    }else {
+      axios
+        .get("http://127.0.0.1:8000/api/token/access", {
+          withCredentials: true,
+          headers: { Accept: "application/json" },
+        })
+        .then((response) => {
+          localStorage.setItem("token", response.data.access);
+          setToken(response.data.access);
+          setLoggedIn(true);
+        })
+        .catch((error) => {});
     }
   }, [token]);
 

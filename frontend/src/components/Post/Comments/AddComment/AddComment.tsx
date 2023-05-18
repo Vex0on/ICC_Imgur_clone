@@ -2,7 +2,7 @@ import React, { FormEvent, useState } from "react"
 import axios from "axios"
 import { AxiosError } from "axios";
 import { handleChangeText } from "../../../../utils/eventHandlers"
-
+import { refreshToken } from "../../../../utils/tokenUtils";
 import styles from "./AddComment.module.scss"
 import { API_URL } from "../../../../services/Api/Api"
 import jwt_decode from "jwt-decode"
@@ -49,29 +49,14 @@ export const AddComment: React.FC<CommentProps> = ({
         window.location.reload()
       } catch (commentError: unknown) {  
         if (axios.isAxiosError(commentError) && commentError.response?.status === 401) {
-          try {
-            const newTokenResponse = await axios.get(`${API_URL}token/access`, {
-              withCredentials: true,
-              headers: { Accept: "application/json" },
-            });
-            localStorage.setItem("token", newTokenResponse.data.access);
-            handleSubmit(e);
-          } catch (newTokenError: unknown) {
-            if (axios.isAxiosError(newTokenError) && (newTokenError.response?.status === 400 || newTokenError.response?.status === 401)) {
-              // Refresh token not found, clear localStorage and redirect to login
-              localStorage.removeItem("token")
-              window.location.href = "http://127.0.0.1:3000/login"
-              return
-            }
-            console.error(newTokenError)
-        }
-      }else{
+          refreshToken(() => handleSubmit(e), "/login");
+        }else{
         console.error(commentError)
+        }
       }
         
-      }
     }
-  };
+  }
 
   return (
     <>
