@@ -1,3 +1,4 @@
+import json
 import os
 import uuid
 
@@ -10,7 +11,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 from rest_framework.response import Response
-from .models import ImgurUser, Image, Post, Comment
+from .models import ImgurUser, Image, Post, Comment, Subcomment
 from .serializers import ImageSerializer
 
 
@@ -455,6 +456,182 @@ class CommentTestCase(TestCase):
         comment_id = 9999
         response = self.client.delete(reverse("comment", args=[comment_id]))
         self.assertEqual(response.status_code, 404)
+
+
+# SubComment
+class SubcommentTestCase(TestCase):
+    def setUp(self):
+        user = ImgurUser.objects.create(
+            email="testlogin@gmail.com", password=make_password("testpassword")
+        )
+        post = Post.objects.create(
+            title="Avatar steam",
+            description="Kozacki avatar na steam",
+            tag="Avatary",
+            expirationDate="2023-05-27T21:22:25.429235Z",
+            like_count=0,
+            dislike_count=0,
+        )
+
+        comment = Comment.objects.create(
+            id=1,
+            text="Testowy komentarz",
+            like_count=0,
+            dislike_count=0,
+            imgur_user=user,
+            post=post,
+        )
+        self.subcomment = Subcomment.objects.create(
+            text="This field is required.",
+            comment=comment,
+            imgur_user=user
+        )
+
+    def test_create_subcomment(self):
+        Comment.objects.all().delete()
+        test_user = ImgurUser.objects.create(
+            email="testlogin3@gmail.com", password=make_password("Testpassword3")
+        )
+        test_post = Post.objects.create(
+            title="Avatar steam",
+            description="Kozacki avatar na steam",
+            tag="Avatary",
+            expirationDate="2023-05-27T21:22:25.429235Z",
+            like_count=0,
+            dislike_count=0,
+        )
+        test_comment = Comment.objects.create(
+            id=1,
+            text="Testowy komentarz",
+            like_count=0,
+            dislike_count=0,
+            imgur_user=test_user,
+            post=test_post,
+        )
+
+        data = {
+            "text": "Nowa odpowiedź",
+            "imgur_user": test_user.id,
+            "comment": test_comment.id,
+        }
+
+        response = self.client.post(
+            reverse("add-subcomment"), data, content_type="application/json"
+        )
+
+        if response.status_code == 422:
+            print("Validation errors:")
+            print(response.data.get("errors"))
+        self.assertEqual(response.status_code, 201)
+        return response
+
+    def test_create_subcomment_unprocessable_entity(self):
+        Comment.objects.all().delete()
+        test_user = ImgurUser.objects.create(
+            email="testlogin3@gmail.com", password=make_password("Testpassword3")
+        )
+        test_post = Post.objects.create(
+            title="Avatar steam",
+            description="Kozacki avatar na steam",
+            tag="Avatary",
+            expirationDate="2023-05-27T21:22:25.429235Z",
+            like_count=0,
+            dislike_count=0,
+        )
+        test_comment = Comment.objects.create(
+            id=1,
+            text="Testowy komentarz",
+            like_count=0,
+            dislike_count=0,
+            imgur_user=test_user,
+            post=test_post,
+        )
+
+        data = {
+            "text": "",
+            "imgur_user": test_user.id,
+            "comment": test_comment.id,
+        }
+
+        response = self.client.post(
+            reverse("add-subcomment"), data, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 422)
+
+    # GET
+    def test_get_subcomments(self):
+        url = reverse("subcomments")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]["text"], self.subcomment.text)
+        self.assertEqual(response.data[0]["comment"], self.subcomment.comment.id)
+        self.assertEqual(response.data[0]["imgur_user"], self.subcomment.imgur_user.id)
+
+    def test_get_subcomment(self):
+        url = reverse("subcomment", args=[self.subcomment.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["text"], self.subcomment.text)
+        self.assertEqual(response.data["comment"], self.subcomment.comment.id)
+        self.assertEqual(response.data["imgur_user"], self.subcomment.imgur_user.id)
+
+    def test_get_nonexistent_subcomment(self):
+        url = reverse("subcomment", args=[9999])
+        data = {}
+        response = self.client.get(url, data)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    # UPDATE
+    def test_update_subcomment(self):
+        url = reverse("update-subcomment", kwargs={"pk": self.subcomment.pk})
+        data = {
+            "text": "Updated subcomment",
+            "comment": self.subcomment.comment.pk,
+            "imgur_user": self.subcomment.imgur_user.pk,
+        }
+        response = self.client.put(url, data=json.dumps(data), content_type="application/json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.subcomment.refresh_from_db()
+        self.assertEqual(self.subcomment.text, "Updated subcomment")
+
+    def test_update_nonexistent_subcomment(self):
+        url = reverse("update-subcomment", kwargs={"pk": 9999})
+        data = {
+            "text": "Updated subcomment",
+            "comment": 1,
+            "imgur_user": 1,
+        }
+        response = self.client.put(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.data["message"], "HTTP_404_NOT_FOUND")
+
+    def test_update_subcomment_bad_request(self):
+        url = reverse("update-subcomment", kwargs={"pk": self.subcomment.pk})
+        data = {
+            "text": "",
+            "comment": self.subcomment.comment.pk,
+            "imgur_user": self.subcomment.imgur_user.pk,
+        }
+        response = self.client.put(url, data=json.dumps(data), content_type="application/json")
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    # DELETE
+    def test_delete_subcomment(self):
+        url = reverse("delete-subcomment", kwargs={"pk": self.subcomment.pk})
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Subcomment.objects.filter(pk=self.subcomment.pk).exists())
+
+    def test_delete_nonexistent_subcomment(self):
+        url = reverse("delete-subcomment", kwargs={"pk": 9999})
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.data["message"], "HTTP_404_NOT_FOUND")
 
 
 # Sygnały

@@ -25,7 +25,7 @@ def get_subcomment(request, pk):
             serializer.data,
             status=status.HTTP_200_OK,
         )
-    except subcomment.DoesNotExist:
+    except Subcomment.DoesNotExist:
         return Response(
             {"message": "HTTP_404_NOT_FOUND"},
             status=status.HTTP_404_NOT_FOUND,
