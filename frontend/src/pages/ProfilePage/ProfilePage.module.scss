@@ -1,0 +1,101 @@
+@use '../../styles/mixin.scss' as mixin;
+
+@import '../../styles/variables.scss';
+
+.main {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    width: 80vw;
+    height: 100vh;
+    margin-top: 9rem;
+
+    color: $font-secondary-color;
+}
+
+.profile {
+    display: flex;
+
+    width: 850px;
+    height: 500px;
+
+    border-radius: 10px;
+    background-color: $background-secondary-color;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    width: 40%;
+
+    .nav__profile {
+        margin-top: 2rem;
+    }
+
+    .nav__image {
+        border-radius: 50%;
+    }
+
+    .nav__username {
+        font-size: 1.25rem;
+        font-weight: 300;
+
+        text-align: center;
+        letter-spacing: 0.1rem;
+    }
+
+    .nav__content {
+        margin-top: 3rem;
+    }
+
+    .nav__item {
+        font-size: 1.25rem;
+
+        display: flex;
+        align-items: center;
+
+        cursor: pointer;
+
+        &:last-child {
+            margin-top: 1rem;
+            margin-left: 2px;
+        }
+    }
+
+    .nav__icon {
+        font-size: 2rem;
+
+        margin-right: 0.5rem;
+    }
+}
+
+.content {
+    overflow-y: scroll;
+
+    width: 60%;
+}
+
+.rocket__left {
+    position: absolute;
+    z-index: -1;
+    top: 10%;
+    left: 0;
+
+    @include mixin.desktop-larger { display: none;
+}
+
+}
+
+.rocket__right {
+    position: absolute;
+    z-index: -1;
+    top: 30%;
+    right: 0;
+
+    @include mixin.desktop-larger { display: none;
+}
+
+}

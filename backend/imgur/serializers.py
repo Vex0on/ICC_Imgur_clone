@@ -1,9 +1,10 @@
 import datetime
 
 import PIL
+from djoser.serializers import UserCreateSerializer
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from djoser.serializers import UserCreateSerializer
+
 from .models import *
 from .validators import *
 
@@ -17,6 +18,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             token["is_superuser"] = True
         else:
             token["is_superuser"] = False
+
+        token["username"] = user.username
 
         return token
 
@@ -56,17 +59,28 @@ class ImgurUserBaseSerializer(serializers.ModelSerializer):
         validators=[validate_phone_number],
         # error_messages=error_messages,
         required=False,
+        allow_null=True,
+        allow_blank=True,
     )
 
     first_name = serializers.CharField(
         validators=[validate_first_name],
         # error_messages=error_messages,
         required=False,
+        allow_null=True,
+        allow_blank=True,
     )
 
     last_name = serializers.CharField(
         validators=[validate_last_name],
         # error_messages=error_messages,
+        required=False,
+        allow_null=True,
+        allow_blank=True,
+    )
+
+    profile_picture = serializers.ImageField(
+        validators=[validate_image],
         required=False,
     )
 
@@ -76,6 +90,7 @@ class ImgurUserBaseSerializer(serializers.ModelSerializer):
             username=validated_data.get("email"),
             phone_number=validated_data.get("phone_number"),
             is_active=False,  # True - dostep do logowania, False - brak dostepu
+            profile_picture=validated_data.get("profile_picture"),
         )
         # set_password haszuje haslo
         imgur_user.set_password(validated_data.get("password"))
@@ -91,7 +106,9 @@ class ImgurUserBaseSerializer(serializers.ModelSerializer):
         instance.is_active = validated_data.get("is_active", instance.is_active)
         instance.first_name = validated_data.get("first_name", instance.first_name)
         instance.last_name = validated_data.get("last_name", instance.last_name)
-
+        instance.profile_picture = validated_data.get(
+            "profile_picture", instance.profile_picture
+        )
         password = validated_data.get("password")
         if password:
             instance.set_password(password)

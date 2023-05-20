@@ -1,12 +1,15 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+def user_profile_picture_path(instance, filename):
+    return f"user-profile-pictures/user_{instance.id}/{filename}"
 
 class ImgurUser(AbstractUser):
     phone_number = models.CharField(max_length=9, unique=True, null=True)
     email = models.EmailField(unique=True, null=True)
-    username = models.CharField(max_length=45, unique=True, null=True, blank=True)
-    password = models.CharField(max_length=255, blank=True)
+    username = models.CharField(max_length=45, unique=True, null=True)
+    password = models.CharField(max_length=255)
+    profile_picture = models.ImageField(upload_to=user_profile_picture_path)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]

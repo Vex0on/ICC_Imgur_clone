@@ -23,7 +23,7 @@ interface Post {
   dislike_count: number
   created_time: string
   updated_time: string
-  imgur_user: string | null
+  imgur_user: any
   images: Array<{ image: string; name: string }>
   comments: Array<any>
 }

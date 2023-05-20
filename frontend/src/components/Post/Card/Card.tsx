@@ -14,7 +14,7 @@ interface CardProps {
   title: string
   description: string
   createdTime: string
-  imgurUser: string | null
+  imgurUser: any
   images: Array<Image>
   comments: Array<any>
 }
@@ -55,7 +55,7 @@ export const Card: React.FC<CardProps> = ({ title, description, createdTime, img
               />
 
               <div>
-                <p className={styles.name}>{imgurUser || "Anonim"}</p>
+                <p className={styles.name}>{imgurUser ? imgurUser.username : "Anonim"}</p>
                 <p className={styles.date}>{formatDate(createdTime)}</p>
               </div>
             </div>

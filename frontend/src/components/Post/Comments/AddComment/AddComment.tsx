@@ -1,8 +1,8 @@
 import React, { FormEvent, useState } from "react"
 import axios from "axios"
-
+import { AxiosError } from "axios";
 import { handleChangeText } from "../../../../utils/eventHandlers"
-
+import { refreshToken } from "../../../../utils/tokenUtils";
 import styles from "./AddComment.module.scss"
 import { API_URL } from "../../../../services/Api/Api"
 import jwt_decode from "jwt-decode"
@@ -21,31 +21,40 @@ export const AddComment: React.FC<CommentProps> = ({
   onAddComment,
 }) => {
   const [comment, setComment] = useState<string | string>("")
-  const [user_id, setUser_id] = useState<number | null>(null);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault()
-    
-    const token = localStorage.getItem('token');
+    e.preventDefault();
+  
+    const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwt_decode(token) as DecodedToken;
-      setUser_id(decodedToken.user_id);
+  
       try {
         const headers = {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         };
         const response = await axios.post(
           `${API_URL}comments`,
-          { text: comment, record_id: 0, post: postId, imgur_user: user_id },
-          { headers }
-        )
+          {
+            text: comment,
+            record_id: 0,
+            post: postId,
+            imgur_user: decodedToken.user_id,
+          },
+          { headers, withCredentials: true },
+        );
         console.log(response.data)
         setComment("")
         window.location.reload()
-      } catch (error) {
-        console.error(error)
+      } catch (commentError: unknown) {  
+        if (axios.isAxiosError(commentError) && commentError.response?.status === 401) {
+          refreshToken(() => handleSubmit(e), "/login");
+        }else{
+        console.error(commentError)
+        }
       }
+        
     }
   }
 

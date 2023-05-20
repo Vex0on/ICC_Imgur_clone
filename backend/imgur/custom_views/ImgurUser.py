@@ -25,7 +25,7 @@ def delete_refresh_token(request):
     return response
 
 
-@api_view(["POST"])
+@api_view(["GET"])
 def get_access_token(request):
     refresh_token = request.COOKIES.get("refresh")
 
@@ -36,7 +36,7 @@ def get_access_token(request):
             new_access_token = str(token.access_token)
 
             response = Response({'access': new_access_token})
-            response.set_cookie('refresh', refresh_token, httponly=True)
+            response.set_cookie('refresh', refresh_token, httponly=True, samesite="Lax")
             return response
         except ImgurUser.DoesNotExist:
             return Response(

@@ -1,9 +1,14 @@
 import React, { useState, ChangeEvent, FormEvent } from "react"
 import { DropzoneOptions, useDropzone } from "react-dropzone"
-
+import jwt_decode from "jwt-decode"
 import styles from "./Add.module.scss"
 import axios from "axios";
 import { API_URL } from "../../../services/Api/Api"
+import { refreshToken } from "../../../utils/tokenUtils";
+
+interface DecodedToken {
+  user_id: number;
+}
 
 export const AddPost = () => {
   const [title, setTitle] = useState<string>("")
@@ -12,32 +17,71 @@ export const AddPost = () => {
   const [image, setImage] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
 
     const formData = new FormData()
 
-    formData.append('post', JSON.stringify({ title, description, tag }))
+    let user_id = null
 
-    if (image) {
+    const token = localStorage.getItem('token');
+
+    if(token){
+      const decodedToken = jwt_decode(token) as DecodedToken
+      user_id = decodedToken?.user_id
+      
+      formData.append('post', JSON.stringify({ title, description, tag, imgur_user: user_id }))
+      
+      if (image) {
         formData.append('image', image)
+      }
+
+      try {
+        axios
+          .post(API_URL + 'posts/add', formData, {
+              headers: {
+                  'Content-Type': 'multipart/form-data',
+                  Authorization: `Bearer ${token}`
+              },
+          })
+          .then((response) => {
+              console.log(response)
+          })
+          .catch(async (postError) => {
+              if (axios.isAxiosError(postError) && postError.response?.status === 401) {
+                refreshToken(() => handleSubmit(e), "/add/post")
+              } 
+          })
+      } catch (error) {
+          console.log(error)
+      }
+    }      
+    else{
+      formData.append('post', JSON.stringify({ title, description, tag, imgur_user: user_id }))
+
+      if (image) {
+          formData.append('image', image)
+      }
+
+      axios
+          .post(API_URL + 'posts/add', formData, {
+              headers: {
+                  'Content-Type': 'multipart/form-data',
+              },
+          })
+          .then((response) => {
+              console.log(response)
+          })
+          .catch((err) => {
+              console.log('Błąd')
+          });
+
+      console.log({ title, description, tag, image })
+      }
     }
 
-    axios
-        .post(API_URL + 'posts/add', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        })
-        .then((response) => {
-            console.log(response)
-        })
-        .catch((err) => {
-            console.log('Błąd')
-        });
-
-    console.log({ title, description, tag, image })
-}
 
   const handleImageChange = (
     e: ChangeEvent<HTMLInputElement>
