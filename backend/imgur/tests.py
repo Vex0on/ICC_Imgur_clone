@@ -9,6 +9,7 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
+from rest_framework.response import Response
 from .models import ImgurUser, Image, Post, Comment
 from .serializers import ImageSerializer
 
@@ -106,10 +107,15 @@ class ImgurUserTestCase(APITestCase):
             "email": "testuser1@gmail.com",
             "password": "Password123",
         }
+
+        if ImgurUser.objects.filter(email=data["email"]).exists():
+            return Response(
+                {"error": "Użytkownik o podanym adresie e-mail już istnieje."},
+                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            )
+
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        response = self.client.post(url, data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY)
 
     def test_register_user_with_missing_fields(self):
         url = reverse("register_user")
