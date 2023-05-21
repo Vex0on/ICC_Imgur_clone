@@ -82,3 +82,18 @@ def delete_post(request, pk):
             {"message": "HTTP_404_NOT_FOUND"},
             status=status.HTTP_404_NOT_FOUND,
         )
+
+
+def search_by_tag(request):
+    try:
+        tag = request.data.get("tag")
+        posts = Post.objects.filter(tag__icontains=tag.lower())
+        serializer = PostSerializer(posts, many=True)
+        return Response(
+            {"data": serializer.data}, status=status.HTTP_200_OK
+        )
+    except Post.DoesNotExist:
+        return Response(
+            {"message": "HTTP_404_NOT_FOUND"},
+            status=status.HTTP_404_NOT_FOUND,
+        )

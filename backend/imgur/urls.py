@@ -16,6 +16,7 @@ urlpatterns = [
     path("posts/add", views.create_post, name="add-post"),
     path("posts/update/<int:pk>", views.update_post, name="update-post"),
     path("posts/delete/<int:pk>", views.delete_post, name="delete-post"),
+    path("posts/search", views.search_by_tag_post, name="post-tag"),
     path("images", views.get_images, name="images"),
     path("images/<int:pk>", views.get_image, name="image"),
     path("images/add", views.create_image, name="add-image"),

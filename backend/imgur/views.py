@@ -21,6 +21,7 @@ from .custom_views.Post import (
     get_post,
     get_posts,
     update_post,
+    search_by_tag
 )
 from .custom_views.Subcomment import (
     create_subcomment,
@@ -97,6 +98,11 @@ def update_post_view(request):
 @api_view(["DELETE"])
 def delete_post_view(request):
     return delete_post(request)
+
+
+@api_view(["GET"])
+def search_by_tag_post(request):
+    return search_by_tag(request)
 
 
 # Image
