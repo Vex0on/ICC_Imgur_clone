@@ -9,30 +9,31 @@ import rocketLeft from '../../assets/img/homepage-01.png'
 import rocketRight from '../../assets/img/homepage-02.png'
 
 export const HomePage = () => {
-    const [scrollY, setScrollY] = useState(0);
-
+    const [scrollY, setScrollY] = useState(0)
+    const [searchTerm, setSearchTerm] = useState<string>('')
     const handleScroll = () => {
-        setScrollY(window.scrollY);
-    };
+        setScrollY(window.scrollY)
+    }
 
     useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll)
         return () => {
-        window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
+        window.removeEventListener('scroll', handleScroll)
+        }
+    }, [])
 
     const parallaxStyle = {
         transform: `translateY(${scrollY * 0.7}px)`
-      };
+      }
 
     return(
         <>
-            <Nav />
+            <Nav onSearchChange={setSearchTerm} />
             <main className={styles.main}>
                 <h1 className={styles.header}>Uśmiech, kremówka i duch papieża</h1>
                 <Tags />
-                <Media />
+            <Media searchTerm={searchTerm} />
+                
             </main>
 
             <img className={styles.rocket__left} src={rocketLeft} style={parallaxStyle} />

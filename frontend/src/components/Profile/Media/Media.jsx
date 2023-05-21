@@ -5,18 +5,19 @@ import styles from './Media.module.scss'
 import { BsEnvelope } from 'react-icons/bs'
 import { Link } from "react-router-dom"
 
-export const Media = () => {
+export const Media = ({ userId }) => {
     const [posts, setPosts] = useState([])
 
     useEffect(() => {
         axios.get(`${API_URL}full-posts`)
             .then(response => {
-                setPosts(response.data)
+                const userPosts = response.data.filter(post => post.imgur_user.id === userId)
+                setPosts(userPosts)
             })
             .catch(error => {
                 console.error('There was an error!', error)
             })
-    }, [])
+    }, [userId])  
 
     return (
         <div className={styles.container}>

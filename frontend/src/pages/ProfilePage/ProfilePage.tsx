@@ -103,7 +103,7 @@ export const ProfilePage = () => {
 
                     <div className={styles.content}>
                         {view === 'profile' && <User userId={user && user.id} />}
-                        {view === 'media' && <Media />}
+                        {view === 'media' && <Media userId={user && user.id} />}
                     </div>
                 </div>
 

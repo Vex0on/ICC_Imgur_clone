@@ -20,6 +20,7 @@ const Logout = () => {
       .then(() => {
         // Navigate to homepage
         window.location.reload()
+        navigate('/')
       })
       .catch((err) => console.log(err));
   };
