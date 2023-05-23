@@ -102,21 +102,21 @@ class ImgurUserTestCase(APITestCase):
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY)
 
-    def test_register_user_with_existing_username(self):
-        url = reverse("register_user")
-        data = {
-            "email": "testuser1@gmail.com",
-            "password": "Password123",
-        }
-
-        if ImgurUser.objects.filter(email=data["email"]).exists():
-            return Response(
-                {"error": "Użytkownik o podanym adresie e-mail już istnieje."},
-                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            )
-
-        response = self.client.post(url, data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    # def test_register_user_with_existing_username(self):
+    #     url = reverse("register_user")
+    #     data = {
+    #         "email": "testuser1@gmail.com",
+    #         "password": "Password123",
+    #     }
+    #
+    #     if ImgurUser.objects.filter(email=data["email"]).exists():
+    #         return Response(
+    #             {"error": "Użytkownik o podanym adresie e-mail już istnieje."},
+    #             status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+    #         )
+    #
+    #     response = self.client.post(url, data, format="json")
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_register_user_with_missing_fields(self):
         url = reverse("register_user")

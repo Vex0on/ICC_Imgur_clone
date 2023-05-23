@@ -49,9 +49,9 @@ export const AddPost = () => {
               },
           })
           .then((response) => {
-              // console.log(response)
-              // alert("Dodałeś post")
-              // navigate('/')
+              console.log(response)
+              alert("Dodałeś post")
+              navigate('/')
           })
           .catch(async (postError) => {
               if (axios.isAxiosError(postError) && postError.response?.status === 401) {
@@ -76,9 +76,9 @@ export const AddPost = () => {
               },
           })
           .then((response) => {
-              console.log(response)
-              alert("Dodałeś post")
-              navigate('/')
+              // console.log(response)
+              // alert("Dodałeś post")
+              // navigate('/')
           })
           .catch((err) => {
               console.log('Błąd')

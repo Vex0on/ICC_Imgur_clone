@@ -1,15 +1,15 @@
-import React, { FormEvent, useState } from "react"
-import axios from "axios"
+import React, { FormEvent, useState } from "react";
+import axios from "axios";
 import { AxiosError } from "axios";
-import { handleChangeText } from "../../../../utils/eventHandlers"
+import { handleChangeText } from "../../../../utils/eventHandlers";
 import { refreshToken } from "../../../../utils/tokenUtils";
-import styles from "./AddComment.module.scss"
-import { API_URL } from "../../../../services/Api/Api"
-import jwt_decode from "jwt-decode"
+import styles from "./AddComment.module.scss";
+import { API_URL } from "../../../../services/Api/Api";
+import jwt_decode from "jwt-decode";
 
 interface CommentProps {
-  postId: any
-  onAddComment: (comment: any) => void
+  postId: any;
+  onAddComment: (comment: any) => void;
 }
 
 interface DecodedToken {
@@ -20,15 +20,15 @@ export const AddComment: React.FC<CommentProps> = ({
   postId,
   onAddComment,
 }) => {
-  const [comment, setComment] = useState<string | string>("")
+  const [comment, setComment] = useState<string | string>("");
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-  
+
     const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwt_decode(token) as DecodedToken;
-  
+
       try {
         const headers = {
           Authorization: `Bearer ${token}`,
@@ -42,21 +42,23 @@ export const AddComment: React.FC<CommentProps> = ({
             post: postId,
             imgur_user: decodedToken.user_id,
           },
-          { headers, withCredentials: true },
+          { headers, withCredentials: true }
         );
-        console.log(response.data)
-        setComment("")
-        window.location.reload()
-      } catch (commentError: unknown) {  
-        if (axios.isAxiosError(commentError) && commentError.response?.status === 401) {
+        console.log(response.data);
+        setComment("");
+        window.location.reload();
+      } catch (commentError: unknown) {
+        if (
+          axios.isAxiosError(commentError) &&
+          commentError.response?.status === 401
+        ) {
           refreshToken(() => handleSubmit(e), "/login");
-        }else{
-        console.error(commentError)
+        } else {
+          console.error(commentError);
         }
       }
-        
     }
-  }
+  };
 
   return (
     <>
@@ -70,10 +72,10 @@ export const AddComment: React.FC<CommentProps> = ({
             onChange={(event) => handleChangeText(event, setComment)}
           />
           <button className={styles.comment__login} type="submit">
-            Dodaj 
+            Dodaj
           </button>
         </form>
       </div>
     </>
-  )
-}
+  );
+};

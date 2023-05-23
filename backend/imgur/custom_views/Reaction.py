@@ -1,9 +1,7 @@
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from ..models import Reaction
+from ..models import Reaction, Post
 from ..serializers import ReactionSerializers
 
 
@@ -51,13 +49,9 @@ class ReactionList(APIView):
 
 
 class ReactionDetail(APIView):
-    def get(self, request):
-        record_id = request.data.get('record_id')
-        individual_id = request.data.get('individual_id')
-        imgur_user_id = request.data.get('imgur_user')
-
+    def get(self, request, record_id, individual_id, imgur_user_id):
         try:
-            reaction = Reaction.objects.get(record_id=record_id, individual_id=individual_id, imgur_user_id=imgur_user_id)
+            reaction = Reaction.objects.get(record_id=record_id, individual_id=individual_id, imgur_user=imgur_user_id)
             serializer = ReactionSerializers(reaction, many=False)
             return Response(
                 serializer.data,
@@ -71,8 +65,18 @@ class ReactionDetail(APIView):
 
     def put(self, request, record_id, individual_id, imgur_user_id):
         try:
-            reaction = Reaction.objects.get(record_id=record_id, individual_id=individual_id, imgur_user_id=imgur_user_id)
-            serializer = ReactionSerializers(reaction, many=False, data=request.data)
+            changed_reaction = request.data.get("reaction")
+            if changed_reaction is None:
+                return Response(
+                    {"message": "Reaction is required."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            reaction = Reaction.objects.get(record_id=record_id, individual_id=individual_id, imgur_user=imgur_user_id)
+            reaction.reaction = changed_reaction
+            serializer = ReactionSerializers(reaction, many=False, data={"id": reaction.id, "record_id": reaction.record_id,
+                                                                         "individual_id": reaction.individual_id,
+                                                                         "imgur_user": reaction.imgur_user.pk,
+                                                                         "reaction": changed_reaction})
             if serializer.is_valid():
                 serializer.save()
                 return Response(
@@ -81,7 +85,7 @@ class ReactionDetail(APIView):
                 )
             else:
                 return Response(
-                    {"message": "HTTP_400_BAD_REQUEST"},
+                    {"errors": serializer.errors},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
         except Reaction.DoesNotExist:
@@ -92,12 +96,20 @@ class ReactionDetail(APIView):
 
     def delete(self, request, record_id, individual_id, imgur_user_id):
         try:
-            reaction = Reaction.objects.get(record_id=record_id, individual_id=individual_id, imgur_user_id=imgur_user_id)
-            reaction.delete()
-            return Response(
-                {"message": "HTTP_204_NO_CONTENT"},
-                status=status.HTTP_204_NO_CONTENT,
-            )
+            reactions = Reaction.objects.filter(record_id=record_id, individual_id=individual_id,
+                                                imgur_user=imgur_user_id)
+
+            if reactions.exists():
+                reactions.delete()
+                return Response(
+                    {"message": "HTTP_204_NO_CONTENT"},
+                    status=status.HTTP_204_NO_CONTENT,
+                )
+            else:
+                return Response(
+                    {"message": "HTTP_404_NOT_FOUND"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
         except Reaction.DoesNotExist:
             return Response(
                 {"message": "HTTP_404_NOT_FOUND"},
@@ -106,28 +118,22 @@ class ReactionDetail(APIView):
 
 
 class CountReactions(APIView):
-    def get(self, request):
-        record_id = request.data.get('record_id')
-        individual_id = request.data.get('individual_id')
-
-        try:
-            like_data = Reaction.objects.filter(record_id=record_id, individual_id=individual_id, reaction=True).count()
-            dislike_data = Reaction.objects.filter(record_id=record_id, individual_id=individual_id, reaction=False).count()
-            count = like_data - dislike_data
-            return Response({"count": count}, status=status.HTTP_200_OK)
-        except Reaction.DoesNotExist:
+    def get(self, request, record_id, individual_id):
+        post_exists = Post.objects.filter(pk=individual_id).exists()
+        if not post_exists:
             return Response(
                 {"message": "HTTP_404_NOT_FOUND"},
                 status=status.HTTP_404_NOT_FOUND
             )
 
+        like_data = Reaction.objects.filter(record_id=record_id, individual_id=individual_id, reaction=True).count()
+        dislike_data = Reaction.objects.filter(record_id=record_id, individual_id=individual_id, reaction=False).count()
+        count = like_data - dislike_data
+        return Response({"count": count}, status=status.HTTP_200_OK)
+
 
 class UserReaction(APIView):
-    def get(self, request):
-        record_id = request.data.get('record_id')
-        individual_id = request.data.get('individual_id')
-        imgur_user_id = request.data.get('imgur_user')
-
+    def get(self, request, record_id, individual_id, imgur_user_id):
         try:
             reaction = Reaction.objects.get(record_id=record_id, individual_id=individual_id, imgur_user=imgur_user_id)
             return Response({"reaction": reaction.reaction})

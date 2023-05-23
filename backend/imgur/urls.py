@@ -38,11 +38,11 @@ urlpatterns = [
     ),
     path("reactions", Reaction.ReactionList.as_view(), name="reactions"),
     path(
-        "reactions/check",
+        "reactions/check/<int:record_id>/<int:individual_id>/<int:imgur_user_id>",
         Reaction.UserReaction.as_view(),
         name="reaction-user",
     ),
-    path("reactions/count", Reaction.CountReactions.as_view(), name="reaction-record"),
+    path("reactions/count/<int:record_id>/<int:individual_id>", Reaction.CountReactions.as_view(), name="reaction-record"),
     path("reactions/<int:record_id>/<int:individual_id>/<int:imgur_user_id>", Reaction.ReactionDetail.as_view(), name="delete-reaction"),
     path("full-posts", views.get_full_posts, name="full-posts"),
     path("full-posts/<int:pk>", views.get_full_post, name="full-post"),
