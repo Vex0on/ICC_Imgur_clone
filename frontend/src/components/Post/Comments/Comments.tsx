@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Comments.module.scss";
 import { RxThickArrowUp, RxThickArrowDown } from "react-icons/rx";
 import axios from "axios";
@@ -29,6 +29,12 @@ interface CommentsProps {
   comments: CommentData[];
 }
 
+interface CommentReactions {
+  comment_id: number;
+  count: number;
+  subcomments: { subcomment_id: number; count: number }[];
+}
+
 interface DecodedToken {
   user_id: number;
 }
@@ -36,8 +42,45 @@ interface DecodedToken {
 export const Comments: React.FC<CommentsProps> = ({ comments }) => {
   const [expandedComments, setExpandedComments] = useState<number[]>([]);
   const { id } = useParams<{ id: any }>();
+  const [commentReactions, setCommentReactions] = useState<CommentReactions[]>(
+    []
+  );
   const [updatedComments, setUpdatedComments] =
     useState<CommentData[]>(comments);
+
+  useEffect(() => {
+    fetchCommentReactions();
+  }, []);
+
+  const fetchCommentReactions = async () => {
+    try {
+      const response = await axios.get(`${API_URL}reactions/count/2/${id}`);
+      const commentReactions: CommentReactions[] = response.data.data;
+      setCommentReactions(commentReactions);
+      console.log(commentReactions);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getCommentReactionCount = (commentId: number): number => {
+    const reaction = commentReactions.find(
+      (comment) => comment.comment_id === commentId
+    );
+    return reaction ? reaction.count : 0;
+  };
+
+  const getSubcommentReactionCount = (subcommentId: number): number => {
+    let count = 0;
+    commentReactions.forEach((comment) => {
+      comment.subcomments.forEach((subcomment) => {
+        if (subcomment.subcomment_id === subcommentId) {
+          count += subcomment.count;
+        }
+      });
+    });
+    return count;
+  };
 
   const toggleExpandComment = (index: number) => {
     setExpandedComments((prevExpandedComments) =>
@@ -134,7 +177,7 @@ export const Comments: React.FC<CommentsProps> = ({ comments }) => {
             <div className={styles.container__interactions}>
               <RxThickArrowUp className={styles.interactions__icon} />
               <p className={styles.interactions__count}>
-                {comment.like_count - comment.dislike_count}
+                {getCommentReactionCount(comment.id)}
               </p>
               <RxThickArrowDown className={styles.interactions__icon} />
               <p
@@ -170,7 +213,7 @@ export const Comments: React.FC<CommentsProps> = ({ comments }) => {
                   <div className={styles.container__interactions}>
                     <RxThickArrowUp className={styles.interactions__icon} />
                     <p className={styles.interactions__count}>
-                      {subcomment.like_count - subcomment.dislike_count}
+                      {getSubcommentReactionCount(subcomment.id)}
                     </p>
                     <RxThickArrowDown className={styles.interactions__icon} />
                   </div>
