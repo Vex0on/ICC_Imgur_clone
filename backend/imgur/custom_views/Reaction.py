@@ -121,7 +121,6 @@ class UserReactions(APIView):
     def get(self, request, individual_id, imgur_user_id):
         post_exists = Post.objects.filter(pk=individual_id).exists()
         if post_exists:
-            reaction_post = Reaction.objects.get(record_id=0, individual_id=individual_id, imgur_user=imgur_user_id)
             reactions_comment = Reaction.objects.filter(record_id=1, imgur_user=imgur_user_id).values_list("id", "reaction")
             reactions_comment = [{"id": id, "reaction": reaction} for id, reaction in reactions_comment]
 
@@ -129,7 +128,6 @@ class UserReactions(APIView):
             reactions_subcomment = [{"id": id, "reaction": reaction} for id, reaction in reactions_subcomment]
 
             return Response({"data": {
-                "reaction_post": reaction_post.reaction,
                 "reactions_comment": reactions_comment,
                 "reactions_subcomment": reactions_subcomment
             }}, status=status.HTTP_200_OK)
@@ -173,7 +171,7 @@ class CountReactionsComment(APIView):
         return Response({"data": results})
 
 
-class CountReactionsSubcomment(APIView):
+class CountReactionsCommentSubcomment(APIView):
     def get(self, request, individual_id):
         comments_exists = Comment.objects.filter(post=individual_id).exists()
         if not comments_exists:

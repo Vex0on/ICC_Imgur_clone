@@ -42,21 +42,24 @@ interface DecodedToken {
 export const Comments: React.FC<CommentsProps> = ({ comments }) => {
   const [expandedComments, setExpandedComments] = useState<number[]>([]);
   const { id } = useParams<{ id: any }>();
-  const [commentReactions, setCommentReactions] = useState<CommentReactions[]>(
-    []
-  );
+  const [commentReactionsCount, setCommentReactionsCount] = useState<
+    CommentReactions[]
+  >([]);
   const [updatedComments, setUpdatedComments] =
     useState<CommentData[]>(comments);
+  const [UserReactionComment, setUserReactionComment] = useState<
+    boolean | null
+  >(null);
 
   useEffect(() => {
-    fetchCommentReactions();
+    fetchCommentReactionsCount();
   }, []);
 
-  const fetchCommentReactions = async () => {
+  const fetchCommentReactionsCount = async () => {
     try {
       const response = await axios.get(`${API_URL}reactions/count/2/${id}`);
       const commentReactions: CommentReactions[] = response.data.data;
-      setCommentReactions(commentReactions);
+      setCommentReactionsCount(commentReactions);
       console.log(commentReactions);
     } catch (error) {
       console.log(error);
@@ -64,7 +67,7 @@ export const Comments: React.FC<CommentsProps> = ({ comments }) => {
   };
 
   const getCommentReactionCount = (commentId: number): number => {
-    const reaction = commentReactions.find(
+    const reaction = commentReactionsCount.find(
       (comment) => comment.comment_id === commentId
     );
     return reaction ? reaction.count : 0;
@@ -72,7 +75,7 @@ export const Comments: React.FC<CommentsProps> = ({ comments }) => {
 
   const getSubcommentReactionCount = (subcommentId: number): number => {
     let count = 0;
-    commentReactions.forEach((comment) => {
+    commentReactionsCount.forEach((comment) => {
       comment.subcomments.forEach((subcomment) => {
         if (subcomment.subcomment_id === subcommentId) {
           count += subcomment.count;
@@ -141,6 +144,62 @@ export const Comments: React.FC<CommentsProps> = ({ comments }) => {
     }
   };
 
+  const handleReaction = async (
+    commentId: number,
+    reaction: boolean,
+    recordId: number
+  ) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwt_decode(token) as DecodedToken;
+      const imgur_user = decodedToken?.user_id;
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      try {
+        await axios.post(
+          `${API_URL}reactions`,
+          {
+            imgur_user,
+            reaction,
+            record_id: recordId,
+            individual_id: commentId,
+          },
+          {
+            headers,
+          }
+        );
+
+        fetchCommentReactionsCount();
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
+          refreshToken(
+            () => handleReaction(commentId, reaction, recordId),
+            "/login"
+          );
+        } else if (
+          axios.isAxiosError(error) &&
+          error.response?.status === 409
+        ) {
+          if (error.response.data.existing_reaction.reaction == reaction) {
+            await axios.delete(
+              `${API_URL}reactions/${recordId}/${commentId}/${imgur_user}`,
+              {
+                headers,
+              }
+            );
+          } else {
+            await axios.put(
+              `${API_URL}reactions/1/${commentId}/${imgur_user}`,
+              { reaction: reaction },
+              { headers }
+            );
+          }
+        }
+      }
+    }
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -175,11 +234,17 @@ export const Comments: React.FC<CommentsProps> = ({ comments }) => {
             <p className={styles.content}>{comment.text}</p>
 
             <div className={styles.container__interactions}>
-              <RxThickArrowUp className={styles.interactions__icon} />
+              <RxThickArrowUp
+                className={styles.interactions__icon}
+                onClick={() => handleReaction(comment.id, true, 1)}
+              />
               <p className={styles.interactions__count}>
                 {getCommentReactionCount(comment.id)}
               </p>
-              <RxThickArrowDown className={styles.interactions__icon} />
+              <RxThickArrowDown
+                className={styles.interactions__icon}
+                onClick={() => handleReaction(comment.id, false, 1)}
+              />
               <p
                 className={styles.interactions__subcomments}
                 onClick={() => toggleExpandComment(index)}
@@ -211,11 +276,17 @@ export const Comments: React.FC<CommentsProps> = ({ comments }) => {
                   <p className={styles.content}>{subcomment.text}</p>
 
                   <div className={styles.container__interactions}>
-                    <RxThickArrowUp className={styles.interactions__icon} />
+                    <RxThickArrowUp
+                      className={styles.interactions__icon}
+                      onClick={() => handleReaction(subcomment.id, true, 2)}
+                    />
                     <p className={styles.interactions__count}>
                       {getSubcommentReactionCount(subcomment.id)}
                     </p>
-                    <RxThickArrowDown className={styles.interactions__icon} />
+                    <RxThickArrowDown
+                      className={styles.interactions__icon}
+                      onClick={() => handleReaction(subcomment.id, false, 2)}
+                    />
                   </div>
                 </div>
               ))}

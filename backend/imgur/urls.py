@@ -44,7 +44,7 @@ urlpatterns = [
     ),
     path("reactions/count/0/<int:individual_id>", Reaction.CountReactionsPost.as_view(), name="reactions-post"),
     path("reactions/count/1/<int:individual_id>", Reaction.CountReactionsComment.as_view(), name="reactions-comment"),
-    path("reactions/count/2/<int:individual_id>", Reaction.CountReactionsSubcomment.as_view(), name="reactions-subcomment"),
+    path("reactions/count/2/<int:individual_id>", Reaction.CountReactionsCommentSubcomment.as_view(), name="reactions-subcomment"),
     path("reactions/<int:record_id>/<int:individual_id>/<int:imgur_user_id>", Reaction.ReactionDetail.as_view(), name="delete-reaction"),
     path("reactions/check/<int:individual_id>/<int:imgur_user_id>", Reaction.UserReactions.as_view(), name="delete-reaction"),
     path("full-posts", views.get_full_posts, name="full-posts"),
