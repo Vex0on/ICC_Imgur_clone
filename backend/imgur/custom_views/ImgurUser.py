@@ -32,11 +32,11 @@ def get_access_token(request):
     if refresh_token:
         try:
             token = RefreshToken(refresh_token)
-            user = ImgurUser.objects.get(id=token['user_id'])
+            user = ImgurUser.objects.get(id=token["user_id"])
             new_access_token = str(token.access_token)
 
-            response = Response({'access': new_access_token})
-            response.set_cookie('refresh', refresh_token, httponly=True, samesite="Lax")
+            response = Response({"access": new_access_token})
+            response.set_cookie("refresh", refresh_token, httponly=True, samesite="Lax")
             return response
         except ImgurUser.DoesNotExist:
             return Response(

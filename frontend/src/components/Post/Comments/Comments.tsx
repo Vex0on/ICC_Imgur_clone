@@ -190,7 +190,7 @@ export const Comments: React.FC<CommentsProps> = ({ comments }) => {
             );
           } else {
             await axios.put(
-              `${API_URL}reactions/1/${commentId}/${imgur_user}`,
+              `${API_URL}reactions/${recordId}/${commentId}/${imgur_user}`,
               { reaction: reaction },
               { headers }
             );
