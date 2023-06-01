@@ -1,49 +1,61 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 import jwt_decode from "jwt-decode"
-import axios from 'axios';
-import styles from "./Nav.module.scss";
-import { Link } from "react-router-dom";
-import { FiUpload, FiSearch, FiMenu } from "react-icons/fi";
-import Logout from "../../Logout/Logout";
+import axios from 'axios'
+import styles from "./Nav.module.scss"
+import { Link } from "react-router-dom"
+import { FiUpload, FiSearch, FiMenu } from "react-icons/fi"
+import Logout from "../../Logout/Logout"
 import { API_URL } from "../../../services/Api/Api"
 
 interface DecodedToken {
-  user_id: string;
+  user_id: string
 }
 
 interface User {
-  id: number;
-  username: string;
+  id: number
+  username: string
 }
 
-export const Nav = () => {
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [token, setToken] = useState('');
-  const [user, setUser] = useState<User | null>(null);
-  const [loadingUser, setLoadingUser] = useState(true);
+interface NavProps {
+  onSearchChange?: (searchTerm: string) => void
+}
+
+export const Nav: React.FC<NavProps> = ({ onSearchChange }) => {
+  const [menuVisible, setMenuVisible] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(false)
+  const [token, setToken] = useState('')
+  const [user, setUser] = useState<User | null>(null)
+  const [loadingUser, setLoadingUser] = useState(true)
+  const [searchTerm, setSearchTerm] = useState<string>('')
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value)
+    if(onSearchChange) onSearchChange(e.target.value)
+  }
   
   const handleHamburgerClick = () => {
-    setMenuVisible(!menuVisible);
-  };
+    setMenuVisible(!menuVisible)
+  }
 
-  const [scrollY, setScrollY] = useState(0);
+  const [scrollY, setScrollY] = useState(0)
 
   const handleScroll = () => {
-    setScrollY(window.scrollY);
-  };
+    setScrollY(window.scrollY)
+  }
+
+  
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll)
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [])
 
   useEffect(() => {
-    setToken(localStorage.getItem("token") || '');
+    setToken(localStorage.getItem("token") || '')
     if (token) {
-      setLoggedIn(true);
+      setLoggedIn(true)
     }else {
       axios
         .get("http://127.0.0.1:8000/api/token/access", {
@@ -51,33 +63,33 @@ export const Nav = () => {
           headers: { Accept: "application/json" },
         })
         .then((response) => {
-          localStorage.setItem("token", response.data.access);
-          setToken(response.data.access);
-          setLoggedIn(true);
+          localStorage.setItem("token", response.data.access)
+          setToken(response.data.access)
+          setLoggedIn(true)
         })
-        .catch((error) => {});
+        .catch((error) => {})
     }
-  }, [token]);
+  }, [token])
 
   useEffect(() => {
     if (token) {
-      const decoded = jwt_decode(token) as DecodedToken;
-      const userId = decoded?.user_id;
+      const decoded = jwt_decode(token) as DecodedToken
+      const userId = decoded?.user_id
   
       if (userId) {
-        setLoadingUser(true);
+        setLoadingUser(true)
         axios.get(`${API_URL}users/${userId}`)
           .then(response => {
-            setUser(response.data);
-            setLoadingUser(false);
+            setUser(response.data)
+            setLoadingUser(false)
           })
           .catch(error => {
-            console.error('There was an error!', error);
-            setLoadingUser(false);
-          });
+            console.error('There was an error!', error)
+            setLoadingUser(false)
+          })
       }
     }
-  }, [token]);
+  }, [token])
 
   return (
     <>
@@ -101,11 +113,13 @@ export const Nav = () => {
     <FiMenu className={styles.hamburger} onClick={handleHamburgerClick} />
 
     <div className={`${styles.container__search} ${styles.d__none}`}>
-      <input
-        className={styles.input__search}
-        type="text"
-        placeholder="Wyszukaj obraz"
-      />
+    <input
+    className={styles.input__search}
+    type="text"
+    placeholder="Wyszukaj obraz"
+    value={searchTerm}
+    onChange={handleSearchChange}
+  />
       <FiSearch className={styles.icon__search} />
     </div>
 
@@ -154,16 +168,18 @@ export const Nav = () => {
       )}
       <li>
         <div className={`${styles.container__search} `}>
-          <input
-            className={styles.input__search}
-            type="text"
-            placeholder="Wyszukaj obraz"
-          />
+        <input
+    className={styles.input__search}
+    type="text"
+    placeholder="Wyszukaj obraz"
+    value={searchTerm}
+    onChange={handleSearchChange}
+  />
           <FiSearch className={styles.icon__search} />
         </div>
       </li>
     </ul>
   </nav>
 </>
-);
-};
+)
+}

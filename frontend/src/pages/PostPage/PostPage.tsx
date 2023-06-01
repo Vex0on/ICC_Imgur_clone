@@ -31,11 +31,14 @@ interface Post {
 export const PostPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const [post, setPost] = useState<Post | null>(null)
+  const [reactions, setReactions] = useState<number | 0>(0)
 
   const fetchPosts = async () => {
     try {
       const response = await axios.get<Post>(`${API_URL}full-posts/${id}`)
+      const reactionsResponse = await axios.get(`${API_URL}reactions/count/${0}/${id}`)
       setPost(response.data)
+      setReactions(reactionsResponse.data.count)
     } catch (error) {
       console.log(error)
     }
@@ -64,8 +67,8 @@ export const PostPage: React.FC = () => {
           <>
             <div>
               <Interactions
-                likeCount={post.like_count}
-                dislikeCount={post.dislike_count}
+                postId={post.id}
+                reactions={reactions}
                 comments={post.comments}
                 imgurUser={post.imgur_user}
               />

@@ -214,6 +214,7 @@ class ShorterImageSerializer(serializers.ModelSerializer):
         fields = [
             "image",
             "name",
+            "id"
         ]
 
 
@@ -238,6 +239,7 @@ class ShorterUserSerializer(serializers.ModelSerializer):
         fields = [
             "username",
             "reactions",
+            "id",
         ]
 
 

@@ -4,7 +4,8 @@ import jwt_decode from "jwt-decode"
 import styles from "./Add.module.scss"
 import axios from "axios";
 import { API_URL } from "../../../services/Api/Api"
-import { refreshToken } from "../../../utils/tokenUtils";
+import { refreshToken } from "../../../utils/tokenUtils"
+import { useNavigate } from "react-router-dom"
 
 interface DecodedToken {
   user_id: number;
@@ -16,7 +17,8 @@ export const AddPost = () => {
   const [tag, setTag] = useState<string>("")
   const [image, setImage] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-
+  
+  const navigate = useNavigate()
 
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
@@ -48,6 +50,8 @@ export const AddPost = () => {
           })
           .then((response) => {
               console.log(response)
+              alert("Dodałeś post")
+              navigate('/')
           })
           .catch(async (postError) => {
               if (axios.isAxiosError(postError) && postError.response?.status === 401) {
@@ -72,7 +76,9 @@ export const AddPost = () => {
               },
           })
           .then((response) => {
-              console.log(response)
+              // console.log(response)
+              // alert("Dodałeś post")
+              // navigate('/')
           })
           .catch((err) => {
               console.log('Błąd')
